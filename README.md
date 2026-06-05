@@ -1,6 +1,6 @@
 # smart-ripgrep
 
-**ripgrep with GitSense intelligence layer**
+**ripgrep with GitSense intelligence layers**
 
 This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that comes pre-loaded with two GitSense intelligence layers (`code-intent` and `implicit-todos`).
 
@@ -8,7 +8,7 @@ This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) th
 
 - The complete ripgrep source code (identical to upstream, with only this README modified and a new .gitsense directory)
 - A `code-intent` manifest that explains what each file does
-- An `implicit-todos` manifest that finds TODOs that grep can't
+- An `implicit-todos` manifest that finds TODOs that grep can't find
 
 ## Quick Start
 
@@ -31,9 +31,9 @@ gsc rg --db code-intent --fields purpose cache
 gsc query --db implicit-todos --filter "has_todo=true" --fields todo_summary
 ```
 
-### Ask AI
+### Ask Your Agent
 
-After importing the intelligence layer, start your agent (Claude Code, Codex, etc.) and have it run
+After importing the intelligence layers, start your agent (Claude Code, Codex, etc.) and have it run
 
 ```
 gsc experts init
