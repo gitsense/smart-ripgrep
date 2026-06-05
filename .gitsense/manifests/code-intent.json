@@ -1,0 +1,6864 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-03T04:48:30.693Z",
+  "manifest": {
+    "name": "Intent-Based Code Discovery",
+    "database_name": "code-intent",
+    "description": "Acts as a \"Discovery Detective\" to extract intent-based metadata optimized for search indexing and change management. This manifest tracks `purpose`, `action-object keywords`, `parent_keywords`, `mechanism`, and `logic_constraints` to help agents discover files based on *what they do* and *how to change them*, while strictly enforcing stop-word exclusion.",
+    "tags": [
+      "intent-based",
+      "code-discovery",
+      "change-centric",
+      "action-object",
+      "search-optimization"
+    ]
+  },
+  "repositories": [
+    {
+      "ref": "R0",
+      "name": "gitsense/smart-ripgrep"
+    }
+  ],
+  "branches": [
+    {
+      "ref": "B0",
+      "name": "master"
+    }
+  ],
+  "analyzers": [
+    {
+      "ref": "A0",
+      "id": "code-intent::file-content::default",
+      "name": "Code Intent",
+      "description": "Generates a discovery-optimized summary and metadata, including Action-Object keywords, functional parent domains, interface types, and logic constraints.",
+      "version": "3.1.0"
+    }
+  ],
+  "fields": [
+    {
+      "ref": "F0",
+      "name": "file_extension",
+      "type": "string",
+      "display_name": "File Extension",
+      "description": "No description available.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F1",
+      "name": "purpose",
+      "type": "string",
+      "display_name": "Purpose",
+      "description": "A change-centric summary starting with \"Modify this file to change...\" or \"Use this file to change...\".",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F2",
+      "name": "type",
+      "type": "string",
+      "display_name": "Type",
+      "description": "The standardized category of the file (e.g., `source_code`, `documentation`, `blog_post`). Must be a value defined in `keyword-map.json` or a standard default.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F3",
+      "name": "dates",
+      "type": "string",
+      "display_name": "Dates",
+      "description": "An array of date strings formatted as `yyyy-mm-dd_type` (e.g., `[\"2023-10-27_published\", \"2023-11-05_modified\"]`). Null if no dates.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F4",
+      "name": "keywords",
+      "type": "array",
+      "display_name": "Keywords",
+      "description": "An array of 3-7 specific, high-discrimination keywords. MUST be \"Action-Object\" pairs. MUST exclude stop words. Quality over quantity.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F5",
+      "name": "parent_keywords",
+      "type": "array",
+      "display_name": "Parent Keywords",
+      "description": "An array of 2-5 broader, functional domain keywords that group the specific keywords.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F6",
+      "name": "key_entities",
+      "type": "array",
+      "display_name": "Key Entities",
+      "description": "A list of the most important named components within the file.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F7",
+      "name": "mechanism",
+      "type": "string",
+      "display_name": "Mechanism",
+      "description": "The interface/pattern type (e.g., `cli-command`, `rest-api`, `webhook-handler`, `factory-pattern`). Null if not applicable.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F8",
+      "name": "logic_constraints",
+      "type": "string",
+      "display_name": "Logic Constraints",
+      "description": "A list of hardcoded business logic or configuration constants found in the file. Null if none found.",
+      "analyzer_ref": "A0"
+    }
+  ],
+  "data": [
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/data/sherlock-nul.txt",
+      "language": "plaintext",
+      "chat_id": 41654,
+      "fields": {
+        "F0": "txt",
+        "F1": "Use this file to change the test dataset for text search and encoding validation. It contains the full text of 'A Study in Scarlet' by Arthur Conan Doyle.",
+        "F2": "test",
+        "F3": "[\"2008-07-12_posted\",\"1995-04-01_released\",\"2013-02-17_updated\"]",
+        "F4": [
+          "test-data",
+          "text-search",
+          "encoding-validation",
+          "fixture-data"
+        ],
+        "F5": [
+          "testing",
+          "fixtures",
+          "data-management"
+        ],
+        "F6": [
+          "Sherlock Holmes",
+          "Arthur Conan Doyle",
+          "Project Gutenberg"
+        ],
+        "F7": "test-fixture",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/binary.rs",
+      "language": "rust",
+      "chat_id": 41655,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the test coverage for binary file detection, specifically verifying how NUL bytes and memory maps affect search termination and output.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-binary-detection",
+          "handle-nul-bytes",
+          "verify-mmap-behavior",
+          "check-implicit-search",
+          "validate-binary-offset"
+        ],
+        "F5": [
+          "testing",
+          "binary-io",
+          "file-searching"
+        ],
+        "F6": [
+          "HAY",
+          "rgtest!",
+          "mmap_match_implicit",
+          "after_match1_implicit"
+        ],
+        "F7": "integration-test",
+        "F8": "[\"buffer-capacity-65536\",\"nul-byte-offset-77041\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/feature.rs",
+      "language": "rust",
+      "chat_id": 41656,
+      "fields": {
+        "F0": "rs",
+        "F1": "Validates CLI behavior and edge cases for the `ripgrep` search tool, including encoding handling, ignore rules, output formatting, and search statistics. Modify this file to change integration test coverage for command-line arguments and output modes.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "validate-encoding",
+          "test-ignore-rules",
+          "verify-output-format",
+          "check-search-stats",
+          "test-sorting"
+        ],
+        "F5": [
+          "integration-testing",
+          "cli-validation",
+          "encoding-handling",
+          "output-formatting"
+        ],
+        "F6": [
+          "rgtest!",
+          "TestCommand",
+          "Dir",
+          "SHERLOCK"
+        ],
+        "F7": "integration-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/hay.rs",
+      "language": "rust",
+      "chat_id": 41657,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the test text data used for verifying text processing logic.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-fixture",
+          "haystack-data",
+          "crlf-string",
+          "lf-string",
+          "define-constants"
+        ],
+        "F5": [
+          "testing",
+          "data-fixtures"
+        ],
+        "F6": [
+          "SHERLOCK",
+          "SHERLOCK_CRLF"
+        ],
+        "F7": "const-data",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/json.rs",
+      "language": "rust",
+      "chat_id": 41658,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the validation logic for JSON output formats, including assertions for match offsets, context lines, binary data handling, and CRLF line endings.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "validate-json-output",
+          "test-serialization",
+          "handle-non-utf8",
+          "verify-crlf-handling",
+          "check-replacement-field"
+        ],
+        "F5": [
+          "testing",
+          "serialization",
+          "output-formatting"
+        ],
+        "F6": [
+          "Message",
+          "Begin",
+          "End",
+          "Match",
+          "Context",
+          "Summary",
+          "SubMatch",
+          "Data",
+          "Stats",
+          "Duration"
+        ],
+        "F7": "unit-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/macros.rs",
+      "language": "rust",
+      "chat_id": 41659,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the setup logic or error formatting for the test suite macros.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-test-macro",
+          "reduce-test-boilerplate",
+          "automate-pcre2-testing",
+          "format-assertion-errors"
+        ],
+        "F5": [
+          "testing-infrastructure",
+          "metaprogramming"
+        ],
+        "F6": [
+          "rgtest",
+          "eqnice",
+          "eqnice_repr"
+        ],
+        "F7": "macro-rules",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/misc.rs",
+      "language": "rust",
+      "chat_id": 41660,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change miscellaneous integration tests for ripgrep, covering features like line numbers, inverted matching, file types, globbing, and compression handling.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "verify-line-numbers",
+          "verify-inverted-match",
+          "verify-file-type-filtering",
+          "verify-glob-matching",
+          "verify-compression-search",
+          "verify-ignore-behavior",
+          "verify-context-printing"
+        ],
+        "F5": [
+          "integration-tests",
+          "feature-validation",
+          "cli-testing"
+        ],
+        "F6": [
+          "rgtest!",
+          "SHERLOCK",
+          "sort_setup"
+        ],
+        "F7": "integration-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/multiline.rs",
+      "language": "rust",
+      "chat_id": 41661,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change test coverage for multiline regex matching, including overlap logic, dot-newline behavior, and output formatting for flags like vimgrep.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-multiline-overlap",
+          "test-dot-newline",
+          "test-vimgrep-multiline",
+          "test-stdin-multiline",
+          "test-context-multiline"
+        ],
+        "F5": [
+          "testing",
+          "multiline-search",
+          "regex-behavior"
+        ],
+        "F6": [
+          "overlap1",
+          "overlap2",
+          "dot_no_newline",
+          "dot_all",
+          "only_matching",
+          "vimgrep",
+          "stdin",
+          "context"
+        ],
+        "F7": "test-suite",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/regression.rs",
+      "language": "rust",
+      "chat_id": 41662,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the regression test suite for ripgrep, covering gitignore logic, regex edge cases, and file system interactions.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "verify-gitignore-rules",
+          "test-regex-matching",
+          "validate-symlink-handling",
+          "check-exit-codes",
+          "test-multiline-search",
+          "verify-color-output"
+        ],
+        "F5": [
+          "testing",
+          "regression-suite",
+          "integration-tests"
+        ],
+        "F6": [
+          "rgtest!",
+          "TestCommand",
+          "Dir",
+          "SHERLOCK"
+        ],
+        "F7": "test-macro",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41663,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the organization and inclusion of top-level test suites. It aggregates various test modules, including binary handling, features, JSON output, and regression tests, into a unified test runner structure.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "aggregate-test-modules",
+          "declare-test-suites",
+          "organize-tests"
+        ],
+        "F5": [
+          "testing",
+          "test-organization"
+        ],
+        "F6": [
+          "macros",
+          "hay",
+          "util",
+          "binary",
+          "feature",
+          "json",
+          "misc",
+          "multiline",
+          "regression"
+        ],
+        "F7": "module-declaration",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/util.rs",
+      "language": "rust",
+      "chat_id": 41664,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how integration test environments are initialized, how the ripgrep binary is executed, or how cross-compilation runners (like QEMU) are detected and configured.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "setup-test-dir",
+          "run-test-command",
+          "strip-jemalloc",
+          "detect-cross-runner",
+          "create-test-file"
+        ],
+        "F5": [
+          "testing-infrastructure",
+          "integration-testing",
+          "process-management"
+        ],
+        "F6": [
+          "Dir",
+          "TestCommand",
+          "setup",
+          "cmd_exists"
+        ],
+        "F7": "test-harness",
+        "F8": "[\"retry-limit-10\",\"test-dir-prefix-ripgrep-tests\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "scripts/copy-examples",
+      "language": "plaintext",
+      "chat_id": 41666,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change how code examples are extracted from the Rust cookbook.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "extract-code-blocks",
+          "strip-comments",
+          "generate-examples",
+          "parse-rust-cookbook"
+        ],
+        "F5": [
+          "documentation-generation",
+          "build-scripts"
+        ],
+        "F6": [
+          "RE_EACH_CODE_BLOCK",
+          "RE_MARKER",
+          "argparse"
+        ],
+        "F7": "cli-script",
+        "F8": "[\"default-rust-file=src/cookbook.rs\",\"default-example-dir=grep/examples\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/windows/Manifest.xml",
+      "language": "xml",
+      "chat_id": 41669,
+      "fields": {
+        "F0": "xml",
+        "F1": "Modify this file to change Windows application execution settings, specifically UTF-8 encoding, long path awareness, and OS compatibility declarations.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "enable-utf8",
+          "enable-long-paths",
+          "declare-windows-compatibility",
+          "configure-execution"
+        ],
+        "F5": [
+          "windows-configuration",
+          "application-settings"
+        ],
+        "F6": [
+          "assembly",
+          "activeCodePage",
+          "longPathAware"
+        ],
+        "F7": "xml-manifest",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/windows/README.md",
+      "language": "markdown",
+      "chat_id": 41670,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the Windows application manifest configuration, specifically the `longPathAware` setting that allows paths longer than 260 characters during MSVC builds.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "enable-long-paths",
+          "configure-manifest",
+          "link-manifest",
+          "msvc-build"
+        ],
+        "F5": [
+          "windows-configuration",
+          "build-system"
+        ],
+        "F6": [
+          "longPathAware",
+          "build.rs",
+          "MSVC"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/brew/ripgrep-bin.rb",
+      "language": "ruby",
+      "chat_id": 41672,
+      "fields": {
+        "F0": "rb",
+        "F1": "Modify this file to change the installation source, version, or checksums for the ripgrep binary package in Homebrew. It handles OS-specific artifact downloading and shell completion setup.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "install-binary",
+          "configure-brew",
+          "handle-os-specifics",
+          "manage-conflicts",
+          "install-shell-completions"
+        ],
+        "F5": [
+          "package-management",
+          "homebrew",
+          "installation"
+        ],
+        "F6": [
+          "RipgrepBin",
+          "Formula",
+          "install"
+        ],
+        "F7": "homebrew-formula",
+        "F8": "[\"version-15.0.0\",\"conflicts-ripgrep\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/fuzz_targets/fuzz_glob.rs",
+      "language": "rust",
+      "chat_id": 41675,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the fuzzing logic for the Glob parser, specifically the comparison between constructors.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "fuzz-glob-parser",
+          "verify-constructor-equality",
+          "test-string-representation"
+        ],
+        "F5": [
+          "fuzzing",
+          "glob-parsing"
+        ],
+        "F6": [
+          "Glob",
+          "libfuzzer_sys::fuzz_target"
+        ],
+        "F7": "fuzz-target",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/.gitignore",
+      "language": "plaintext",
+      "chat_id": 41676,
+      "fields": {
+        "F0": "gitignore",
+        "F1": "Modify this file to change which build artifacts, fuzzing corpus data, and coverage reports are excluded from version control in the fuzzing directory.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "exclude-fuzz-corpus",
+          "ignore-coverage-reports",
+          "exclude-build-target",
+          "ignore-fuzz-artifacts"
+        ],
+        "F5": [
+          "fuzzing",
+          "version-control",
+          "build-configuration"
+        ],
+        "F6": [
+          "target",
+          "corpus",
+          "artifacts",
+          "coverage"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/Cargo.lock",
+      "language": "plaintext",
+      "chat_id": 41677,
+      "fields": {
+        "F0": "lock",
+        "F1": "Modify this file to change the exact versions of dependencies used by the fuzzing harness, though it is typically auto-generated.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "lock-dependencies",
+          "pin-versions",
+          "fuzz-harness",
+          "reproducible-builds"
+        ],
+        "F5": [
+          "dependency-management",
+          "fuzzing",
+          "build-configuration"
+        ],
+        "F6": [
+          "aho-corasick",
+          "arbitrary",
+          "libfuzzer-sys",
+          "globset",
+          "regex-automata"
+        ],
+        "F7": "lock-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41678,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the fuzzing configuration or dependencies for the globset crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "fuzz-harness",
+          "globset-testing",
+          "libfuzzer-integration"
+        ],
+        "F5": [
+          "testing",
+          "security-auditing"
+        ],
+        "F6": [
+          "fuzz_glob",
+          "libfuzzer-sys"
+        ],
+        "F7": "config-file",
+        "F8": "[\"debug-level-1\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/README.md",
+      "language": "markdown",
+      "chat_id": 41679,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the instructions for setting up and running fuzz tests using `cargo-fuzz` to detect stability issues.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "run-fuzz-test",
+          "install-cargo-fuzz",
+          "list-fuzz-targets",
+          "generate-arbitrary-data",
+          "detect-conversion-bugs"
+        ],
+        "F5": [
+          "testing",
+          "quality-assurance",
+          "stability-testing"
+        ],
+        "F6": [
+          "cargo-fuzz",
+          "cargo"
+        ],
+        "F7": "cli-command",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/core.rs",
+      "language": "rust",
+      "chat_id": 41684,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the core search execution engine, including line iteration strategies, binary data detection, and context buffering. It implements the main loop that delegates matching logic and manages state for fast and slow search paths.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "execute-search-loop",
+          "detect-binary-data",
+          "manage-context-buffer",
+          "iterate-lines",
+          "delegate-matcher"
+        ],
+        "F5": [
+          "search-engine",
+          "core-logic",
+          "buffer-management"
+        ],
+        "F6": [
+          "Core",
+          "FastMatchResult",
+          "LineStep",
+          "SinkMatch",
+          "SinkContext"
+        ],
+        "F7": "state-machine",
+        "F8": "[\"initial-line-number-1\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/glue.rs",
+      "language": "rust",
+      "chat_id": 41685,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how search results are processed, buffered, and how binary data is detected during the search operation.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "execute-search",
+          "detect-binary",
+          "manage-line-buffer",
+          "handle-context",
+          "coordinate-matcher-sink"
+        ],
+        "F5": [
+          "search-execution",
+          "buffer-management",
+          "binary-handling"
+        ],
+        "F6": [
+          "ReadByLine",
+          "SliceByLine",
+          "MultiLine",
+          "Core",
+          "LineBufferReader"
+        ],
+        "F7": "strategy-pattern",
+        "F8": "[\"DEFAULT_BUFFER_CAPACITY\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mmap.rs",
+      "language": "rust",
+      "chat_id": 41686,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the heuristics and safety checks for using memory maps during file searches. It implements a strategy pattern to conditionally enable memory mapping based on platform and performance considerations.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "mmap-strategy",
+          "open-memory-map",
+          "disable-macos-mmap",
+          "sigbus-prevention"
+        ],
+        "F5": [
+          "memory-management",
+          "file-io",
+          "performance-optimization"
+        ],
+        "F6": [
+          "MmapChoice",
+          "MmapChoiceImpl"
+        ],
+        "F7": "strategy-enum",
+        "F8": "[\"default-mmap-never\",\"macos-mmap-disabled\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mod.rs",
+      "language": "rust",
+      "chat_id": 41687,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the core search execution logic, including memory mapping strategies, binary detection heuristics, and encoding transcoding behavior.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "configure-search",
+          "detect-binary",
+          "transcode-encoding",
+          "execute-search",
+          "manage-heap-limit",
+          "memory-map-strategy",
+          "multi-line-search"
+        ],
+        "F5": [
+          "search-engine",
+          "configuration",
+          "io-operations",
+          "memory-management"
+        ],
+        "F6": [
+          "Searcher",
+          "SearcherBuilder",
+          "Config",
+          "BinaryDetection",
+          "Encoding"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"decode-buffer-size-8192\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41688,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the core search execution logic, configuration options for the Searcher, or the public API exports for the search engine crate.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "execute-search",
+          "manage-bytes",
+          "detect-binary",
+          "invert-search",
+          "report-context",
+          "mmap-choice"
+        ],
+        "F5": [
+          "search-engine",
+          "io-operations",
+          "pattern-matching"
+        ],
+        "F6": [
+          "Searcher",
+          "SearcherBuilder",
+          "Sink",
+          "Matcher",
+          "UTF8"
+        ],
+        "F7": "trait-implementation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/line_buffer.rs",
+      "language": "rust",
+      "chat_id": 41689,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how lines are read from an underlying reader, including memory allocation strategies and binary data handling.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "read-lines",
+          "detect-binary",
+          "allocate-buffer",
+          "roll-buffer",
+          "replace-bytes"
+        ],
+        "F5": [
+          "io-operations",
+          "memory-management",
+          "data-parsing"
+        ],
+        "F6": [
+          "LineBuffer",
+          "LineBufferReader",
+          "LineBufferBuilder",
+          "BufferAllocation",
+          "BinaryDetection"
+        ],
+        "F7": "buffered-reader",
+        "F8": "[\"default-capacity-64kb\",\"eager-allocation-doubles-capacity\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lines.rs",
+      "language": "rust",
+      "chat_id": 41690,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how lines are iterated, counted, and located within byte slices, including handling of line terminators and boundary calculations.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "iterate-bytes",
+          "count-terminators",
+          "locate-boundaries",
+          "strip-terminator",
+          "preceding-offset"
+        ],
+        "F5": [
+          "byte-operations",
+          "iteration",
+          "parsing"
+        ],
+        "F6": [
+          "LineIter",
+          "LineStep",
+          "count",
+          "locate",
+          "preceding"
+        ],
+        "F7": "iterator-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41691,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the formatting of test assertion failures for string comparisons.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "assert-macro",
+          "string-diff",
+          "test-helper"
+        ],
+        "F5": [
+          "testing",
+          "utilities"
+        ],
+        "F6": [
+          "assert_eq_printed"
+        ],
+        "F7": "macro",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/sink.rs",
+      "language": "rust",
+      "chat_id": 41692,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how search results are processed and reported to the caller via the push-based Sink trait.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "handle-match",
+          "process-context",
+          "detect-binary",
+          "handle-error",
+          "push-results",
+          "validate-utf8"
+        ],
+        "F5": [
+          "search-interface",
+          "result-handling",
+          "trait-definition"
+        ],
+        "F6": [
+          "Sink",
+          "SinkError",
+          "SinkMatch",
+          "SinkContext",
+          "SinkFinish",
+          "UTF8",
+          "Lossy",
+          "Bytes"
+        ],
+        "F7": "trait",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/testutil.rs",
+      "language": "rust",
+      "chat_id": 41693,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the testing infrastructure for the searcher component, specifically how regex matchers are mocked and how various search configurations (line-by-line, multi-line, inverted) are validated against expected outputs.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-searcher",
+          "regex-matcher",
+          "mock-sink",
+          "search-config",
+          "assert-output"
+        ],
+        "F5": [
+          "testing",
+          "search-verification",
+          "unit-testing"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "KitchenSink",
+          "SearcherTester",
+          "TesterConfig"
+        ],
+        "F7": "test-utility",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/examples/search-stdin.rs",
+      "language": "rust",
+      "chat_id": 41695,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the example implementation of searching standard input using the Searcher API.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "search-stdin",
+          "read-regex-pattern",
+          "example-searcher-usage"
+        ],
+        "F5": [
+          "examples",
+          "stdin-handling"
+        ],
+        "F6": [
+          "Searcher",
+          "RegexMatcher",
+          "UTF8"
+        ],
+        "F7": "cli-example",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41696,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the build dependencies, version, or feature flags for the grep-searcher crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "specify-searcher-dependencies",
+          "configure-simd-acceleration",
+          "define-package-metadata"
+        ],
+        "F5": [
+          "rust-crate-config",
+          "dependency-management"
+        ],
+        "F6": [
+          "grep-searcher",
+          "bstr",
+          "encoding_rs",
+          "grep-matcher",
+          "memmap2"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41697,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Modify this file to change the legal licensing terms or copyright attribution for the software.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_copyright\"]",
+        "F4": [
+          "mit-license",
+          "copyright-assignment",
+          "software-permission",
+          "liability-waiver"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/README.md",
+      "language": "markdown",
+      "chat_id": 41698,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation for the `grep-searcher` crate, which handles low-level search execution details like memory mapping, binary data detection, and UTF-16 transcoding.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "line-oriented-search",
+          "binary-data-detection",
+          "utf-16-transcoding",
+          "memory-map-decision",
+          "context-reporting"
+        ],
+        "F5": [
+          "search-engine",
+          "low-level-library",
+          "io-operations"
+        ],
+        "F6": [
+          "grep-searcher",
+          "grep"
+        ],
+        "F7": "library-facade",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41699,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to change the legal licensing terms to public domain, effectively waiving all copyright.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain",
+          "copyright-waiver",
+          "license-declaration",
+          "relinquish-rights"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "UNLICENSE"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ast.rs",
+      "language": "rust",
+      "chat_id": 41702,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex patterns are analyzed for literals and uppercase characters, affecting smart case matching logic.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "analyze-ast",
+          "detect-literal",
+          "detect-uppercase",
+          "parse-pattern"
+        ],
+        "F5": [
+          "parsing",
+          "syntax-analysis",
+          "regex-engine"
+        ],
+        "F6": [
+          "AstAnalysis",
+          "Ast"
+        ],
+        "F7": "ast-traversal",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ban.rs",
+      "language": "rust",
+      "chat_id": 41703,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the logic for detecting and rejecting specific bytes (like null bytes) within regex patterns via HIR traversal.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "detect-banned-byte",
+          "validate-hir-structure",
+          "check-literal-matches",
+          "check-class-ranges",
+          "enforce-ascii-constraint"
+        ],
+        "F5": [
+          "validation",
+          "regex-parsing",
+          "security"
+        ],
+        "F6": [
+          "check",
+          "Hir",
+          "HirKind",
+          "ErrorKind::Banned"
+        ],
+        "F7": "hir-traversal",
+        "F8": "[\"byte-is-ascii\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/config.rs",
+      "language": "rust",
+      "chat_id": 41704,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex patterns are parsed, configured, and compiled into HIR expressions, including size limits and case sensitivity rules.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "build-hir",
+          "configure-regex",
+          "parse-patterns",
+          "set-size-limits",
+          "strip-line-terminator",
+          "determine-case-sensitivity"
+        ],
+        "F5": [
+          "regex-engine",
+          "configuration",
+          "parsing"
+        ],
+        "F6": [
+          "Config",
+          "ConfiguredHIR",
+          "Hir",
+          "build_many",
+          "to_regex"
+        ],
+        "F7": "config-builder",
+        "F8": "[\"size_limit-100mb\",\"dfa_size_limit-1gb\",\"nest_limit-250\",\"onepass_size_limit-10mb\",\"dfa_state_limit-1000\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/error.rs",
+      "language": "rust",
+      "chat_id": 41705,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex parsing and compilation errors are categorized and reported to the user.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "handle-regex-errors",
+          "report-syntax-errors",
+          "check-size-limits",
+          "validate-line-terminator",
+          "report-banned-byte"
+        ],
+        "F5": [
+          "error-handling",
+          "validation"
+        ],
+        "F6": [
+          "Error",
+          "ErrorKind",
+          "Regex",
+          "NotAllowed",
+          "Banned"
+        ],
+        "F7": "error-enum",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41706,
+      "fields": {
+        "F0": "rs",
+        "F1": "Use this file to change the public API surface or re-export internal modules for the regex crate.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "export-matcher-api",
+          "define-error-types",
+          "implement-regex-trait"
+        ],
+        "F5": [
+          "public-api",
+          "regex-engine",
+          "error-handling"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "RegexMatcherBuilder",
+          "Error",
+          "ErrorKind"
+        ],
+        "F7": "module-export",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/literal.rs",
+      "language": "rust",
+      "chat_id": 41707,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the heuristics used for extracting inner literals from regex patterns to build faster pre-filters, or to adjust the limits that trigger literal optimization.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "extract-inner-literals",
+          "optimize-regex",
+          "build-prefilter",
+          "limit-literal-length",
+          "detect-poisonous-literal"
+        ],
+        "F5": [
+          "regex-optimization",
+          "pattern-analysis",
+          "search-performance"
+        ],
+        "F6": [
+          "InnerLiterals",
+          "Extractor",
+          "TSeq"
+        ],
+        "F7": "literal-extraction",
+        "F8": "[\"limit-class-10\",\"limit-repeat-10\",\"limit-literal-len-100\",\"limit-total-64\",\"poisonous-rank-250\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41708,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex matchers are constructed and configured, including optimizations like fast line scanning and line terminator handling. It wraps the `regex-automata` engine to provide a builder interface for search patterns.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "build-regex-matcher",
+          "fast-line-regex",
+          "line-terminator-optimization",
+          "smart-case-matching",
+          "crlf-handling"
+        ],
+        "F5": [
+          "pattern-matching",
+          "regex-engine",
+          "search-configuration"
+        ],
+        "F6": [
+          "RegexMatcherBuilder",
+          "RegexMatcher",
+          "RegexCaptures"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"default-unicode-enabled\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/non_matching.rs",
+      "language": "rust",
+      "chat_id": 41709,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the logic for determining which bytes cannot possibly match a regex pattern, used for optimizing search performance.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "compute-non-matching-bytes",
+          "analyze-hir",
+          "remove-matching-bytes",
+          "byte-set-optimization",
+          "regex-literal-analysis"
+        ],
+        "F5": [
+          "regex-optimization",
+          "byte-analysis",
+          "pattern-matching"
+        ],
+        "F6": [
+          "non_matching_bytes",
+          "remove_matching_bytes",
+          "ByteSet",
+          "Hir"
+        ],
+        "F7": "hir-analysis",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/strip.rs",
+      "language": "rust",
+      "chat_id": 41710,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex High-level Intermediate Representations (HIR) are transformed to prevent matching specific line terminators.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "strip-line-terminator",
+          "transform-hir",
+          "validate-literal",
+          "remove-char-class"
+        ],
+        "F5": [
+          "regex-transformation",
+          "validation",
+          "parsing"
+        ],
+        "F6": [
+          "strip_from_match",
+          "strip_from_match_ascii",
+          "Hir",
+          "LineTerminator"
+        ],
+        "F7": "hir-transformation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41711,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to update dependencies or metadata for the regex integration layer.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "regex-adapter",
+          "grep-matcher-impl",
+          "regex-syntax-dep"
+        ],
+        "F5": [
+          "search-engine",
+          "pattern-matching"
+        ],
+        "F6": [
+          "grep-regex",
+          "regex-automata",
+          "regex-syntax"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41712,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Use this file to change the legal terms and permissions granted to users of the software.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_published\"]",
+        "F4": [
+          "grant-permission",
+          "limit-liability",
+          "include-notice",
+          "distribute-software"
+        ],
+        "F5": [
+          "legal",
+          "compliance"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/README.md",
+      "language": "markdown",
+      "chat_id": 41713,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation for the `grep-regex` crate, which implements the `Matcher` trait to use Rust's regex engine for fast line-oriented searching.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "implement-matcher-trait",
+          "integrate-regex-engine",
+          "enable-line-search"
+        ],
+        "F5": [
+          "search-engine",
+          "regex-integration",
+          "library-crate"
+        ],
+        "F6": [
+          "grep-regex",
+          "grep-matcher",
+          "Matcher"
+        ],
+        "F7": "trait-implementation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41714,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal declaration releasing the software into the public domain.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain-dedication",
+          "copyright-relinquishment",
+          "unlicense-terms",
+          "warranty-disclaimer"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "public-domain",
+          "copyright"
+        ],
+        "F7": "legal-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/aliases.rs",
+      "language": "rust",
+      "chat_id": 41718,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the mapping of hyperlink aliases to their URL format strings and display priorities.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-hyperlink-alias",
+          "map-scheme-format",
+          "configure-default-scheme"
+        ],
+        "F5": [
+          "hyperlink-configuration",
+          "printer-output"
+        ],
+        "F6": [
+          "HYPERLINK_PATTERN_ALIASES",
+          "HyperlinkAlias",
+          "alias",
+          "prioritized_alias"
+        ],
+        "F7": "constant-data-structure",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/mod.rs",
+      "language": "rust",
+      "chat_id": 41719,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how terminal hyperlinks are parsed, validated, and interpolated, including the handling of format variables like {path} and {line}, and platform-specific path encoding for Unix and Windows.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "hyperlink-interpolation",
+          "format-parsing",
+          "path-encoding",
+          "variable-substitution",
+          "scheme-validation"
+        ],
+        "F5": [
+          "terminal-output",
+          "formatting",
+          "url-handling"
+        ],
+        "F6": [
+          "HyperlinkConfig",
+          "HyperlinkFormat",
+          "Interpolator",
+          "HyperlinkPath"
+        ],
+        "F7": "interpolator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/color.rs",
+      "language": "rust",
+      "chat_id": 41720,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how color specifications are parsed, validated, and applied to terminal output components like paths, lines, and matches.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-color-spec",
+          "apply-terminal-style",
+          "merge-color-specs",
+          "validate-color-format",
+          "define-color-output"
+        ],
+        "F5": [
+          "terminal-output",
+          "styling",
+          "configuration"
+        ],
+        "F6": [
+          "UserColorSpec",
+          "ColorSpecs",
+          "ColorError",
+          "OutType",
+          "SpecValue"
+        ],
+        "F7": "parser",
+        "F8": "[\"default-path-magenta-unix\",\"default-path-cyan-windows\",\"default-line-green\",\"default-match-red-bold\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/counter.rs",
+      "language": "rust",
+      "chat_id": 41721,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the byte counting logic or writer wrapping behavior for output tracking.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "byte-counting",
+          "writer-wrapper",
+          "output-tracking",
+          "write-color-proxy"
+        ],
+        "F5": [
+          "io-operations",
+          "printer-utilities"
+        ],
+        "F6": [
+          "CounterWriter"
+        ],
+        "F7": "writer-wrapper",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/json.rs",
+      "language": "rust",
+      "chat_id": 41722,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the JSON Lines output format, including how search results, statistics, and binary data offsets are serialized.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "serialize-search-results",
+          "emit-json-lines",
+          "handle-invalid-utf8",
+          "encode-base64-data",
+          "track-search-stats"
+        ],
+        "F5": [
+          "output-formatting",
+          "serialization",
+          "printer-implementation"
+        ],
+        "F6": [
+          "JSONBuilder",
+          "JSON",
+          "JSONSink",
+          "SubMatches",
+          "Config"
+        ],
+        "F7": "json-lines-printer",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/jsont.rs",
+      "language": "rust",
+      "chat_id": 41723,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the JSON serialization structures for ripgrep's output stream, specifically handling zero-allocation serialization and binary data encoding.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "serialize-json-output",
+          "handle-binary-data",
+          "encode-base64-bytes",
+          "define-message-types",
+          "serialize-match-data"
+        ],
+        "F5": [
+          "serialization",
+          "json-formatting",
+          "data-encoding"
+        ],
+        "F6": [
+          "Message",
+          "Begin",
+          "End",
+          "Match",
+          "Context",
+          "SubMatch",
+          "Data",
+          "base64_standard"
+        ],
+        "F7": "json-serialization",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41724,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the public API exports and module structure of the grep-printer crate.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "export-standard-printer",
+          "export-json-printer",
+          "export-summary-printer",
+          "configure-color-specs",
+          "configure-hyperlinks"
+        ],
+        "F5": [
+          "output-formatting",
+          "terminal-coloring",
+          "search-results"
+        ],
+        "F6": [
+          "Standard",
+          "JSON",
+          "Summary",
+          "ColorSpecs",
+          "HyperlinkConfig",
+          "PathPrinter"
+        ],
+        "F7": "library-api",
+        "F8": "[\"max-look-ahead-128\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41725,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the formatting or behavior of test assertions for printed output.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "assert-equality",
+          "format-output",
+          "test-macro"
+        ],
+        "F5": [
+          "testing",
+          "macros",
+          "assertions"
+        ],
+        "F6": [
+          "assert_eq_printed"
+        ],
+        "F7": "macro",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/path.rs",
+      "language": "rust",
+      "chat_id": 41726,
+      "fields": {
+        "F0": "rs",
+        "F1": "Provides a configurable builder and printer for emitting file paths with support for color, hyperlinks, custom separators, and terminators. Use this file to change how file paths are formatted and displayed in the terminal output.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "emit-file-path",
+          "configure-colors",
+          "set-separator",
+          "insert-hyperlink"
+        ],
+        "F5": [
+          "output-printing",
+          "path-handling",
+          "terminal-formatting"
+        ],
+        "F6": [
+          "PathPrinter",
+          "PathPrinterBuilder",
+          "Config",
+          "Interpolator"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"default-terminator-newline\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/standard.rs",
+      "language": "rust",
+      "chat_id": 41727,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how search results are formatted, colored, or displayed, including the handling of separators, line numbers, column offsets, and hyperlinks.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "format-match-output",
+          "apply-color-specs",
+          "write-context-separator",
+          "trim-ascii-prefix",
+          "handle-max-columns"
+        ],
+        "F5": [
+          "output-formatting",
+          "terminal-ui",
+          "result-presentation"
+        ],
+        "F6": [
+          "Standard",
+          "StandardBuilder",
+          "StandardSink",
+          "StandardImpl"
+        ],
+        "F7": "sink-implementation",
+        "F8": "[\"default-separator-context--\",\"default-separator-field-match-:\",\"default-separator-field-context--\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/stats.rs",
+      "language": "rust",
+      "chat_id": 41728,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how search performance metrics and match counts are aggregated and reported.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "track-search-metrics",
+          "aggregate-statistics",
+          "measure-search-time",
+          "count-matched-lines"
+        ],
+        "F5": [
+          "statistics",
+          "performance-monitoring",
+          "aggregation"
+        ],
+        "F6": [
+          "Stats",
+          "NiceDuration"
+        ],
+        "F7": "accumulator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/summary.rs",
+      "language": "rust",
+      "chat_id": 41729,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how search results are summarized, including match counting, path display, and statistics aggregation.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "print-summary",
+          "count-matches",
+          "aggregate-stats",
+          "format-output",
+          "handle-binary-data",
+          "configure-colors",
+          "quit-early"
+        ],
+        "F5": [
+          "output-formatting",
+          "statistics",
+          "search-results"
+        ],
+        "F6": [
+          "Summary",
+          "SummaryBuilder",
+          "SummarySink",
+          "SummaryKind",
+          "Config"
+        ],
+        "F7": "sink-pattern",
+        "F8": "[\"default-separator-colon\",\"default-exclude-zero-true\",\"default-path-true\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/util.rs",
+      "language": "rust",
+      "chat_id": 41730,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how string replacements are performed, how paths are formatted for printing, or how durations/numbers are converted to strings.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "string-replacement",
+          "path-transformation",
+          "duration-formatting",
+          "decimal-formatting",
+          "match-abstraction"
+        ],
+        "F5": [
+          "printer-utilities",
+          "string-manipulation",
+          "io-utilities"
+        ],
+        "F6": [
+          "Replacer",
+          "Sunk",
+          "PrinterPath",
+          "NiceDuration",
+          "DecimalFormatter"
+        ],
+        "F7": "utility-module",
+        "F8": "[\"MAX_U64_LEN-20\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41731,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the build configuration, dependencies, and feature flags for the `grep-printer` crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "define-crate-metadata",
+          "configure-serde-feature",
+          "implement-sink-trait",
+          "set-dependencies"
+        ],
+        "F5": [
+          "build-configuration",
+          "output-formatting",
+          "package-management"
+        ],
+        "F6": [
+          "grep-printer",
+          "grep-matcher",
+          "grep-searcher",
+          "termcolor"
+        ],
+        "F7": "config-file",
+        "F8": "[\"version-0.3.1\",\"edition-2024\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41732,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Use this file to change the legal licensing terms for the software. It specifies the MIT License conditions including permissions, restrictions, and copyright notices.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_copyright\"]",
+        "F4": [
+          "mit-license",
+          "legal-permission",
+          "copyright-assignment",
+          "software-distribution",
+          "liability-waiver"
+        ],
+        "F5": [
+          "legal",
+          "compliance"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/README.md",
+      "language": "markdown",
+      "chat_id": 41733,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation or usage instructions for the `grep-printer` crate, which handles formatting search results.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "format-results",
+          "print-output",
+          "json-lines",
+          "aggregate-data"
+        ],
+        "F5": [
+          "output-formatting",
+          "search-results"
+        ],
+        "F6": [
+          "grep-printer"
+        ],
+        "F7": "crate",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41734,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to change the legal status of the software to public domain. It explicitly waives all copyright interests.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "waive-copyright",
+          "public-domain",
+          "license-declaration"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "Unlicense",
+          "Public Domain"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/error.rs",
+      "language": "rust",
+      "chat_id": 41737,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex parsing and compilation errors are wrapped and categorized.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-error-struct",
+          "wrap-regex-error",
+          "classify-error-kind",
+          "expose-error-metadata"
+        ],
+        "F5": [
+          "error-handling",
+          "pcre2-integration"
+        ],
+        "F6": [
+          "Error",
+          "ErrorKind"
+        ],
+        "F7": "error-struct",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41738,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the public API exports and module structure for the PCRE2 matcher implementation.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "export-pcre2-adapter",
+          "expose-error-types",
+          "re-export-jit-status",
+          "define-module-structure"
+        ],
+        "F5": [
+          "pcre2-integration",
+          "library-interface"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "RegexMatcherBuilder",
+          "Error",
+          "ErrorKind"
+        ],
+        "F7": "library-interface",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41739,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the PCRE2 regex compilation logic, builder configuration options, and the implementation of the `Matcher` trait.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "compile-regex",
+          "configure-jit",
+          "enable-smart-case",
+          "match-word-boundary",
+          "escape-literal-strings"
+        ],
+        "F5": [
+          "regex-engine",
+          "pattern-compilation",
+          "matching-logic"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "RegexMatcherBuilder",
+          "RegexCaptures"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"default-jit-stack-32kb\",\"empty-pattern-never-match\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41740,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the PCRE2 library bindings or regex backend configuration for the grep-pcre2 crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "link-pcre2-library",
+          "configure-regex-backend",
+          "enable-lookarounds"
+        ],
+        "F5": [
+          "rust-crate-config",
+          "regex-integration"
+        ],
+        "F6": [
+          "grep-pcre2",
+          "grep-matcher",
+          "pcre2"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41741,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Modify this file to change the legal licensing terms for the PCRE2 crate component.",
+        "F2": "license",
+        "F3": "[\"2015_created\"]",
+        "F4": [
+          "mit-license",
+          "copyright-2015",
+          "software-permission",
+          "license-text"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "license-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/README.md",
+      "language": "markdown",
+      "chat_id": 41742,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation for the `grep-pcre2` crate, which implements the `Matcher` trait for PCRE2 support.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "implement-matcher-trait",
+          "enable-pcre2-support",
+          "perform-line-search",
+          "add-cargo-dependency"
+        ],
+        "F5": [
+          "regex-engine",
+          "search-library",
+          "crates"
+        ],
+        "F6": [
+          "grep-pcre2",
+          "grep-matcher",
+          "grep",
+          "pcre2"
+        ],
+        "F7": "crate",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41743,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms or warranty disclaimers for the software.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain-release",
+          "copyright-waiver",
+          "disclaim-warranty",
+          "unlicense-software"
+        ],
+        "F5": [
+          "legal",
+          "compliance",
+          "licensing"
+        ],
+        "F6": [
+          "public domain",
+          "copyright interest"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/test_matcher.rs",
+      "language": "rust",
+      "chat_id": 41746,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to add new test cases for the matcher, verify regex behavior changes, or validate edge cases in pattern matching logic.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-find",
+          "test-captures",
+          "test-replace",
+          "verify-regex",
+          "short-circuit",
+          "test-iter"
+        ],
+        "F5": [
+          "testing",
+          "regex-validation",
+          "unit-tests"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "RegexMatcherNoCaps",
+          "Match",
+          "Captures"
+        ],
+        "F7": "unit-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41747,
+      "fields": {
+        "F0": "rs",
+        "F1": "Use this file to change the test module structure or entry points for the matcher crate's test suite.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-module-declaration",
+          "test-suite-entry",
+          "aggregate-tests"
+        ],
+        "F5": [
+          "testing",
+          "test-organization"
+        ],
+        "F6": [
+          "util",
+          "test_matcher"
+        ],
+        "F7": "module-declaration",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/util.rs",
+      "language": "rust",
+      "chat_id": 41748,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the test implementation of the Matcher trait or regex wrapper behavior.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "implement-matcher-trait",
+          "wrap-regex-engine",
+          "mock-matcher",
+          "test-capture-groups"
+        ],
+        "F5": [
+          "testing",
+          "regex-engine"
+        ],
+        "F6": [
+          "RegexMatcher",
+          "RegexCaptures",
+          "RegexMatcherNoCaps"
+        ],
+        "F7": "trait-implementation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/interpolate.rs",
+      "language": "rust",
+      "chat_id": 41750,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how capture group references in replacement strings are parsed and interpolated into the final output buffer.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "interpolate-replacement",
+          "parse-references",
+          "resolve-groups",
+          "write-buffer"
+        ],
+        "F5": [
+          "regex-processing",
+          "string-manipulation",
+          "replacement-logic"
+        ],
+        "F6": [
+          "interpolate",
+          "find_cap_ref",
+          "CaptureRef",
+          "Ref"
+        ],
+        "F7": "parser-combinator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41751,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the core Matcher trait definition and supporting types for regex abstraction.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-matcher-trait",
+          "implement-internal-iteration",
+          "handle-capturing-groups",
+          "manage-match-offsets",
+          "detect-line-terminator"
+        ],
+        "F5": [
+          "regex-abstraction",
+          "search-interface",
+          "text-processing"
+        ],
+        "F6": [
+          "Matcher",
+          "Match",
+          "Captures",
+          "NoCaptures",
+          "LineTerminator",
+          "ByteSet"
+        ],
+        "F7": "trait-definition",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41752,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the version, dependencies, or metadata for the `grep-matcher` crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "define-matcher-trait",
+          "abstract-regex",
+          "declare-dependencies",
+          "configure-tests"
+        ],
+        "F5": [
+          "crate-configuration",
+          "regex-engine",
+          "dependencies"
+        ],
+        "F6": [
+          "grep-matcher",
+          "memchr",
+          "regex"
+        ],
+        "F7": "config-file",
+        "F8": "[\"version-0.1.8\",\"edition-2024\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41753,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Modify this file to change the legal licensing terms of the `matcher` crate from MIT to another license.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_copyright\"]",
+        "F4": [
+          "grant-permission",
+          "disclaim-liability",
+          "mit-license",
+          "copyright-notice",
+          "software-distribution"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/README.md",
+      "language": "markdown",
+      "chat_id": 41754,
+      "fields": {
+        "F0": "md",
+        "F1": "Use this file to understand the low-level interface for regex matchers that enables pluggable regex engines within the `grep` crate.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "define-matcher-interface",
+          "plug-regex-engine",
+          "implement-matcher"
+        ],
+        "F5": [
+          "api-design",
+          "regex-engine"
+        ],
+        "F6": [
+          "grep-matcher",
+          "grep",
+          "Cargo.toml"
+        ],
+        "F7": "crate-interface",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41755,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms to the Unlicense standard.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain-dedication",
+          "copyright-relinquishment",
+          "unlicense-text"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "public-domain"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.gitignore",
+      "language": "plaintext",
+      "chat_id": 41758,
+      "fields": {
+        "F0": "gitignore",
+        "F1": "Use this file to modify test cases that verify how glob patterns interact with root directories versus subdirectories.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-path-matching",
+          "verify-glob-patterns",
+          "validate-root-rules",
+          "check-subdir-behavior"
+        ],
+        "F5": [
+          "testing",
+          "pattern-matching",
+          "filesystem"
+        ],
+        "F6": [
+          "file_root_00",
+          "dir_root_00",
+          "parent_dir"
+        ],
+        "F7": "test-fixture",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+      "language": "rust",
+      "chat_id": 41759,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the test coverage for the `matched_path_or_any_parents` gitignore logic.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "test-gitignore-matching",
+          "verify-parent-inheritance",
+          "test-directory-ignoring"
+        ],
+        "F5": [
+          "gitignore-logic",
+          "unit-tests"
+        ],
+        "F6": [
+          "Gitignore",
+          "GitignoreBuilder",
+          "matched_path_or_any_parents"
+        ],
+        "F7": "unit-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_skip_bom.gitignore",
+      "language": "plaintext",
+      "chat_id": 41760,
+      "fields": {
+        "F0": "gitignore",
+        "F1": "Modify this file to change the test case for BOM handling in gitignore parsing.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "bom-handling",
+          "gitignore-parsing",
+          "test-fixture",
+          "utf-8-bom"
+        ],
+        "F5": [
+          "testing",
+          "configuration-parsing"
+        ],
+        "F6": [
+          "ignore/this/path"
+        ],
+        "F7": "test-fixture",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_skip_bom.rs",
+      "language": "rust",
+      "chat_id": 41761,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the test cases for Byte-Order Mark (BOM) handling in gitignore file parsing.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "skip-bom",
+          "parse-gitignore",
+          "test-ignore-behavior",
+          "validate-path-matching"
+        ],
+        "F5": [
+          "gitignore-parsing",
+          "file-encoding",
+          "integration-tests"
+        ],
+        "F6": [
+          "GitignoreBuilder",
+          "gitignore_skip_bom"
+        ],
+        "F7": "unit-test",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/default_types.rs",
+      "language": "rust",
+      "chat_id": 41763,
+      "fields": {
+        "F0": "rs",
+        "F1": "Defines the comprehensive mapping of file type aliases to their corresponding glob patterns used for filtering search results. Modify this file to change the default file type definitions or add support for new programming languages and extensions.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "map-file-types",
+          "define-glob-patterns",
+          "filter-by-extension"
+        ],
+        "F5": [
+          "file-filtering",
+          "type-definition",
+          "configuration-data"
+        ],
+        "F6": [
+          "DEFAULT_TYPES"
+        ],
+        "F7": "static-data",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/dir.rs",
+      "language": "rust",
+      "chat_id": 41764,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how ignore rules are loaded, prioritized, and applied during directory walks.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "match-ignore-rules",
+          "traverse-directory-hierarchy",
+          "resolve-gitignore-precedence",
+          "build-persistent-matcher",
+          "load-gitignore"
+        ],
+        "F5": [
+          "directory-traversal",
+          "ignore-logic",
+          "git-integration"
+        ],
+        "F6": [
+          "Ignore",
+          "IgnoreBuilder",
+          "IgnoreMatch",
+          "Parents"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"default-hidden-true\",\"default-ignore-true\",\"default-parents-true\",\"default-git-global-true\",\"default-git-ignore-true\",\"default-git-exclude-true\",\"default-require-git-true\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/gitignore.rs",
+      "language": "rust",
+      "chat_id": 41765,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how gitignore globs are parsed, compiled, and matched against file paths.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-glob",
+          "match-path",
+          "strip-prefix",
+          "build-matcher",
+          "load-global",
+          "parse-config"
+        ],
+        "F5": [
+          "path-matching",
+          "globbing",
+          "gitignore-logic"
+        ],
+        "F6": [
+          "Gitignore",
+          "GitignoreBuilder",
+          "Glob",
+          "GlobSet"
+        ],
+        "F7": "glob-matching",
+        "F8": "[\"allow-unclosed-class-true\",\"case-insensitive-false\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41766,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the public API for recursive directory traversal and ignore filtering, specifically the Walk and WalkBuilder interfaces and the comprehensive Error enum for handling filesystem and glob parsing failures.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "directory-walk",
+          "ignore-filtering",
+          "error-handling",
+          "walk-builder",
+          "glob-matching"
+        ],
+        "F5": [
+          "filesystem",
+          "traversal",
+          "filtering"
+        ],
+        "F6": [
+          "Walk",
+          "WalkBuilder",
+          "Error",
+          "Match"
+        ],
+        "F7": "iterator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/overrides.rs",
+      "language": "rust",
+      "chat_id": 41767,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how explicit include/exclude glob overrides are matched and inverted relative to standard gitignore semantics.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "manage-overrides",
+          "match-globs",
+          "invert-semantics",
+          "build-matcher",
+          "check-whitelist"
+        ],
+        "F5": [
+          "file-filtering",
+          "glob-matching",
+          "ignore-logic"
+        ],
+        "F6": [
+          "Override",
+          "OverrideBuilder",
+          "Glob",
+          "Gitignore"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"default-unclosed-class-false\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41768,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how file paths are inspected for hidden status, prefixes, or filenames across different operating systems.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "detect-hidden-files",
+          "strip-path-prefix",
+          "extract-filename",
+          "check-file-name",
+          "platform-specific-path"
+        ],
+        "F5": [
+          "filesystem-utilities",
+          "path-manipulation",
+          "os-abstraction"
+        ],
+        "F6": [
+          "is_hidden",
+          "strip_prefix",
+          "is_file_name",
+          "file_name",
+          "DirEntry"
+        ],
+        "F7": "platform-abstraction",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/types.rs",
+      "language": "rust",
+      "chat_id": 41769,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how file types are defined, matched, and selected using glob patterns within the ignore crate.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-file-type",
+          "match-glob",
+          "select-type",
+          "negate-type",
+          "build-matcher"
+        ],
+        "F5": [
+          "file-matching",
+          "glob-patterns",
+          "ignore-logic"
+        ],
+        "F6": [
+          "Types",
+          "TypesBuilder",
+          "FileTypeDef",
+          "Glob"
+        ],
+        "F7": "builder-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/walk.rs",
+      "language": "rust",
+      "chat_id": 41770,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how directory trees are traversed, including parallelism strategies, ignore rule application, and symlink handling.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "traverse-directory",
+          "parallel-iterator",
+          "apply-ignores",
+          "filter-entries",
+          "check-symlinks"
+        ],
+        "F5": [
+          "filesystem",
+          "concurrency",
+          "gitignore-integration"
+        ],
+        "F6": [
+          "WalkBuilder",
+          "Walk",
+          "WalkParallel",
+          "DirEntry",
+          "Worker",
+          "Stack"
+        ],
+        "F7": "work-stealing-deque",
+        "F8": "[\"threads-default-0\",\"threads-max-12\",\"sleep-duration-1ms\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/examples/walk.rs",
+      "language": "rust",
+      "chat_id": 41772,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the example implementation of directory traversal, adjust parallelism settings, or demonstrate different usage patterns of the ignore crate.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "walk-directory",
+          "traverse-parallel",
+          "send-channel",
+          "compare-walkers",
+          "build-parallel"
+        ],
+        "F5": [
+          "filesystem-operations",
+          "concurrency",
+          "directory-traversal"
+        ],
+        "F6": [
+          "WalkBuilder",
+          "WalkDir",
+          "DirEntry",
+          "crossbeam_channel"
+        ],
+        "F7": "cli-example",
+        "F8": "[\"threads-6\",\"bounded-100\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41773,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the dependencies or build configuration for the ignore crate, which handles gitignore-style file filtering.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "specify-ignore-dependencies",
+          "configure-gitignore-matching",
+          "enable-directory-traversal"
+        ],
+        "F5": [
+          "rust-crate-config",
+          "file-path-matching"
+        ],
+        "F6": [
+          "ignore",
+          "globset",
+          "walkdir",
+          "regex-automata"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/COPYING",
+      "language": "plaintext",
+      "chat_id": 41774,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the licensing terms for the project.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "define-license",
+          "dual-license",
+          "unlicense",
+          "mit-license"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "Unlicense",
+          "MIT"
+        ],
+        "F7": "license-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41775,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the MIT license terms, copyright holder, or permission conditions.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_copyright\"]",
+        "F4": [
+          "mit-permission",
+          "copyright-license",
+          "software-warranty",
+          "license-conditions",
+          "liability-disclaimer"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "legal-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/README.md",
+      "language": "markdown",
+      "chat_id": 41776,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation for the `ignore` crate, which provides recursive directory traversal and filtering based on gitignore rules, globs, and file types.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "recursive-directory-iterator",
+          "gitignore-filtering",
+          "glob-matching",
+          "file-type-filtering",
+          "hidden-file-detection"
+        ],
+        "F5": [
+          "filesystem-operations",
+          "filtering",
+          "directory-traversal"
+        ],
+        "F6": [
+          "Walk",
+          "WalkBuilder",
+          "ignore"
+        ],
+        "F7": "iterator-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41777,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms of the project to the Unlicense public domain dedication.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain",
+          "copyright-waiver",
+          "license-text"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "Unlicense"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41780,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the high-level library facade that re-exports and unifies the core constituent crates of the ripgrep project.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "re-export-crates",
+          "unify-api",
+          "expose-modules"
+        ],
+        "F5": [
+          "library-structure",
+          "api-design"
+        ],
+        "F6": [
+          "grep_cli",
+          "grep_matcher",
+          "grep_regex",
+          "grep_searcher"
+        ],
+        "F7": "module-re-export",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/examples/simplegrep.rs",
+      "language": "rust",
+      "chat_id": 41782,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the example implementation of a basic grep-like tool using the library's matcher and searcher components.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-cli-arguments",
+          "construct-regex-matcher",
+          "walk-directory-tree",
+          "execute-search",
+          "configure-color-output",
+          "handle-binary-files"
+        ],
+        "F5": [
+          "examples",
+          "cli-usage",
+          "file-searching"
+        ],
+        "F6": [
+          "try_main",
+          "search",
+          "RegexMatcher",
+          "SearcherBuilder",
+          "WalkDir"
+        ],
+        "F7": "cli-application",
+        "F8": "[\"binary-detection-quit-null\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41783,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the main library dependencies, feature flags (like PCRE2), or version for the `grep` crate.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "aggregate-crates",
+          "enable-pcre2",
+          "define-features",
+          "declare-deps"
+        ],
+        "F5": [
+          "crate-configuration",
+          "library-aggregation",
+          "feature-flags"
+        ],
+        "F6": [
+          "grep",
+          "grep-cli",
+          "grep-matcher",
+          "grep-printer",
+          "grep-searcher"
+        ],
+        "F7": "config-file",
+        "F8": "[\"version-0.4.1\",\"edition-2024\",\"deprecated-simd-accel\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/COPYING",
+      "language": "plaintext",
+      "chat_id": 41784,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the licensing terms for the project.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "define-license",
+          "dual-license",
+          "unlicense",
+          "mit-license"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "Unlicense",
+          "MIT"
+        ],
+        "F7": "license-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41785,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Modify this file to change the legal licensing terms for the grep crate component.",
+        "F2": "license",
+        "F3": "[\"2015_created\"]",
+        "F4": [
+          "mit-license",
+          "copyright-2015",
+          "software-permission",
+          "license-text"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "MIT License",
+          "Andrew Gallant"
+        ],
+        "F7": "license-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/README.md",
+      "language": "markdown",
+      "chat_id": 41786,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to update the high-level library documentation for the `grep` crate, which aggregates search components and optionally enables PCRE2 support via feature flags.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "aggregate-search-components",
+          "enable-pcre2-feature",
+          "configure-matcher-implementation"
+        ],
+        "F5": [
+          "search-library",
+          "feature-configuration",
+          "aggregation"
+        ],
+        "F6": [
+          "grep",
+          "grep-pcre2",
+          "grep-regex"
+        ],
+        "F7": "library-facade",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41787,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms or copyright status of the software.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "relinquish-copyright",
+          "public-domain",
+          "define-usage",
+          "legal-terms"
+        ],
+        "F5": [
+          "legal",
+          "compliance"
+        ],
+        "F6": [
+          "public domain",
+          "copyright"
+        ],
+        "F7": "legal-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/fnv.rs",
+      "language": "rust",
+      "chat_id": 41790,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the hashing algorithm implementation or the default hasher configuration for the HashMap.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "implement-fnv-hash",
+          "define-hashmap-alias",
+          "optimize-hash-performance"
+        ],
+        "F5": [
+          "hashing",
+          "data-structures",
+          "performance"
+        ],
+        "F6": [
+          "HashMap",
+          "Hasher",
+          "OFFSET_BASIS",
+          "PRIME"
+        ],
+        "F7": "hash-algorithm",
+        "F8": "[\"const-offset-basis-0xcbf29ce484222325\",\"const-prime-0x100000001b3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/glob.rs",
+      "language": "rust",
+      "chat_id": 41791,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how glob patterns are parsed, compiled into regexes, or optimized for specific matching strategies.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-glob-pattern",
+          "compile-glob-to-regex",
+          "match-strategy-selection",
+          "glob-builder",
+          "recursive-descent-parser"
+        ],
+        "F5": [
+          "pattern-matching",
+          "file-filtering",
+          "glob-syntax"
+        ],
+        "F6": [
+          "Glob",
+          "GlobBuilder",
+          "MatchStrategy",
+          "Parser",
+          "Token"
+        ],
+        "F7": "parser-compiler",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41792,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the compilation strategies, optimization logic, or matching semantics for glob patterns.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "match-glob-patterns",
+          "build-glob-set",
+          "optimize-match-strategy",
+          "escape-glob-meta-chars",
+          "compile-glob-matcher"
+        ],
+        "F5": [
+          "pattern-matching",
+          "glob-syntax",
+          "path-filtering"
+        ],
+        "F6": [
+          "GlobSet",
+          "GlobSetBuilder",
+          "Candidate",
+          "GlobSetMatchStrategy"
+        ],
+        "F7": "glob-matcher",
+        "F8": "[\"nfa-size-limit-10mb\",\"hybrid-cache-capacity-10mb\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41793,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how file extensions are detected or how path separators are normalized for cross-platform consistency.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "extract-file-basename",
+          "extract-file-extension",
+          "normalize-path-separators",
+          "parse-path-bytes"
+        ],
+        "F5": [
+          "path-manipulation",
+          "filesystem-utilities",
+          "cross-platform-compatibility"
+        ],
+        "F6": [
+          "file_name",
+          "file_name_ext",
+          "normalize_path"
+        ],
+        "F7": "utility-functions",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/serde_impl.rs",
+      "language": "rust",
+      "chat_id": 41794,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how glob patterns and sets are serialized or deserialized using serde.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "serialize-glob",
+          "deserialize-glob",
+          "serialize-globset",
+          "deserialize-globset",
+          "parse-pattern"
+        ],
+        "F5": [
+          "serialization",
+          "data-parsing",
+          "serde-integration"
+        ],
+        "F6": [
+          "GlobVisitor",
+          "GlobSetVisitor",
+          "Glob",
+          "GlobSet"
+        ],
+        "F7": "visitor-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/benches/bench.rs",
+      "language": "rust",
+      "chat_id": 41796,
+      "fields": {
+        "F0": "rs",
+        "F1": "Use this file to change the performance benchmarks comparing the `glob` and `globset` libraries.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "benchmark-patterns",
+          "match-paths",
+          "compare-performance",
+          "compile-matcher"
+        ],
+        "F5": [
+          "performance-testing",
+          "pattern-matching"
+        ],
+        "F6": [
+          "ext_glob",
+          "ext_regex",
+          "short_glob",
+          "long_glob",
+          "many_short_glob",
+          "many_short_regex_set"
+        ],
+        "F7": "benchmark-suite",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41797,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the build configuration and dependencies for the `globset` crate, which handles glob pattern matching.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "configure-glob-matching",
+          "enable-simd-acceleration",
+          "define-serde-feature",
+          "set-regex-engine"
+        ],
+        "F5": [
+          "build-configuration",
+          "pattern-matching",
+          "filesystem-operations"
+        ],
+        "F6": [
+          "globset",
+          "aho-corasick",
+          "regex-syntax",
+          "regex-automata"
+        ],
+        "F7": "config-file",
+        "F8": "[\"version-0.4.18\",\"edition-2024\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/COPYING",
+      "language": "plaintext",
+      "chat_id": 41798,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to change the licensing terms available to users. It declares a dual-licensing scheme allowing the use of either the Unlicense or MIT license.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "dual-license",
+          "select-license",
+          "mit-license"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "MIT License",
+          "Unlicense"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41799,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Modify this file to change the licensing terms for the globset crate.",
+        "F2": "license",
+        "F3": "[\"2015_copyright\"]",
+        "F4": [
+          "mit-license",
+          "copyright-grant",
+          "software-permission",
+          "liability-waiver"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "Andrew Gallant",
+          "MIT License"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/README.md",
+      "language": "markdown",
+      "chat_id": 41800,
+      "fields": {
+        "F0": "md",
+        "F1": "Use this file to understand how to implement and configure glob pattern matching using the globset crate, including performance optimizations and semantic options.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "match-glob",
+          "compile-matcher",
+          "configure-semantics",
+          "literal-separator",
+          "regex-conversion"
+        ],
+        "F5": [
+          "pattern-matching",
+          "file-path-filtering",
+          "performance-optimization"
+        ],
+        "F6": [
+          "Glob",
+          "GlobBuilder",
+          "GlobSetBuilder",
+          "regex"
+        ],
+        "F7": "library-api",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41801,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms of the globset crate to the public domain.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain",
+          "copyright-relinquishment",
+          "license-declaration"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "public domain",
+          "copyright"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/help.rs",
+      "language": "rust",
+      "chat_id": 41805,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how ripgrep's command-line help documentation is formatted and rendered.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-help",
+          "format-docs",
+          "roff-removal",
+          "template-population",
+          "render-markup"
+        ],
+        "F5": [
+          "documentation-generation",
+          "cli-ux"
+        ],
+        "F6": [
+          "generate_short",
+          "generate_long",
+          "remove_roff",
+          "TEMPLATE_SHORT",
+          "TEMPLATE_LONG"
+        ],
+        "F7": "template-engine",
+        "F8": "[\"wrap-width-71\",\"column-pad-2\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/man.rs",
+      "language": "rust",
+      "chat_id": 41806,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how the man page is generated or how flags are formatted in roff documentation.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "man-page-generation",
+          "roff-formatting",
+          "flag-documentation"
+        ],
+        "F5": [
+          "documentation",
+          "build-scripts"
+        ],
+        "F6": [
+          "generate",
+          "generate_flag"
+        ],
+        "F7": "template-engine",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/mod.rs",
+      "language": "rust",
+      "chat_id": 41807,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how custom markup tags within documentation strings are parsed and replaced.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "render-custom-markup",
+          "replace-tag-content",
+          "parse-documentation"
+        ],
+        "F5": [
+          "documentation-generation",
+          "string-manipulation"
+        ],
+        "F6": [
+          "render_custom_markup",
+          "help",
+          "man",
+          "version"
+        ],
+        "F7": "string-parsing",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.long.help",
+      "language": "plaintext",
+      "chat_id": 41808,
+      "fields": {
+        "F0": "help",
+        "F1": "Modify this file to change the structure and content of the long-form help text displayed by the ripgrep command-line interface.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "generate-help-text",
+          "define-cli-usage",
+          "template-arguments",
+          "document-options"
+        ],
+        "F5": [
+          "cli-interface",
+          "documentation-generation",
+          "user-guide"
+        ],
+        "F6": [
+          "USAGE",
+          "POSITIONAL ARGUMENTS",
+          "INPUT OPTIONS",
+          "SEARCH OPTIONS"
+        ],
+        "F7": "cli-help-template",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.rg.1",
+      "language": "plaintext",
+      "chat_id": 41809,
+      "fields": {
+        "F0": "1",
+        "F1": "Modify this file to change the documentation displayed in the ripgrep man page.",
+        "F2": "documentation",
+        "F3": "[\"2025-10-22_published\"]",
+        "F4": [
+          "man-page-template",
+          "cli-documentation",
+          "troff-format",
+          "define-exit-status"
+        ],
+        "F5": [
+          "documentation",
+          "cli-interface"
+        ],
+        "F6": [
+          "SYNOPSIS",
+          "DESCRIPTION",
+          "OPTIONS",
+          "EXIT STATUS"
+        ],
+        "F7": "man-page",
+        "F8": "[\"exit-status-match=0\",\"exit-status-no-match=1\",\"exit-status-error=2\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.short.help",
+      "language": "plaintext",
+      "chat_id": 41810,
+      "fields": {
+        "F0": "help",
+        "F1": "Modify this file to change the structure and content of the short help text displayed by the ripgrep CLI.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "cli-help-template",
+          "usage-syntax",
+          "positional-arguments",
+          "option-categories",
+          "help-generation"
+        ],
+        "F5": [
+          "documentation",
+          "cli-interface",
+          "user-guide"
+        ],
+        "F6": [
+          "ripgrep",
+          "Andrew Gallant"
+        ],
+        "F7": "template-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/version.rs",
+      "language": "rust",
+      "chat_id": 41811,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how version strings are formatted and which CPU features or build dependencies are reported.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-version",
+          "detect-cpu-features",
+          "check-pcre2",
+          "format-build-info"
+        ],
+        "F5": [
+          "build-info",
+          "versioning",
+          "cpu-optimization"
+        ],
+        "F6": [
+          "generate_digits",
+          "generate_long",
+          "runtime_cpu_features"
+        ],
+        "F7": "string-builder",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/bash.rs",
+      "language": "rust",
+      "chat_id": 41813,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the structure or content of the generated Bash shell completion script.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "bash-completion",
+          "cli-script-generation",
+          "shell-script-template",
+          "flag-iteration"
+        ],
+        "F5": [
+          "cli-utilities",
+          "shell-integration"
+        ],
+        "F6": [
+          "generate",
+          "TEMPLATE_FULL",
+          "TEMPLATE_CASE"
+        ],
+        "F7": "code-generator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/encodings.sh",
+      "language": "bash",
+      "chat_id": 41814,
+      "fields": {
+        "F0": "sh",
+        "F1": "Modify this file to change the list of supported character encodings used for shell completion and configuration.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "define-encodings",
+          "list-charsets",
+          "shell-completion",
+          "whatwg-encoding",
+          "braced-expansion"
+        ],
+        "F5": [
+          "character-encoding",
+          "shell-scripting",
+          "configuration-data"
+        ],
+        "F6": [
+          "ascii",
+          "utf-8",
+          "iso-8859",
+          "big5"
+        ],
+        "F7": "shell-expansion",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/fish.rs",
+      "language": "rust",
+      "chat_id": 41815,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how Fish shell completion scripts are generated from CLI flag definitions.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-completions",
+          "format-fish-commands",
+          "handle-negated-flags",
+          "map-completion-types"
+        ],
+        "F5": [
+          "shell-integration",
+          "cli-ux",
+          "developer-tools"
+        ],
+        "F6": [
+          "generate",
+          "TEMPLATE",
+          "FLAGS"
+        ],
+        "F7": "code-generation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/mod.rs",
+      "language": "rust",
+      "chat_id": 41816,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the structure or availability of shell completion modules.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-completions",
+          "support-shells",
+          "include-encodings"
+        ],
+        "F5": [
+          "cli-interface",
+          "shell-integration",
+          "user-experience"
+        ],
+        "F6": [
+          "bash",
+          "fish",
+          "powershell",
+          "zsh",
+          "ENCODINGS"
+        ],
+        "F7": "module-system",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/powershell.rs",
+      "language": "rust",
+      "chat_id": 41817,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the generation logic for PowerShell argument completion scripts for ripgrep's CLI flags.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-powershell-script",
+          "register-argument-completer",
+          "format-cli-flags",
+          "escape-documentation"
+        ],
+        "F5": [
+          "shell-integration",
+          "cli-completion",
+          "script-generation"
+        ],
+        "F6": [
+          "generate",
+          "TEMPLATE",
+          "TEMPLATE_FLAG",
+          "FLAGS"
+        ],
+        "F7": "code-generation",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/prelude.fish",
+      "language": "fish",
+      "chat_id": 41818,
+      "fields": {
+        "F0": "fish",
+        "F1": "Modify this file to change how shell completions detect active options by caching and parsing the `RIPGREP_CONFIG_PATH` file alongside the current command line arguments.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "cache-config-file",
+          "check-cli-option",
+          "parse-commandline",
+          "completion-helper"
+        ],
+        "F5": [
+          "shell-completion",
+          "configuration-management"
+        ],
+        "F6": [
+          "__rg_contains_opt",
+          "__rg_config",
+          "RIPGREP_CONFIG_PATH"
+        ],
+        "F7": "fish-function",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/rg.zsh",
+      "language": "zsh",
+      "chat_id": 41819,
+      "fields": {
+        "F0": "zsh",
+        "F1": "Modify this file to change the Zsh autocompletion behavior for ripgrep, including available flags, descriptions, and argument handling logic.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-completion-specs",
+          "map-cli-flags",
+          "complete-encodings",
+          "complete-file-types",
+          "handle-argument-groups",
+          "specify-color-styles"
+        ],
+        "F5": [
+          "shell-integration",
+          "cli-ux",
+          "zsh-scripting"
+        ],
+        "F6": [
+          "_rg",
+          "_rg_encodings",
+          "_rg_types",
+          "_rg_hyperlink_formats",
+          "_arguments"
+        ],
+        "F7": "zsh-completion-script",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/zsh.rs",
+      "language": "rust",
+      "chat_id": 41820,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how Zsh shell completions are generated, specifically the handling of hyperlink aliases and encoding lists.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "generate-completion",
+          "embed-script",
+          "replace-placeholder"
+        ],
+        "F5": [
+          "shell-integration",
+          "cli-completion"
+        ],
+        "F6": [
+          "generate"
+        ],
+        "F7": "template-engine",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/config.rs",
+      "language": "rust",
+      "chat_id": 41821,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how ripgrep configuration files are read, parsed, and converted into command-line arguments.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-config-file",
+          "read-rc-file",
+          "load-env-config",
+          "convert-to-args"
+        ],
+        "F5": [
+          "configuration",
+          "file-io",
+          "argument-parsing"
+        ],
+        "F6": [
+          "args",
+          "parse",
+          "parse_reader"
+        ],
+        "F7": "file-reader",
+        "F8": "[\"env-var-RIPGREP_CONFIG_PATH\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/hiargs.rs",
+      "language": "rust",
+      "chat_id": 41823,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how low-level CLI arguments are converted into high-level search configurations, matchers, and printers.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "convert-low-args",
+          "build-pattern-matcher",
+          "configure-search-worker",
+          "detect-binary-mode"
+        ],
+        "F5": [
+          "cli-configuration",
+          "search-engine-setup"
+        ],
+        "F6": [
+          "HiArgs",
+          "Patterns",
+          "Paths",
+          "BinaryDetection",
+          "State"
+        ],
+        "F7": "builder-pattern",
+        "F8": "[\"max-jit-stack-10mb\",\"default-threads-min-12\",\"mmap-threshold-10-files\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/lowargs.rs",
+      "language": "rust",
+      "chat_id": 41824,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the definition, validation, and default values of low-level CLI arguments and operational modes.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-cli-flags",
+          "populate-lowargs",
+          "override-modes",
+          "validate-flags"
+        ],
+        "F5": [
+          "cli-parsing",
+          "configuration",
+          "argument-handling"
+        ],
+        "F6": [
+          "LowArgs",
+          "SpecialMode",
+          "Mode",
+          "BinaryMode",
+          "ContextMode"
+        ],
+        "F7": "struct-definition",
+        "F8": "[\"default-context-separator\",\"default-field-separator\",\"default-buffer-mode\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/mod.rs",
+      "language": "rust",
+      "chat_id": 41825,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the definition, parsing behavior, and documentation generation logic for ripgrep's command-line flags. It defines the `Flag` trait and organizes the high-level argument structure.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "define-cli-flag",
+          "parse-command-line",
+          "generate-shell-completions",
+          "flag-trait",
+          "help-generation"
+        ],
+        "F5": [
+          "cli-interface",
+          "argument-parsing",
+          "documentation-generation"
+        ],
+        "F6": [
+          "Flag",
+          "Category",
+          "FlagValue",
+          "HiArgs"
+        ],
+        "F7": "trait-definition",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/parse.rs",
+      "language": "rust",
+      "chat_id": 41826,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how command line arguments are parsed, how config files are integrated, or how error suggestions are calculated.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "cli-parsing",
+          "argument-validation",
+          "flag-lookup",
+          "config-file-loading",
+          "error-suggestion"
+        ],
+        "F5": [
+          "cli-interface",
+          "argument-processing"
+        ],
+        "F6": [
+          "Parser",
+          "ParseResult",
+          "FlagMap"
+        ],
+        "F7": "parser",
+        "F8": "[\"jaccard-threshold-0.4\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/haystack.rs",
+      "language": "rust",
+      "chat_id": 41827,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the logic for determining which directory entries are valid search targets, including handling of explicit paths and symlinks.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "build-target",
+          "filter-entry",
+          "strip-prefix",
+          "check-explicit"
+        ],
+        "F5": [
+          "search-targeting",
+          "filesystem-traversal",
+          "filtering"
+        ],
+        "F6": [
+          "HaystackBuilder",
+          "Haystack",
+          "build",
+          "is_explicit"
+        ],
+        "F7": "builder-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/logger.rs",
+      "language": "rust",
+      "chat_id": 41828,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how logs are formatted or output to stderr.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "implement-log-trait",
+          "write-stderr",
+          "init-global-logger"
+        ],
+        "F5": [
+          "logging",
+          "infrastructure"
+        ],
+        "F6": [
+          "Logger",
+          "LOGGER"
+        ],
+        "F7": "singleton-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/main.rs",
+      "language": "rust",
+      "chat_id": 41829,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the application entry point logic, including argument parsing, allocator selection, and the dispatching of search or file listing operations.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "dispatch-search",
+          "handle-cli-args",
+          "configure-allocator",
+          "run-parallel-search",
+          "print-stats",
+          "handle-broken-pipe"
+        ],
+        "F5": [
+          "application-entry",
+          "orchestration",
+          "cli"
+        ],
+        "F6": [
+          "main",
+          "run",
+          "search",
+          "search_parallel",
+          "files",
+          "generate"
+        ],
+        "F7": "cli-entry-point",
+        "F8": "[\"exit-code-0-success\",\"exit-code-1-no-match\",\"exit-code-2-error\",\"allocator-jemalloc-musl-64bit\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/messages.rs",
+      "language": "rust",
+      "chat_id": 41830,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how user-facing messages and errors are reported and tracked. It provides thread-safe macros and atomic state management for printing to stderr while preventing output interleaving and tracking error status for exit codes.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "manage-message-state",
+          "print-locked-stderr",
+          "track-error-status",
+          "handle-broken-pipe"
+        ],
+        "F5": [
+          "logging",
+          "error-handling",
+          "io-operations"
+        ],
+        "F6": [
+          "MESSAGES",
+          "IGNORE_MESSAGES",
+          "ERRORED",
+          "eprintln_locked",
+          "message",
+          "err_message",
+          "ignore_message"
+        ],
+        "F7": "atomic-state",
+        "F8": "[\"exit-code-0-broken-pipe\",\"exit-code-2-write-error\",\"stderr-prefix-rg\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/README.md",
+      "language": "markdown",
+      "chat_id": 41831,
+      "fields": {
+        "F0": "md",
+        "F1": "Use this file to understand the internal structure of the ripgrep core crate, specifically how the CLI is defined and how sub-crates are integrated to execute searches.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "define-cli",
+          "integrate-crates",
+          "execute-search",
+          "glue-code"
+        ],
+        "F5": [
+          "cli-architecture",
+          "search-engine",
+          "integration"
+        ],
+        "F6": [
+          "main.rs",
+          "grep-matcher",
+          "grep-regex",
+          "grep-searcher",
+          "grep-printer"
+        ],
+        "F7": "binary-entry-point",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/search.rs",
+      "language": "rust",
+      "chat_id": 41832,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the core search orchestration logic, including how preprocessors, decompression, and binary detection are integrated into the search workflow.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "configure-binary-detection",
+          "execute-search-worker",
+          "configure-preprocessor",
+          "enable-decompression",
+          "handle-stdin-search"
+        ],
+        "F5": [
+          "search-orchestration",
+          "io-operations",
+          "configuration"
+        ],
+        "F6": [
+          "SearchWorker",
+          "SearchWorkerBuilder",
+          "Config",
+          "PatternMatcher",
+          "Printer",
+          "SearchResult"
+        ],
+        "F7": "worker-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/decompress.rs",
+      "language": "rust",
+      "chat_id": 41835,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how files are decompressed, including the default list of supported compression formats and the security logic for resolving external binary paths.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "resolve-binary-path",
+          "match-decompression-glob",
+          "spawn-decompression-process",
+          "configure-default-commands",
+          "handle-stderr-async"
+        ],
+        "F5": [
+          "decompression",
+          "process-spawning",
+          "file-io",
+          "security"
+        ],
+        "F6": [
+          "DecompressionReader",
+          "DecompressionMatcher",
+          "DecompressionReaderBuilder",
+          "DecompressionCommand"
+        ],
+        "F7": "streaming-reader",
+        "F8": "[\"default-extensions-com-exe\",\"default-commands-gzip-bzip-xz\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/escape.rs",
+      "language": "rust",
+      "chat_id": 41836,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the logic for escaping and unescaping byte sequences for CLI display.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "escape-bytes",
+          "unescape-string",
+          "convert-invalid-utf8",
+          "handle-hex-sequences",
+          "format-control-characters"
+        ],
+        "F5": [
+          "string-formatting",
+          "cli-utilities",
+          "byte-manipulation"
+        ],
+        "F6": [
+          "escape",
+          "unescape",
+          "escape_os",
+          "unescape_os"
+        ],
+        "F7": "utility-function",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/hostname.rs",
+      "language": "rust",
+      "chat_id": 41837,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how the system hostname is retrieved or how platform-specific errors are handled.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "get-system-hostname",
+          "call-libc-sysconf",
+          "handle-buffer-overflow",
+          "read-computer-name"
+        ],
+        "F5": [
+          "system-info",
+          "platform-abstraction",
+          "ffi"
+        ],
+        "F6": [
+          "hostname",
+          "gethostname"
+        ],
+        "F7": "platform-specific-ffi",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/human.rs",
+      "language": "rust",
+      "chat_id": 41838,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how human-readable size strings (e.g., '10M') are parsed into byte counts.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "parse-size",
+          "convert-bytes",
+          "validate-suffix",
+          "handle-overflow",
+          "format-error"
+        ],
+        "F5": [
+          "parsing",
+          "data-conversion"
+        ],
+        "F6": [
+          "parse_human_readable_size",
+          "ParseSizeError"
+        ],
+        "F7": "parser",
+        "F8": "[\"kilo-shift-10\",\"mega-shift-20\",\"giga-shift-30\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41839,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change common CLI utility behaviors such as stdin detection, output buffering, and pattern validation.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "detect-stdin",
+          "buffer-output",
+          "escape-bytes",
+          "validate-patterns",
+          "read-process-output"
+        ],
+        "F5": [
+          "cli-utilities",
+          "io-handling",
+          "text-processing"
+        ],
+        "F6": [
+          "is_readable_stdin",
+          "StandardStream",
+          "CommandReader",
+          "DecompressionReader"
+        ],
+        "F7": "utility-library",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/pattern.rs",
+      "language": "rust",
+      "chat_id": 41840,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how regex patterns are parsed from OS strings, files, or stdin, specifically the UTF-8 validation logic and error reporting for invalid patterns.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "validate-pattern-encoding",
+          "convert-os-string",
+          "read-patterns-file",
+          "parse-pattern-stdin",
+          "report-invalid-utf8"
+        ],
+        "F5": [
+          "pattern-parsing",
+          "input-validation",
+          "cli-utilities"
+        ],
+        "F6": [
+          "InvalidPatternError",
+          "pattern_from_os",
+          "patterns_from_path",
+          "patterns_from_stdin"
+        ],
+        "F7": "utf8-validator",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/process.rs",
+      "language": "rust",
+      "chat_id": 41841,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change how external commands are spawned, how stdout is streamed, or how stderr is captured to prevent deadlocks.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "spawn-process",
+          "stream-stdout",
+          "async-stderr",
+          "prevent-deadlock",
+          "capture-error-output"
+        ],
+        "F5": [
+          "process-management",
+          "io-operations",
+          "error-handling"
+        ],
+        "F6": [
+          "CommandReader",
+          "CommandReaderBuilder",
+          "CommandError",
+          "StderrReader"
+        ],
+        "F7": "streaming-reader",
+        "F8": "[\"async-stderr-default-true\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/wtr.rs",
+      "language": "rust",
+      "chat_id": 41842,
+      "fields": {
+        "F0": "rs",
+        "F1": "Modify this file to change the stdout buffering strategy (line vs block) or color handling behavior for the CLI.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "write-stdout",
+          "detect-terminal",
+          "select-buffer",
+          "support-color"
+        ],
+        "F5": [
+          "io",
+          "terminal-output",
+          "cli-utilities"
+        ],
+        "F6": [
+          "StandardStream",
+          "StandardStreamKind"
+        ],
+        "F7": "adapter-pattern",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41843,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change CLI utility dependencies or platform-specific library versions.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "cli-utilities",
+          "platform-specific-deps",
+          "terminal-color-support"
+        ],
+        "F5": [
+          "command-line-interface",
+          "cross-platform"
+        ],
+        "F6": [
+          "grep-cli",
+          "termcolor",
+          "bstr"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41844,
+      "fields": {
+        "F0": "MIT",
+        "F1": "Modify this file to change the licensing terms for the cli crate.",
+        "F2": "license",
+        "F3": "[\"2015_copyright\"]",
+        "F4": [
+          "mit-license",
+          "copyright-grant",
+          "software-permission",
+          "liability-waiver"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "Andrew Gallant",
+          "MIT License"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/README.md",
+      "language": "markdown",
+      "chat_id": 41845,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the documentation for the `grep-cli` utility library, which provides cross-platform routines for command line interfaces such as hex parsing and stdin detection.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "parse-hex-escapes",
+          "detect-stdin-readability",
+          "provide-cli-utilities"
+        ],
+        "F5": [
+          "command-line-interface",
+          "cross-platform-compatibility",
+          "input-detection"
+        ],
+        "F6": [
+          "grep-cli"
+        ],
+        "F7": "utility-library",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41846,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal status of the `cli` crate from public domain to a licensed work.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "relinquish-copyright",
+          "public-domain",
+          "unlicense",
+          "unrestricted-use",
+          "dedicate-software"
+        ],
+        "F5": [
+          "legal",
+          "licensing",
+          "compliance"
+        ],
+        "F6": [
+          "Unlicense"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/sha256-releases",
+      "language": "plaintext",
+      "chat_id": 41848,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to change the process for verifying the integrity of downloaded release binaries and source archives.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "calculate-sha256",
+          "download-releases",
+          "verify-integrity",
+          "ci-script",
+          "fetch-artifacts"
+        ],
+        "F5": [
+          "continuous-integration",
+          "release-management",
+          "security"
+        ],
+        "F6": [
+          "sha256sum",
+          "curl",
+          "BurntSushi/ripgrep"
+        ],
+        "F7": "shell-script",
+        "F8": "[\"arg-count-1\",\"exit-on-error\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/test-complete",
+      "language": "plaintext",
+      "chat_id": 41849,
+      "fields": {
+        "F0": "zsh",
+        "F1": "Modify this file to change the logic for validating that zsh completion arguments match the ripgrep binary's help output.",
+        "F2": "test",
+        "F3": "N/A",
+        "F4": [
+          "validate-completion",
+          "compare-options",
+          "parse-help-output",
+          "extract-arguments",
+          "diff-verification"
+        ],
+        "F5": [
+          "testing",
+          "ci-cd",
+          "shell-scripting",
+          "command-line-interface"
+        ],
+        "F6": [
+          "get_comp_args",
+          "main",
+          "rg",
+          "_rg"
+        ],
+        "F7": "shell-script",
+        "F8": "[\"target-dir-default-target\",\"diff-context-u2\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/ubuntu-install-packages",
+      "language": "plaintext",
+      "chat_id": 41850,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the system dependencies installed during the CI process on Ubuntu.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "install-system-packages",
+          "bootstrap-sudo",
+          "setup-ci-environment",
+          "apt-get-install"
+        ],
+        "F5": [
+          "continuous-integration",
+          "dependency-management",
+          "environment-setup"
+        ],
+        "F6": [
+          "apt-get",
+          "sudo"
+        ],
+        "F7": "shell-script",
+        "F8": "[\"flag-no-install-recommends\",\"flag-y\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/utils.sh",
+      "language": "bash",
+      "chat_id": 41851,
+      "fields": {
+        "F0": "sh",
+        "F1": "Use this file to change the logic for detecting build environments, determining target architectures, and selecting the appropriate build toolchain in CI.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "detect-architecture",
+          "find-build-dir",
+          "select-builder",
+          "check-musl",
+          "determine-host"
+        ],
+        "F5": [
+          "continuous-integration",
+          "build-automation",
+          "environment-detection"
+        ],
+        "F6": [
+          "cargo_out_dir",
+          "host",
+          "architecture",
+          "builder"
+        ],
+        "F7": "bash-function",
+        "F8": "[\"x86_64-unknown-linux-gnu\",\"x86_64-apple-darwin\",\"arm-linux-gnueabihf-\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/raw.csv",
+      "language": "csv",
+      "chat_id": 41855,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to update the raw dataset for search tool performance comparisons. It records execution times and match counts for tools like ripgrep, ag, and git grep under various configurations.",
+        "F2": "other",
+        "F3": "[\"2022-12-16_collected\"]",
+        "F4": [
+          "compare-search-tools",
+          "measure-execution-time",
+          "store-csv-data",
+          "analyze-performance"
+        ],
+        "F5": [
+          "performance-analysis",
+          "data-collection"
+        ],
+        "F6": [
+          "ripgrep",
+          "ag",
+          "git grep",
+          "ugrep",
+          "grep"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/README.md",
+      "language": "markdown",
+      "chat_id": 41856,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to update the benchmark results, tool versions, or hardware specifications for the performance run on 2022-12-16.",
+        "F2": "documentation",
+        "F3": "[\"2022-12-16_captured\"]",
+        "F4": [
+          "run-benchmarks",
+          "compare-tools",
+          "measure-performance",
+          "capture-metrics"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis"
+        ],
+        "F6": [
+          "ripgrep",
+          "grep",
+          "ag",
+          "ugrep",
+          "benchsuite"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/summary",
+      "language": "plaintext",
+      "chat_id": 41857,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to analyze the performance metrics of ripgrep compared to alternative search tools like ag, git grep, and ugrep on an Arch Linux environment.",
+        "F2": "test",
+        "F3": "[\"2022-12-16_benchmark\"]",
+        "F4": [
+          "measure-performance",
+          "compare-tools",
+          "benchmark-execution",
+          "analyze-speed"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmarking",
+          "metrics"
+        ],
+        "F6": [
+          "linux_literal_default",
+          "subtitles_en_literal",
+          "rg",
+          "ag",
+          "ugrep"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/raw.csv",
+      "language": "csv",
+      "chat_id": 41859,
+      "fields": {
+        "F0": "csv",
+        "F1": "Use this file to analyze the performance comparison of various grep tools (ripgrep, ag, git grep, ugrep) on Arch Linux (frink) across different search patterns.",
+        "F2": "other",
+        "F3": "[\"2020-10-14_run\"]",
+        "F4": [
+          "compare-search-tools",
+          "measure-execution-time",
+          "analyze-regex-performance",
+          "benchmark-ripgrep",
+          "test-literal-search"
+        ],
+        "F5": [
+          "performance-testing",
+          "data-analysis",
+          "search-optimization"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "ugrep",
+          "grep"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/README.md",
+      "language": "markdown",
+      "chat_id": 41860,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to update the benchmark execution parameters or tool versions recorded for the 2020-10-14 performance run.",
+        "F2": "documentation",
+        "F3": "[\"2020-10-14_captured\"]",
+        "F4": [
+          "benchmark-execution",
+          "performance-comparison",
+          "tool-version-tracking",
+          "warmup-iteration",
+          "bench-iteration"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis",
+          "version-control"
+        ],
+        "F6": [
+          "benchsuite",
+          "ripgrep",
+          "grep",
+          "ag",
+          "ugrep"
+        ],
+        "F7": "benchmark-script",
+        "F8": "[\"warmup-iter-1\",\"bench-iter-5\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/summary",
+      "language": "plaintext",
+      "chat_id": 41861,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to analyze benchmark performance metrics comparing search tools (rg, ag, git grep, ugrep, grep) across various patterns and corpora.",
+        "F2": "other",
+        "F3": "[\"2020-10-14_run\"]",
+        "F4": [
+          "benchmark-results",
+          "performance-metrics",
+          "search-comparison",
+          "literal-search",
+          "regex-search"
+        ],
+        "F5": [
+          "performance",
+          "testing",
+          "benchmarking"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "ugrep",
+          "grep"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41863,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the raw benchmark data recorded for the 2018-01-08 run, which includes performance metrics (duration, lines matched) for various search tools like ripgrep, ag, and git grep across different corpus types.",
+        "F2": "other",
+        "F3": "[\"2018-01-08_run\"]",
+        "F4": [
+          "store-benchmark-results",
+          "measure-search-performance",
+          "compare-search-tools",
+          "rg-metrics",
+          "ag-metrics"
+        ],
+        "F5": [
+          "performance-testing",
+          "data-collection",
+          "benchmarking"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "pt",
+          "sift",
+          "ucg",
+          "linux_alternates",
+          "subtitles_en"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup_iter-1\",\"iter-5\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/README",
+      "language": "plaintext",
+      "chat_id": 41864,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to change the benchmark execution parameters and environment details. It documents the specific tool versions, compilation flags, and command arguments used for the 2018-01-08 run.",
+        "F2": "documentation",
+        "F3": "[\"2018-01-08_published\"]",
+        "F4": [
+          "benchmark-configuration",
+          "tool-versioning",
+          "compilation-flags",
+          "ripgrep-build",
+          "performance-setup"
+        ],
+        "F5": [
+          "benchmarking",
+          "environment-setup"
+        ],
+        "F6": [
+          "grep",
+          "ag",
+          "sift",
+          "pt",
+          "ucg",
+          "ripgrep"
+        ],
+        "F7": "documentation",
+        "F8": "[\"warmup-iter-1\",\"bench-iter-5\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41865,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to analyze historical search performance data and execution times.",
+        "F2": "test",
+        "F3": "[\"2018-01-08_created\"]",
+        "F4": [
+          "measure-search-performance",
+          "compare-search-tools",
+          "benchmark-regex-speed"
+        ],
+        "F5": [
+          "performance",
+          "benchmarking",
+          "metrics"
+        ],
+        "F6": [
+          "ripgrep",
+          "the_silver_searcher",
+          "git_grep"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-30-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41867,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the raw benchmark data recorded for the 2016-12-30 run, which captures performance metrics for search tools using a 3-iteration configuration across various datasets.",
+        "F2": "other",
+        "F3": "[\"2016-12-30_run\"]",
+        "F4": [
+          "store-benchmark-results",
+          "measure-search-performance",
+          "compare-search-tools",
+          "rg-metrics",
+          "ag-metrics"
+        ],
+        "F5": [
+          "performance-testing",
+          "data-collection",
+          "benchmarking"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "pt",
+          "sift",
+          "ucg",
+          "linux_alternates",
+          "subtitles_en"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup_iter-1\",\"iter-3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-30-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41868,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to change the recorded performance metrics for various search patterns. It contains a summary of execution times and line counts for ripgrep configurations.",
+        "F2": "documentation",
+        "F3": "[\"2016-12-30_published\"]",
+        "F4": [
+          "performance-metrics",
+          "search-patterns",
+          "execution-time",
+          "benchmark-summary",
+          "rg-configuration"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_en_literal",
+          "subtitles_ru_literal"
+        ],
+        "F7": "data-table",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-system/raw.csv",
+      "language": "csv",
+      "chat_id": 41870,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the recorded benchmark execution metrics for ripgrep on an Arch Linux musl system. It captures command duration and line counts for various search patterns and configurations.",
+        "F2": "test",
+        "F3": "[\"2016-12-24_run\"]",
+        "F4": [
+          "run-benchmark",
+          "measure-duration",
+          "musl-system",
+          "archlinux-cheetah",
+          "csv-export"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmark-data",
+          "system-profiling"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_en_literal",
+          "rg"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup-iter-1\",\"iter-3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-system/summary",
+      "language": "plaintext",
+      "chat_id": 41871,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to analyze ripgrep's search performance across various regex patterns and system configurations on Arch Linux, comparing execution times and line counts.",
+        "F2": "documentation",
+        "F3": "[\"2016-12-24_benchmark\"]",
+        "F4": [
+          "benchmark-rg-performance",
+          "compare-regex-speed",
+          "measure-mmap-impact",
+          "analyze-case-sensitivity"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmarking",
+          "metrics"
+        ],
+        "F6": [
+          "rg",
+          "linux_alternates",
+          "subtitles_en",
+          "subtitles_ru"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-jemalloc/raw.csv",
+      "language": "csv",
+      "chat_id": 41873,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the raw benchmark data recorded for the 2016-12-24 run, specifically testing search tools built with the musl libc and jemalloc allocator configurations.",
+        "F2": "other",
+        "F3": "[\"2016-12-24_run\"]",
+        "F4": [
+          "store-benchmark-results",
+          "measure-search-performance",
+          "compare-search-tools",
+          "musl-build",
+          "jemalloc-build"
+        ],
+        "F5": [
+          "performance-testing",
+          "data-collection",
+          "benchmarking"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "pt",
+          "sift",
+          "ucg",
+          "linux_alternates",
+          "subtitles_en"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup_iter-1\",\"iter-3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-jemalloc/summary",
+      "language": "plaintext",
+      "chat_id": 41874,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to analyze the performance impact of different ripgrep configurations on specific regex patterns.",
+        "F2": "other",
+        "F3": "[\"2016-12-24_benchmark\"]",
+        "F4": [
+          "measure-performance",
+          "compare-configurations",
+          "benchmark-regex",
+          "analyze-speed"
+        ],
+        "F5": [
+          "performance",
+          "testing"
+        ],
+        "F6": [
+          "rg",
+          "linux_alternates",
+          "subtitles_en",
+          "subtitles_ru"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-system/raw.csv",
+      "language": "csv",
+      "chat_id": 41876,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the recorded benchmark execution metrics for ripgrep on an Arch Linux glibc system. It captures command duration and line counts for various search patterns and configurations.",
+        "F2": "test",
+        "F3": "[\"2016-12-24_run\"]",
+        "F4": [
+          "run-benchmark",
+          "measure-duration",
+          "glibc-system",
+          "archlinux-cheetah",
+          "csv-export"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmark-data",
+          "system-profiling"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_en_literal",
+          "rg"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup-iter-1\",\"iter-3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-system/summary",
+      "language": "plaintext",
+      "chat_id": 41877,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to review the performance metrics and execution times of various search tools (ripgrep, grep, ag, ugrep) across different benchmark scenarios.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "benchmark-results",
+          "performance-metrics",
+          "search-comparison"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis"
+        ],
+        "F6": [
+          "ripgrep",
+          "grep",
+          "ag",
+          "ugrep"
+        ],
+        "F7": "log-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-jemalloc/raw.csv",
+      "language": "csv",
+      "chat_id": 41879,
+      "fields": {
+        "F0": "csv",
+        "F1": "Use this file to evaluate ripgrep performance variations (mmap, ignore rules) against ucg on Arch Linux with specific memory allocators.",
+        "F2": "other",
+        "F3": "[\"2016-12-24_run\"]",
+        "F4": [
+          "test-mmap-performance",
+          "compare-ignore-rules",
+          "benchmark-allocators",
+          "measure-search-speed",
+          "ripgrep-flags"
+        ],
+        "F5": [
+          "performance-testing",
+          "memory-management",
+          "search-optimization"
+        ],
+        "F6": [
+          "rg",
+          "ucg"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-jemalloc/summary",
+      "language": "plaintext",
+      "chat_id": 41880,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to evaluate the impact of memory allocation strategies on search speed.",
+        "F2": "test",
+        "F3": "[\"2016-12-24_created\"]",
+        "F4": [
+          "measure-allocator-impact",
+          "benchmark-jemalloc",
+          "profile-search-speed"
+        ],
+        "F5": [
+          "performance",
+          "memory-management",
+          "benchmarking"
+        ],
+        "F6": [
+          "ripgrep",
+          "jemalloc"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41882,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the recorded benchmark execution metrics for ripgrep on an Arch Linux system. It captures command duration and line counts for various search patterns and configurations.",
+        "F2": "test",
+        "F3": "[\"2016-12-24_run\"]",
+        "F4": [
+          "run-benchmark",
+          "measure-duration",
+          "archlinux-cheetah",
+          "csv-export"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmark-data",
+          "system-profiling"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_en_literal",
+          "rg"
+        ],
+        "F7": "csv-data",
+        "F8": "[\"warmup-iter-1\",\"iter-3\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41883,
+      "fields": {
+        "F0": "",
+        "F1": "Use this file to analyze the performance impact of different regex patterns and ripgrep configurations on Arch Linux.",
+        "F2": "documentation",
+        "F3": "[\"2016-12-24_benchmark\"]",
+        "F4": [
+          "benchmark-results",
+          "performance-metrics",
+          "regex-patterns",
+          "search-configurations",
+          "archlinux-run"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_en_literal",
+          "rg"
+        ],
+        "F7": "benchmark-log",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-22-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41885,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to update the historical benchmark results for search tools. It contains execution duration data and line counts for various grep implementations across different test scenarios.",
+        "F2": "other",
+        "F3": "[\"2016-09-22_collected\"]",
+        "F4": [
+          "compare-search-tools",
+          "measure-execution-time",
+          "store-csv-data",
+          "historical-data"
+        ],
+        "F5": [
+          "performance-analysis",
+          "data-collection"
+        ],
+        "F6": [
+          "ripgrep",
+          "ag",
+          "git grep",
+          "ucg",
+          "pt",
+          "sift"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-22-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41886,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to update or view the recorded benchmark performance data for various search tools.",
+        "F2": "documentation",
+        "F3": "[\"2016-09-22_recorded\"]",
+        "F4": [
+          "compare-search-tools",
+          "measure-execution-time",
+          "benchmark-corpus",
+          "record-performance-metrics"
+        ],
+        "F5": [
+          "performance-testing",
+          "data-analysis",
+          "benchmarking"
+        ],
+        "F6": [
+          "ripgrep",
+          "ag",
+          "git grep"
+        ],
+        "F7": "data-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/raw.csv",
+      "language": "csv",
+      "chat_id": 41888,
+      "fields": {
+        "F0": "csv",
+        "F1": "Modify this file to change the raw benchmark results for search tool performance. It records execution duration and line counts for ripgrep, ag, and git grep across multiple test iterations.",
+        "F2": "other",
+        "F3": "[\"2016-09-20_run\"]",
+        "F4": [
+          "benchmark-results",
+          "performance-data",
+          "cli-comparison",
+          "search-metrics",
+          "raw-output"
+        ],
+        "F5": [
+          "benchmarking",
+          "performance-analysis",
+          "cli-tools"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "pt",
+          "sift",
+          "ucg"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/README.SETUP",
+      "language": "plaintext",
+      "chat_id": 41889,
+      "fields": {
+        "F0": "SETUP",
+        "F1": "Modify this file to change the benchmark environment configuration, tool versions, or execution parameters for performance testing.",
+        "F2": "documentation",
+        "F3": "[\"2016-09-20_benchmark-run\"]",
+        "F4": [
+          "benchmark-environment",
+          "install-dependencies",
+          "clone-repos",
+          "execute-benchmarks",
+          "configure-ec2",
+          "download-corpora"
+        ],
+        "F5": [
+          "benchmarking",
+          "infrastructure",
+          "testing"
+        ],
+        "F6": [
+          "ripgrep",
+          "the_silver_searcher",
+          "ucg",
+          "the_platinum_searcher",
+          "sift",
+          "git grep",
+          "GNU grep"
+        ],
+        "F7": "setup-guide",
+        "F8": "[\"warmup-iter-3\",\"bench-iter-10\",\"ami-ubuntu1604\",\"instance-c3.2xlarge\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/summary",
+      "language": "plaintext",
+      "chat_id": 41890,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to review performance benchmarks comparing search tools like ripgrep, ag, and git grep on specific datasets.",
+        "F2": "documentation",
+        "F3": "[\"2016-09-20_benchmark\"]",
+        "F4": [
+          "benchmark-results",
+          "performance-comparison",
+          "search-tool-metrics",
+          "execution-time",
+          "pattern-matching"
+        ],
+        "F5": [
+          "performance",
+          "testing",
+          "metrics"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "ucg",
+          "pt",
+          "sift",
+          "grep"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/raw.csv",
+      "language": "csv",
+      "chat_id": 41892,
+      "fields": {
+        "F0": "csv",
+        "F1": "Use this file to compare the search performance of multiple grep tools (ripgrep, ag, pt, sift, ucg) on Ubuntu 16.04 EC2 instances.",
+        "F2": "other",
+        "F3": "[\"2016-09-17_run\"]",
+        "F4": [
+          "compare-grep-tools",
+          "benchmark-ec2-performance",
+          "test-subtitle-search",
+          "measure-regex-speed",
+          "analyze-unicode-search"
+        ],
+        "F5": [
+          "performance-testing",
+          "cloud-benchmarking",
+          "search-optimization"
+        ],
+        "F6": [
+          "rg",
+          "ag",
+          "git grep",
+          "ucg",
+          "pt",
+          "sift"
+        ],
+        "F7": "csv-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/README.SETUP",
+      "language": "plaintext",
+      "chat_id": 41893,
+      "fields": {
+        "F0": "SETUP",
+        "F1": "Modify this file to change the benchmark environment setup or tool installation process.",
+        "F2": "documentation",
+        "F3": "[\"2016-09-17_run\"]",
+        "F4": [
+          "setup-benchmark",
+          "install-tools",
+          "run-benchsuite",
+          "configure-ec2",
+          "download-corpora"
+        ],
+        "F5": [
+          "benchmarking",
+          "infrastructure",
+          "testing"
+        ],
+        "F6": [
+          "ripgrep",
+          "the_silver_searcher",
+          "ucg",
+          "the_platinum_searcher",
+          "sift"
+        ],
+        "F7": "setup-script",
+        "F8": "[\"instance-c3.2xlarge\",\"ami-ubuntu1604\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/summary",
+      "language": "plaintext",
+      "chat_id": 41894,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Use this file to review historical performance benchmarks of ripgrep against legacy search tools like ucg, sift, and pt on Ubuntu 16.04 EC2 instances.",
+        "F2": "test",
+        "F3": "[\"2016-09-17_benchmark\"]",
+        "F4": [
+          "measure-performance",
+          "compare-tools",
+          "benchmark-execution",
+          "analyze-speed"
+        ],
+        "F5": [
+          "performance-testing",
+          "benchmarking",
+          "metrics"
+        ],
+        "F6": [
+          "linux_alternates",
+          "subtitles_ru_literal",
+          "rg",
+          "ucg",
+          "sift"
+        ],
+        "F7": "benchmark-report",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/benchsuite",
+      "language": "plaintext",
+      "chat_id": 41895,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the benchmarking logic, corpus download procedures, or the specific command-line arguments used to compare search tools.",
+        "F2": "source_code",
+        "F3": "N/A",
+        "F4": [
+          "run-benchmarks",
+          "download-corpora",
+          "compare-tools",
+          "aggregate-stats"
+        ],
+        "F5": [
+          "automation",
+          "benchmarking",
+          "testing"
+        ],
+        "F6": [
+          "Benchmark",
+          "Command",
+          "Result",
+          "MissingDependencies"
+        ],
+        "F7": "cli-script",
+        "F8": "[\"default-warmup-1\",\"default-bench-3\",\"sample-lines-55000000\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/workflows/ci.yml",
+      "language": "yaml",
+      "chat_id": 41898,
+      "fields": {
+        "F0": "yml",
+        "F1": "Modify this file to change the CI pipeline configuration, including test matrices, Rust toolchain versions, and scheduled cron jobs.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "run-tests",
+          "build-workspace",
+          "cross-compile",
+          "check-formatting",
+          "verify-fuzz-targets",
+          "install-rust"
+        ],
+        "F5": [
+          "continuous-integration",
+          "quality-assurance",
+          "build-automation"
+        ],
+        "F6": [
+          "test",
+          "wasm",
+          "rustfmt",
+          "docs",
+          "fuzz_testing"
+        ],
+        "F7": "github-actions-workflow",
+        "F8": "[\"CROSS_VERSION-v0.2.5\",\"RUST_BACKTRACE-1\",\"schedule-00-01-daily\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/workflows/release.yml",
+      "language": "yaml",
+      "chat_id": 41899,
+      "fields": {
+        "F0": "yml",
+        "F1": "Modify this file to change the automated release process, including build targets, compilation flags, and asset generation for ripgrep distributions.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "create-release",
+          "build-binaries",
+          "cross-compile",
+          "generate-manpage",
+          "upload-assets",
+          "build-deb-package"
+        ],
+        "F5": [
+          "ci-cd",
+          "release-management",
+          "packaging",
+          "distribution"
+        ],
+        "F6": [
+          "create-release",
+          "build-release",
+          "build-release-deb",
+          "cargo",
+          "cross"
+        ],
+        "F7": "github-actions-workflow",
+        "F8": "[\"CROSS_VERSION-v0.2.5\",\"PCRE2_SYS_STATIC-1\",\"tag-pattern-x.y.z\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "language": "yaml",
+      "chat_id": 41901,
+      "fields": {
+        "F0": "yml",
+        "F1": "Modify this file to change the required fields and validation rules for user-submitted bug reports.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "collect-bug-reports",
+          "validate-input",
+          "request-version",
+          "request-reproduction-steps"
+        ],
+        "F5": [
+          "issue-management",
+          "user-support",
+          "community-templates"
+        ],
+        "F6": [
+          "issue-not-common",
+          "ripgrep-version",
+          "install-method",
+          "steps-to-reproduce"
+        ],
+        "F7": "github-issue-template",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/config.yml",
+      "language": "yaml",
+      "chat_id": 41902,
+      "fields": {
+        "F0": "yml",
+        "F1": "Modify this file to change the issue tracker configuration, specifically how blank issues are handled and where users are directed for questions.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "redirect-questions",
+          "enable-blank-issues",
+          "configure-issue-tracker"
+        ],
+        "F5": [
+          "community-management",
+          "issue-tracking",
+          "configuration"
+        ],
+        "F6": [
+          "contact_links",
+          "blank_issues_enabled"
+        ],
+        "F7": "github-config",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "language": "markdown",
+      "chat_id": 41903,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the structure and instructions presented to users when submitting a new feature request via GitHub issues.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "submit-feature",
+          "request-enhancement",
+          "define-template",
+          "specify-labels"
+        ],
+        "F5": [
+          "issue-management",
+          "community-contribution"
+        ],
+        "F6": [
+          "feature_request",
+          "labels",
+          "assignees"
+        ],
+        "F7": "issue-template",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/FUNDING.yml",
+      "language": "yaml",
+      "chat_id": 41904,
+      "fields": {
+        "F0": "yml",
+        "F1": "Modify this file to change the funding sources displayed on the repository, specifically the GitHub Sponsors link.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "configure-funding",
+          "enable-sponsors"
+        ],
+        "F5": [
+          "community-management",
+          "funding",
+          "configuration"
+        ],
+        "F6": [
+          "github"
+        ],
+        "F7": "github-config",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".cargo/config.toml",
+      "language": "toml",
+      "chat_id": 41906,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change compiler flags for static linking on specific target architectures (Windows MSVC, Linux MUSL).",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "static-link-crt",
+          "configure-rustflags",
+          "target-msvc",
+          "target-musl"
+        ],
+        "F5": [
+          "build-configuration",
+          "compiler-flags",
+          "static-linking"
+        ],
+        "F6": [
+          "x86_64-pc-windows-msvc",
+          "x86_64-unknown-linux-musl"
+        ],
+        "F7": "config-file",
+        "F8": "[\"target-feature-crt-static\",\"link-self-contained-yes\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".gitignore",
+      "language": "plaintext",
+      "chat_id": 41907,
+      "fields": {
+        "F0": "gitignore",
+        "F1": "Modify this file to change which development artifacts, IDE settings, and build outputs are ignored by Git, including Cargo locks and Snapcraft files.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "exclude-cargo-lock",
+          "ignore-snap-build",
+          "exclude-ide-config",
+          "ignore-python-cache"
+        ],
+        "F5": [
+          "version-control",
+          "development-environment",
+          "packaging"
+        ],
+        "F6": [
+          "Cargo.lock",
+          "snap",
+          "tags",
+          "target"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".ignore",
+      "language": "plaintext",
+      "chat_id": 41908,
+      "fields": {
+        "F0": "ignore",
+        "F1": "Modify this file to change which files or directories are included or excluded from ignore patterns.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "configure-ignore",
+          "negate-rule",
+          "include-directory"
+        ],
+        "F5": [
+          "configuration",
+          "build-system"
+        ],
+        "F6": [
+          ".github/"
+        ],
+        "F7": "config-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "AI_POLICY.md",
+      "language": "markdown",
+      "chat_id": 41909,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the contribution guidelines regarding the use of AI tools, autonomous agents, and communication standards.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "define-policy",
+          "restrict-ai",
+          "enforce-standards",
+          "require-human-review"
+        ],
+        "F5": [
+          "governance",
+          "contributing"
+        ],
+        "F6": [
+          "LLMs",
+          "uv"
+        ],
+        "F7": "policy-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "build.rs",
+      "language": "rust",
+      "chat_id": 41910,
+      "fields": {
+        "F0": "rs",
+        "F1": "Use this file to change build-time environment variables, such as the embedded git hash or Windows linker flags for long path support.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "embed-git-hash",
+          "set-build-env",
+          "configure-windows-linker",
+          "enable-long-paths",
+          "embed-manifest"
+        ],
+        "F5": [
+          "build-configuration",
+          "platform-specific",
+          "versioning"
+        ],
+        "F6": [
+          "set_git_revision_hash",
+          "set_windows_exe_options"
+        ],
+        "F7": "build-script",
+        "F8": "[\"git-hash-short-10\",\"target-os-windows\",\"target-env-msvc\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "Cargo.lock",
+      "language": "plaintext",
+      "chat_id": 41911,
+      "fields": {
+        "F0": "lock",
+        "F1": "Modify this file to update or lock the specific versions of Rust dependencies used by the project.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "lock-dependencies",
+          "pin-versions",
+          "verify-checksums",
+          "reproducible-builds",
+          "cargo-lock"
+        ],
+        "F5": [
+          "dependency-management",
+          "build-configuration",
+          "rust-ecosystem"
+        ],
+        "F6": [
+          "ripgrep",
+          "regex",
+          "grep",
+          "ignore",
+          "aho-corasick"
+        ],
+        "F7": "lock-file",
+        "F8": "[\"cargo-version-4\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "Cargo.toml",
+      "language": "toml",
+      "chat_id": 41912,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change build settings, dependencies, workspace structure, and packaging metadata for the ripgrep binary.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "define-dependencies",
+          "configure-workspace",
+          "set-build-profiles",
+          "package-binary",
+          "enable-pcre2"
+        ],
+        "F5": [
+          "build-configuration",
+          "dependency-management",
+          "packaging"
+        ],
+        "F6": [
+          "ripgrep",
+          "rg",
+          "workspace",
+          "profile.release-lto"
+        ],
+        "F7": "config-file",
+        "F8": "[\"version-15.1.0\",\"rust-version-1.85\",\"edition-2024\",\"opt-level-3\",\"lto-fat\",\"debug-1\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "CHANGELOG.md",
+      "language": "markdown",
+      "chat_id": 41913,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to update the historical record of version changes, bug fixes, and feature enhancements for ripgrep.",
+        "F2": "changelog",
+        "F3": "[\"2025-10-15_published\",\"2024-09-08_published\",\"2024-01-06_published\",\"2023-11-28_published\",\"2023-11-27_published\",\"2023-11-26_published\",\"2021-06-12_published\",\"2020-05-29_published\",\"2020-05-09_published\",\"2020-03-29_published\",\"2020-03-15_published\",\"2019-08-01_published\",\"2019-04-16_published\",\"2019-04-15_published\",\"2018-09-07_published\",\"2018-08-03_published\",\"2018-02-20_published\",\"2018-02-11_published\",\"2017-10-22_published\",\"2017-10-20_published\",\"2017-08-23_published\",\"2017-05-11_published\",\"2017-04-09_published\",\"2017-03-12_published\"]",
+        "F4": [
+          "track-version-history",
+          "document-breaking-changes",
+          "list-bug-fixes",
+          "record-feature-enhancements"
+        ],
+        "F5": [
+          "documentation",
+          "versioning",
+          "release-management"
+        ],
+        "F6": [
+          "ripgrep",
+          "cargo-fuzz",
+          "grep-pcre2"
+        ],
+        "F7": "changelog",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "CONTRIBUTING.md",
+      "language": "markdown",
+      "chat_id": 41914,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the contribution guidelines, specifically the policy regarding the use of AI in contributions.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "enforce-policy",
+          "restrict-ai",
+          "manage-contributions",
+          "define-guidelines"
+        ],
+        "F5": [
+          "governance",
+          "contribution-guidelines"
+        ],
+        "F6": [
+          "AI Policy"
+        ],
+        "F7": "policy-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "COPYING",
+      "language": "plaintext",
+      "chat_id": 41915,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the licensing terms of the project.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "declare-license",
+          "dual-license"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "Unlicense",
+          "MIT"
+        ],
+        "F7": "license-file",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "FAQ.md",
+      "language": "markdown",
+      "chat_id": 41916,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to update the documentation for common user questions regarding ripgrep's configuration, performance tuning, regex engine usage, and platform-specific behaviors.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "configure-colors",
+          "search-compressed",
+          "regex-pcre2",
+          "shell-completion",
+          "search-multiline"
+        ],
+        "F5": [
+          "documentation",
+          "troubleshooting",
+          "configuration",
+          "usage-guide"
+        ],
+        "F6": [
+          "rg",
+          "PCRE2",
+          "bash",
+          "zsh",
+          "fish",
+          "PowerShell",
+          "sed"
+        ],
+        "F7": "markdown-document",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "GUIDE.md",
+      "language": "markdown",
+      "chat_id": 41917,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the official user guide and documentation for ripgrep, covering search patterns, filtering, and configuration.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "search-recursive",
+          "filter-glob",
+          "replace-text",
+          "configure-options",
+          "search-binary",
+          "use-preprocessor",
+          "handle-encoding"
+        ],
+        "F5": [
+          "user-guide",
+          "search-optimization",
+          "file-filtering"
+        ],
+        "F6": [
+          "regex",
+          "gitignore",
+          "preprocessor",
+          "configuration-file"
+        ],
+        "F7": "user-guide",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "HomebrewFormula",
+      "language": "plaintext",
+      "chat_id": 41918,
+      "fields": {
+        "F0": "N/A",
+        "F1": "Modify this file to update the reference path for the Homebrew package formula.",
+        "F2": "other",
+        "F3": "N/A",
+        "F4": [
+          "locate-formula",
+          "define-path",
+          "homebrew-package"
+        ],
+        "F5": [
+          "packaging",
+          "distribution"
+        ],
+        "F6": [
+          "pkg/brew"
+        ],
+        "F7": "path-reference",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41919,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms to the MIT License standard.",
+        "F2": "license",
+        "F3": "[\"2015-01-01_copyright\"]",
+        "F4": [
+          "mit-license",
+          "copyright-permission",
+          "software-distribution"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "MIT License"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "README.md",
+      "language": "markdown",
+      "chat_id": 41920,
+      "fields": {
+        "F0": "md",
+        "F1": "Use this file to install smart-ripgrep, import the GitSense intelligence layer, and understand the performance characteristics and feature set of the search tool.",
+        "F2": "readme",
+        "F3": "N/A",
+        "F4": [
+          "install-binary",
+          "search-regex",
+          "compare-performance",
+          "filter-gitignore",
+          "import-intelligence"
+        ],
+        "F5": [
+          "installation-guide",
+          "benchmarking",
+          "search-tool",
+          "documentation"
+        ],
+        "F6": [
+          "rg",
+          "gsc",
+          "GitSense",
+          "PCRE2",
+          "regex"
+        ],
+        "F7": "cli-tool",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "RELEASE-CHECKLIST.md",
+      "language": "markdown",
+      "chat_id": 41921,
+      "fields": {
+        "F0": "md",
+        "F1": "Modify this file to change the standard operating procedure for releasing ripgrep, covering dependency updates, versioning, and publishing steps.",
+        "F2": "documentation",
+        "F3": "N/A",
+        "F4": [
+          "update-dependencies",
+          "bump-version",
+          "publish-release",
+          "update-changelog",
+          "run-ci"
+        ],
+        "F5": [
+          "release-management",
+          "versioning"
+        ],
+        "F6": [
+          "Cargo.toml",
+          "Cargo.lock",
+          "CHANGELOG",
+          "crates.io"
+        ],
+        "F7": "checklist",
+        "F8": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "rustfmt.toml",
+      "language": "toml",
+      "chat_id": 41922,
+      "fields": {
+        "F0": "toml",
+        "F1": "Modify this file to change the Rust code formatting rules, such as line width limits and heuristics.",
+        "F2": "configuration",
+        "F3": "N/A",
+        "F4": [
+          "set-max-width",
+          "configure-heuristics",
+          "define-edition"
+        ],
+        "F5": [
+          "code-style",
+          "formatting-rules",
+          "tool-configuration"
+        ],
+        "F6": [
+          "max_width",
+          "use_small_heuristics"
+        ],
+        "F7": "config-file",
+        "F8": "[\"max-width-79\",\"edition-2024\"]"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41923,
+      "fields": {
+        "F0": "",
+        "F1": "Modify this file to change the legal licensing terms of the project to the public domain.",
+        "F2": "license",
+        "F3": "N/A",
+        "F4": [
+          "public-domain",
+          "copyright-relinquishment",
+          "license-declaration"
+        ],
+        "F5": [
+          "legal",
+          "licensing"
+        ],
+        "F6": [
+          "public domain",
+          "copyright"
+        ],
+        "F7": "legal-text",
+        "F8": "N/A"
+      }
+    }
+  ]
+}

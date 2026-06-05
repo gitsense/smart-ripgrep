@@ -1,0 +1,7 @@
+*.db
+*.sqlite
+*.sqlite3
+import-git.json
+backups/
+manifest.json
+experts-context.md
