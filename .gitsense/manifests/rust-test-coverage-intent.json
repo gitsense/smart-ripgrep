@@ -1,0 +1,6882 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-07T04:48:43.375Z",
+  "manifest": {
+    "name": "Rust Test Intent & Coverage Map",
+    "database_name": "rust-test-coverage-intent",
+    "description": "Catalogs the intent and scope of the Rust test suite. This manifest tracks test_role, tested_behavior, risk_covered, and target_components to enable agents to quickly locate relevant tests, understand coverage gaps, and identify regression risks.",
+    "tags": [
+      "rust",
+      "testing",
+      "coverage",
+      "quality-assurance",
+      "regression-prevention"
+    ]
+  },
+  "repositories": [
+    {
+      "ref": "R0",
+      "name": "gitsense/smart-ripgrep"
+    }
+  ],
+  "branches": [
+    {
+      "ref": "B0",
+      "name": "master"
+    }
+  ],
+  "analyzers": [
+    {
+      "ref": "A0",
+      "id": "rust-test-coverage-intent::file-content::default",
+      "name": "Rust Test Coverage Intent",
+      "description": "Analyzes Rust files to extract test coverage intent, identifying test roles, frameworks, behaviors, and risks with strict validation.",
+      "version": "2.0.0"
+    }
+  ],
+  "fields": [
+    {
+      "ref": "F0",
+      "name": "has_test",
+      "type": "boolean",
+      "display_name": "Has Test",
+      "description": "`true` if this file contains executable tests, test macros, assertions, fuzz targets, benchmark validation, or test harness logic. `false` for pure fixtures even if used by tests, and for non‑test files.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F1",
+      "name": "test_role",
+      "type": "string",
+      "display_name": "Test Role",
+      "description": "**Allowed values (must be one, never null):**",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F2",
+      "name": "test_frameworks",
+      "type": "array",
+      "display_name": "Test Frameworks",
+      "description": "Rust test mechanisms or project conventions used, e.g., `[\"cargo-test\", \"cfg-test\", \"rust-test-attr\", \"rgtest-macro\", \"proptest\", \"quickcheck\", \"compiletest\", \"cargo-fuzz\", \"criterion\", \"custom-harness\"]`. **Always an array**, never a string.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F3",
+      "name": "tested_behavior",
+      "type": "array",
+      "display_name": "Tested Behavior",
+      "description": "3‑10 behavior‑level labels. Prefer action‑object names: `\"detect-binary-file\"`, `\"handle-nul-byte\"`, etc. **Always an array**; empty if not applicable.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F4",
+      "name": "tested_flags_or_api",
+      "type": "array",
+      "display_name": "Tested Flags Or Api",
+      "description": "Exact CLI flags, public APIs, trait methods, config options, or macros tested. Preserve exact spelling, e.g., `\"--binary\"`. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F5",
+      "name": "target_components",
+      "type": "array",
+      "display_name": "Target Components",
+      "description": "Implementation areas under test, e.g., `[\"cli\", \"searcher\"]`. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F6",
+      "name": "platform_scope",
+      "type": "array",
+      "display_name": "Platform Scope",
+      "description": "`[\"all\"]`, or explicit platform constraints such as `[\"unix\", \"windows\"]`. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F7",
+      "name": "fixtures",
+      "type": "array",
+      "display_name": "Fixtures",
+      "description": "Referenced fixture files, `include_bytes!`/`include_str!` paths, generated test files, golden output, etc. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F8",
+      "name": "assertion_style",
+      "type": "array",
+      "display_name": "Assertion Style",
+      "description": "`stdout`, `stderr`, `exit-code`, `panic`, `json-event`, `file-list`, `count`, `binary-offset`, `exact-output`, `regex-match`, `property`, `benchmark-result`. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F9",
+      "name": "risk_covered",
+      "type": "array",
+      "display_name": "Risk Covered",
+      "description": "Failure modes protected by this file, e.g., `[\"binary-detection-regression\"]`. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F10",
+      "name": "canonical_for",
+      "type": "array",
+      "display_name": "Canonical For",
+      "description": "Behaviors for which this is likely the best first file to inspect or extend. **Always an array**.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F11",
+      "name": "add_test_guidance",
+      "type": "string",
+      "display_name": "Add Test Guidance",
+      "description": "One concise sentence explaining when a developer should add or update tests here. For non‑test files, use the standard guidance: `\"Do not add tests here; use the relevant test module for this component.\"`.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F12",
+      "name": "summary",
+      "type": "string",
+      "display_name": "Summary",
+      "description": "For test‑related files, start with `\"Use this file to test...\"` or `\"Use this file as...\"`, and mention the primary behavior/component covered. For non‑test files, use exactly the string `\"This file does not contain test coverage intent.\"`.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F13",
+      "name": "confidence",
+      "type": "string",
+      "display_name": "Confidence",
+      "description": "Must be `\"high\"`, `\"medium\"`, or `\"low\"`. Assign based on presence of direct test syntax vs. inference vs. weak evidence.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F14",
+      "name": "file_extension",
+      "type": "string",
+      "display_name": "File Extension",
+      "description": "The file extension without the leading dot (e.g., `js`, `md`), or `null` if none.",
+      "analyzer_ref": "A0"
+    }
+  ],
+  "data": [
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/data/sherlock-nul.txt",
+      "language": "plaintext",
+      "chat_id": 41654,
+      "fields": {
+        "F0": false,
+        "F1": "test-fixture-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "txt"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/binary.rs",
+      "language": "rust",
+      "chat_id": 41655,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "rgtest-macro",
+          "cargo-test"
+        ],
+        "F3": [
+          "detect-binary-file",
+          "handle-nul-byte",
+          "memory-map-search",
+          "binary-filtering",
+          "implicit-vs-explicit-search",
+          "stdin-binary-handling",
+          "count-matches-binary"
+        ],
+        "F4": [
+          "--mmap",
+          "--binary",
+          "--text",
+          "--no-mmap",
+          "-n",
+          "-c",
+          "-l",
+          "-q"
+        ],
+        "F5": [
+          "searcher",
+          "binary-detector"
+        ],
+        "F6": [
+          "unix",
+          "windows"
+        ],
+        "F7": [
+          "./data/sherlock-nul.txt"
+        ],
+        "F8": [
+          "stdout",
+          "exact-output"
+        ],
+        "F9": [
+          "binary-detection-regression",
+          "memory-map-safety",
+          "nul-byte-handling",
+          "partial-search-warning"
+        ],
+        "F10": [
+          "binary-file-handling",
+          "nul-byte-detection"
+        ],
+        "F11": "Add tests here for new binary file detection edge cases or changes to memory map behavior.",
+        "F12": "Use this file to test ripgrep's handling of binary files, specifically NUL byte detection, memory map interactions, and binary filtering flags.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/feature.rs",
+      "language": "rust",
+      "chat_id": 41656,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "rgtest-macro",
+          "custom-harness"
+        ],
+        "F3": [
+          "encoding-detection",
+          "pattern-file-input",
+          "filename-suppression",
+          "only-matching",
+          "line-column-output",
+          "relative-cwd-ignore",
+          "ignore-precedence",
+          "vcs-ignore-control",
+          "smart-case",
+          "null-separator-output",
+          "file-listing",
+          "max-depth",
+          "case-sensitivity-conflict",
+          "line-truncation",
+          "max-count",
+          "config-file-loading",
+          "column-output",
+          "file-sorting",
+          "path-separator",
+          "dfa-size-limit",
+          "regex-size-limit",
+          "search-stats",
+          "crlf-handling",
+          "passthru-mode",
+          "exit-codes",
+          "whitespace-trimming",
+          "null-data-searching",
+          "max-columns-preview",
+          "ignore-dot-files",
+          "hybrid-regex",
+          "encoding-none",
+          "git-requirement",
+          "git-exclude",
+          "ignore-file-control",
+          "nested-file-sorting",
+          "empty-search-warning",
+          "field-separator-customization",
+          "context-separator-customization",
+          "unicode-case-folding",
+          "stop-on-nonmatch"
+        ],
+        "F4": [
+          "-Esjis",
+          "-Eutf-16le",
+          "-Eeuc-jp",
+          "-f",
+          "--no-filename",
+          "-o",
+          "-n",
+          "-l",
+          "--ignore-file",
+          "--no-ignore-vcs",
+          "-S",
+          "--null",
+          "--files-with-matches",
+          "--files-without-match",
+          "--count",
+          "--files",
+          "-C",
+          "--maxdepth",
+          "--case-sensitive",
+          "--ignore-case",
+          "-M",
+          "-m",
+          "--dfa-size-limit",
+          "--regex-size-limit",
+          "-j",
+          "--stats",
+          "--quiet",
+          "--crlf",
+          "-U",
+          "-0",
+          "--passthru",
+          "-e",
+          "-c",
+          "-r",
+          "--trim",
+          "--max-columns-preview",
+          "--color",
+          "--colors",
+          "--null-data",
+          "--no-ignore-dot",
+          "--auto-hybrid-regex",
+          "--no-pcre2",
+          "--encoding",
+          "-a",
+          "--no-require-git",
+          "--require-git",
+          "--no-ignore-exclude",
+          "--no-ignore-files",
+          "--ignore-files",
+          "-u",
+          "--sort",
+          "--no-messages",
+          "--field-context-separator",
+          "--field-match-separator",
+          "--context-separator",
+          "--no-context-separator",
+          "--no-unicode",
+          "--stop-on-nonmatch"
+        ],
+        "F5": [
+          "cli",
+          "searcher",
+          "printer",
+          "ignore"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK",
+          "SHERLOCK_CRLF"
+        ],
+        "F8": [
+          "stdout",
+          "stderr",
+          "exit-code",
+          "exact-output"
+        ],
+        "F9": [
+          "encoding-regression",
+          "cli-flag-regression",
+          "output-formatting-regression",
+          "ignore-rule-regression",
+          "binary-detection-regression"
+        ],
+        "F10": [
+          "cli-flags",
+          "encoding-support",
+          "ignore-rules",
+          "output-formatting"
+        ],
+        "F11": "Add tests here for new CLI flags, encoding support, or high-level feature behaviors.",
+        "F12": "Use this file to test ripgrep's CLI features, including encoding support, ignore rules, output formatting options, and various search flags.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/hay.rs",
+      "language": "rust",
+      "chat_id": 41657,
+      "fields": {
+        "F0": false,
+        "F1": "rust-fixture",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [
+          "SHERLOCK",
+          "SHERLOCK_CRLF"
+        ],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Use this file to define test fixture constants; do not add executable tests here.",
+        "F12": "Use this file as a source of test fixture constants for text search scenarios.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/json.rs",
+      "language": "rust",
+      "chat_id": 41658,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "rgtest-macro",
+          "cargo-test"
+        ],
+        "F3": [
+          "json-output-format",
+          "replacement-serialization",
+          "non-utf8-handling",
+          "crlf-handling",
+          "stats-reporting"
+        ],
+        "F4": [
+          "--json",
+          "-B1",
+          "-r",
+          "--quiet",
+          "--stats",
+          "--crlf"
+        ],
+        "F5": [
+          "cli",
+          "json-printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK",
+          "SHERLOCK_CRLF"
+        ],
+        "F8": [
+          "json-event",
+          "exact-output"
+        ],
+        "F9": [
+          "json-parsing-regression",
+          "encoding-corruption"
+        ],
+        "F10": [
+          "json-output-testing"
+        ],
+        "F11": "Add tests here for new JSON fields or changes to the JSON output structure.",
+        "F12": "Use this file to test the JSON output format of ripgrep, including match serialization, context, statistics, and handling of non-UTF8 data and CRLF line endings.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/macros.rs",
+      "language": "rust",
+      "chat_id": 41659,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/misc.rs",
+      "language": "rust",
+      "chat_id": 41660,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "rgtest-macro",
+          "custom-harness"
+        ],
+        "F3": [
+          "search-single-file",
+          "search-with-filename",
+          "line-numbers",
+          "column-output",
+          "heading-output",
+          "inverted-match",
+          "case-insensitive",
+          "word-regexp",
+          "line-regexp",
+          "fixed-strings",
+          "quiet-mode",
+          "replace",
+          "replace-groups",
+          "replace-named-groups",
+          "only-matching",
+          "file-type-filtering",
+          "glob-filtering",
+          "byte-offset",
+          "count-matches",
+          "files-with-matches",
+          "context-printing",
+          "max-filesize",
+          "ignore-hidden",
+          "ignore-git",
+          "ignore-generic",
+          "no-ignore",
+          "symlink-handling",
+          "unrestricted-search",
+          "vimgrep-output",
+          "preprocessing",
+          "compressed-search",
+          "binary-file-detection",
+          "file-listing",
+          "sorting-output"
+        ],
+        "F4": [
+          "-n",
+          "--column",
+          "-H",
+          "--heading",
+          "-v",
+          "-i",
+          "-w",
+          "-x",
+          "-F",
+          "-q",
+          "-r",
+          "-t",
+          "-T",
+          "-g",
+          "-b",
+          "--count",
+          "--files-with-matches",
+          "-A",
+          "-B",
+          "-C",
+          "--max-filesize",
+          "--hidden",
+          "--no-ignore",
+          "-L",
+          "-u",
+          "--vimgrep",
+          "--pre",
+          "-z",
+          "--mmap",
+          "--files",
+          "--sort"
+        ],
+        "F5": [
+          "cli",
+          "searcher",
+          "ignore",
+          "filter",
+          "printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "sherlock",
+          "file.py",
+          "file.rs",
+          "file.wat",
+          "haystack",
+          "file",
+          "foo",
+          "bar",
+          ".sherlock",
+          ".gitignore",
+          ".ignore",
+          ".rgignore",
+          "sherlock.xz",
+          "sherlock.gz",
+          "sherlock.bz2",
+          "sherlock.lz4",
+          "sherlock.lzma",
+          "sherlock.br",
+          "sherlock.zst",
+          "sherlock.Z"
+        ],
+        "F8": [
+          "stdout",
+          "stderr",
+          "exit-code",
+          "exact-output",
+          "regex-match"
+        ],
+        "F9": [
+          "cli-flag-regression",
+          "output-formatting-regression",
+          "file-filtering-regression",
+          "compression-handling-regression",
+          "binary-detection-regression"
+        ],
+        "F10": [
+          "general-cli-options",
+          "search-output-formatting",
+          "file-filtering"
+        ],
+        "F11": "Add tests here for general CLI behaviors that do not fit into specific regression or feature suites.",
+        "F12": "Use this file to test miscellaneous CLI behaviors including search options, file filtering, context printing, replacement, compression support, and binary file handling.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/multiline.rs",
+      "language": "rust",
+      "chat_id": 41661,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "rgtest-macro",
+          "custom-harness"
+        ],
+        "F3": [
+          "multiline-overlap",
+          "dot-newline-matching",
+          "only-matching-multiline",
+          "vimgrep-multiline",
+          "stdin-multiline",
+          "context-multiline"
+        ],
+        "F4": [
+          "-n",
+          "-U",
+          "--multiline-dotall",
+          "--only-matching",
+          "--vimgrep",
+          "-C1"
+        ],
+        "F5": [
+          "searcher",
+          "cli"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "stdout",
+          "exact-output"
+        ],
+        "F9": [
+          "multiline-match-regression",
+          "dotall-flag-regression"
+        ],
+        "F10": [
+          "multiline-search"
+        ],
+        "F11": "Add tests here for new multiline search edge cases or flag interactions.",
+        "F12": "Use this file to test multiline search behavior, including overlapping matches, dotall semantics, and context handling.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/regression.rs",
+      "language": "rust",
+      "chat_id": 41662,
+      "fields": {
+        "F0": true,
+        "F1": "rust-regression-test",
+        "F2": [
+          "rgtest-macro",
+          "cargo-test"
+        ],
+        "F3": [
+          "gitignore-handling",
+          "symlink-following",
+          "regex-matching",
+          "flag-parsing",
+          "exit-codes",
+          "file-filtering"
+        ],
+        "F4": [
+          "--files",
+          "--hidden",
+          "--ignore-file",
+          "-g",
+          "-j1",
+          "-C",
+          "-q",
+          "--stats",
+          "--crlf"
+        ],
+        "F5": [
+          "cli",
+          "ignore",
+          "searcher",
+          "globber"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "stdout",
+          "stderr",
+          "exit-code",
+          "exact-output"
+        ],
+        "F9": [
+          "gitignore-regression",
+          "symlink-regression",
+          "crash-on-invalid-input"
+        ],
+        "F10": [
+          "regression-testing"
+        ],
+        "F11": "Add tests here to verify fixes for reported bugs or to prevent regressions in specific edge cases.",
+        "F12": "Use this file to test specific regression cases corresponding to historical GitHub issues, covering gitignore logic, symlinks, regex edge cases, and CLI flag behavior.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41663,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/util.rs",
+      "language": "rust",
+      "chat_id": 41664,
+      "fields": {
+        "F0": false,
+        "F1": "rust-test-helper",
+        "F2": [
+          "custom-harness"
+        ],
+        "F3": [
+          "setup-test-environment",
+          "create-test-fixtures",
+          "run-test-command",
+          "assert-command-success",
+          "assert-command-failure"
+        ],
+        "F4": [
+          "--path-separator",
+          "--pcre2"
+        ],
+        "F5": [
+          "integration-test-harness"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "ripgrep-tests"
+        ],
+        "F8": [
+          "exit-code",
+          "stdout",
+          "stderr"
+        ],
+        "F9": [],
+        "F10": [
+          "integration-test-setup"
+        ],
+        "F11": "Add new helper functions here if they are needed across multiple integration test files.",
+        "F12": "Use this file as a helper library for integration tests. It provides utilities to set up temporary directories, create file fixtures, execute the ripgrep binary, and assert on command output and exit codes.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "scripts/copy-examples",
+      "language": "plaintext",
+      "chat_id": 41666,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/windows/Manifest.xml",
+      "language": "xml",
+      "chat_id": 41669,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "xml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/windows/README.md",
+      "language": "markdown",
+      "chat_id": 41670,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "pkg/brew/ripgrep-bin.rb",
+      "language": "ruby",
+      "chat_id": 41672,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rb"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/fuzz_targets/fuzz_glob.rs",
+      "language": "rust",
+      "chat_id": 41675,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/.gitignore",
+      "language": "plaintext",
+      "chat_id": 41676,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/Cargo.lock",
+      "language": "plaintext",
+      "chat_id": 41677,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "lock"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41678,
+      "fields": {
+        "F0": true,
+        "F1": "rust-fuzz-target",
+        "F2": [
+          "cargo-fuzz"
+        ],
+        "F3": [
+          "fuzz-glob-matching",
+          "property-based-testing"
+        ],
+        "F4": [],
+        "F5": [
+          "globset"
+        ],
+        "F6": [],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "panic-safety",
+          "memory-safety"
+        ],
+        "F10": [
+          "globset-fuzzing"
+        ],
+        "F11": "Add new fuzz targets by defining additional `[[bin]]` sections in this file and creating corresponding source files in `fuzz_targets/`.",
+        "F12": "Use this file to configure the fuzzing harness for the globset component using cargo-fuzz.",
+        "F13": "high",
+        "F14": "toml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/README.md",
+      "language": "markdown",
+      "chat_id": 41679,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/core.rs",
+      "language": "rust",
+      "chat_id": 41684,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/glue.rs",
+      "language": "rust",
+      "chat_id": 41685,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "basic-search",
+          "inverted-match",
+          "line-numbering",
+          "multi-line-overlap",
+          "empty-line-handling",
+          "buffer-limit-handling",
+          "binary-detection",
+          "passthru-mode",
+          "context-printing"
+        ],
+        "F4": [
+          "invert_match",
+          "line_number",
+          "multi_line",
+          "binary_detection",
+          "passthru",
+          "after_context",
+          "before_context"
+        ],
+        "F5": [
+          "searcher",
+          "glue"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK",
+          "CODE"
+        ],
+        "F8": [
+          "exact-output",
+          "byte-count",
+          "binary-offset"
+        ],
+        "F9": [
+          "binary-detection-regression",
+          "buffer-overflow",
+          "multi-line-logic-error",
+          "context-boundary-errors"
+        ],
+        "F10": [
+          "searcher-glue-logic",
+          "multi-line-search",
+          "binary-handling"
+        ],
+        "F11": "Add tests here for new glue logic strategies or edge cases in line buffering/slicing.",
+        "F12": "Use this file to test the core glue logic connecting the searcher configuration to specific execution strategies (ReadByLine, SliceByLine, MultiLine).",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mmap.rs",
+      "language": "rust",
+      "chat_id": 41686,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mod.rs",
+      "language": "rust",
+      "chat_id": 41687,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test"
+        ],
+        "F3": [
+          "config-validation",
+          "heap-limit-error",
+          "line-terminator-mismatch",
+          "utf8-bom-sniffing"
+        ],
+        "F4": [
+          "heap_limit",
+          "line_terminator",
+          "bom_sniffing"
+        ],
+        "F5": [
+          "searcher-config",
+          "searcher-core"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "config-error-handling"
+        ],
+        "F10": [
+          "searcher-configuration"
+        ],
+        "F11": "Add unit tests here for new Searcher configuration options or internal logic.",
+        "F12": "Use this file to test the Searcher's configuration validation and internal behavior, specifically around heap limits and encoding.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41688,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/line_buffer.rs",
+      "language": "rust",
+      "chat_id": 41689,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "buffer-allocation",
+          "binary-detection-quit",
+          "binary-detection-convert",
+          "line-reading",
+          "capacity-limits",
+          "byte-replacement"
+        ],
+        "F4": [
+          "BufferAllocation::Eager",
+          "BufferAllocation::Error",
+          "BinaryDetection::Quit",
+          "BinaryDetection::Convert",
+          "LineBufferBuilder::capacity",
+          "LineBufferBuilder::binary_detection"
+        ],
+        "F5": [
+          "line-buffer",
+          "searcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "exact-output",
+          "binary-offset",
+          "count"
+        ],
+        "F9": [
+          "memory-allocation-regression",
+          "binary-data-handling-regression",
+          "buffer-overflow-risk"
+        ],
+        "F10": [
+          "line-buffer-logic",
+          "binary-detection"
+        ],
+        "F11": "Add tests here for new buffer allocation strategies or binary detection edge cases.",
+        "F12": "Use this file to test the line buffer's core logic, including memory allocation strategies, binary detection (quit and convert modes), and capacity limits.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lines.rs",
+      "language": "rust",
+      "chat_id": 41690,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "count-lines",
+          "locate-lines",
+          "iterate-lines",
+          "find-preceding-lines",
+          "handle-line-terminators"
+        ],
+        "F4": [],
+        "F5": [
+          "searcher",
+          "lines"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "line-parsing-regression",
+          "off-by-one-errors"
+        ],
+        "F10": [
+          "line-iteration",
+          "line-location"
+        ],
+        "F11": "Add tests here for new line iteration or location logic.",
+        "F12": "Use this file to test line iteration, counting, and location logic within the searcher crate.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41691,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/sink.rs",
+      "language": "rust",
+      "chat_id": 41692,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/testutil.rs",
+      "language": "rust",
+      "chat_id": 41693,
+      "fields": {
+        "F0": true,
+        "F1": "rust-test-helper",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "regex-matching",
+          "empty-line-detection",
+          "sink-implementation"
+        ],
+        "F4": [],
+        "F5": [
+          "testutil",
+          "matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-match"
+        ],
+        "F9": [
+          "matcher-logic-error"
+        ],
+        "F10": [
+          "test-utilities",
+          "regex-matcher-helper"
+        ],
+        "F11": "Add tests here to verify the correctness of test utilities (like RegexMatcher or KitchenSink) or to extend the SearcherTester capabilities.",
+        "F12": "Use this file as a test helper providing SearcherTester, KitchenSink, and RegexMatcher for other tests, and to verify the helper's own matching logic.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/examples/search-stdin.rs",
+      "language": "rust",
+      "chat_id": 41695,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41696,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41697,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/README.md",
+      "language": "markdown",
+      "chat_id": 41698,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41699,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ast.rs",
+      "language": "rust",
+      "chat_id": 41702,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "detect-uppercase-literal",
+          "detect-literal-presence",
+          "parse-regex-ast",
+          "analyze-regex-pattern"
+        ],
+        "F4": [
+          "AstAnalysis::from_pattern",
+          "AstAnalysis::from_ast",
+          "AstAnalysis::any_uppercase",
+          "AstAnalysis::any_literal"
+        ],
+        "F5": [
+          "ast",
+          "regex-syntax"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic",
+          "boolean"
+        ],
+        "F9": [
+          "smart-case-detection-regression",
+          "literal-detection-regression"
+        ],
+        "F10": [
+          "ast-analysis",
+          "regex-literal-detection"
+        ],
+        "F11": "Add tests here for new AST analysis features or edge cases in regex literal detection.",
+        "F12": "Use this file to test the AST analysis logic for regex patterns, specifically detecting uppercase literals and general literal presence.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ban.rs",
+      "language": "rust",
+      "chat_id": 41703,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test"
+        ],
+        "F3": [
+          "banned-byte-detection",
+          "literal-ban",
+          "class-ban",
+          "alternation-ban"
+        ],
+        "F4": [
+          "check"
+        ],
+        "F5": [
+          "regex-syntax",
+          "ban-checker"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "banned-byte-escape"
+        ],
+        "F10": [
+          "regex-ban-check"
+        ],
+        "F11": "Add tests here for new regex patterns that should trigger the banned byte check.",
+        "F12": "Use this file to test the logic for detecting banned bytes in regex expressions.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/config.rs",
+      "language": "rust",
+      "chat_id": 41704,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/error.rs",
+      "language": "rust",
+      "chat_id": 41705,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41706,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/literal.rs",
+      "language": "rust",
+      "chat_id": 41707,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41708,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "word-matching",
+          "line-terminator-handling",
+          "crlf-handling",
+          "smart-case-matching",
+          "candidate-line-optimization"
+        ],
+        "F4": [
+          "word",
+          "line_terminator",
+          "crlf",
+          "case_smart",
+          "multi_line"
+        ],
+        "F5": [
+          "matcher",
+          "regex-builder"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic",
+          "exact-output"
+        ],
+        "F9": [
+          "line-terminator-regression",
+          "word-boundary-regression"
+        ],
+        "F10": [
+          "regex-matcher-configuration"
+        ],
+        "F11": "Add tests here for new regex builder options or matcher trait implementations.",
+        "F12": "Use this file to test the RegexMatcher and RegexMatcherBuilder, focusing on configuration options like word boundaries, line terminators, and case handling.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/non_matching.rs",
+      "language": "rust",
+      "chat_id": 41709,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "calculate-non-matching-bytes",
+          "handle-dot-regex",
+          "handle-literal-regex",
+          "handle-anchor-regex"
+        ],
+        "F4": [
+          "non_matching_bytes",
+          "ParserBuilder"
+        ],
+        "F5": [
+          "regex-engine",
+          "byte-set-analysis"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "byte-set-calculation-error",
+          "regex-optimization-bug"
+        ],
+        "F10": [
+          "non-matching-byte-detection"
+        ],
+        "F11": "Add tests here for new regex syntax features that affect byte set analysis.",
+        "F12": "Use this file to test the calculation of non-matching bytes for regex optimization.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/strip.rs",
+      "language": "rust",
+      "chat_id": 41710,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "strip-line-terminator",
+          "handle-crlf",
+          "validate-regex-syntax",
+          "transform-hir"
+        ],
+        "F4": [],
+        "F5": [
+          "regex-parser",
+          "hir-transformation"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "invalid-regex-acceptance",
+          "line-terminator-mismatch"
+        ],
+        "F10": [
+          "line-terminator-stripping"
+        ],
+        "F11": "Add tests here to cover new edge cases in line terminator stripping or HIR transformation logic.",
+        "F12": "Use this file to test the stripping of line terminators from regex HIR structures, ensuring invalid patterns are rejected and valid ones are transformed correctly.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41711,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41712,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/README.md",
+      "language": "markdown",
+      "chat_id": 41713,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41714,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/aliases.rs",
+      "language": "rust",
+      "chat_id": 41718,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/mod.rs",
+      "language": "rust",
+      "chat_id": 41719,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "parse-hyperlink-format",
+          "validate-hyperlink-scheme",
+          "resolve-hyperlink-alias",
+          "convert-path-to-hyperlink",
+          "percent-encode-path",
+          "verify-alias-sorting"
+        ],
+        "F4": [
+          "HyperlinkFormat::from_str",
+          "HyperlinkPath::from_path",
+          "FormatBuilder",
+          "hyperlink_aliases"
+        ],
+        "F5": [
+          "hyperlink",
+          "printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output",
+          "panic"
+        ],
+        "F9": [
+          "hyperlink-format-regression",
+          "path-encoding-regression",
+          "invalid-scheme-acceptance"
+        ],
+        "F10": [
+          "hyperlink-format-parsing",
+          "hyperlink-path-conversion"
+        ],
+        "F11": "Add tests here for new hyperlink format variables, alias definitions, or platform-specific path conversion logic.",
+        "F12": "Use this file to test hyperlink format parsing, validation, alias resolution, and platform-specific path encoding logic.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/color.rs",
+      "language": "rust",
+      "chat_id": 41720,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/counter.rs",
+      "language": "rust",
+      "chat_id": 41721,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/json.rs",
+      "language": "rust",
+      "chat_id": 41722,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "json-output-formatting",
+          "binary-detection-integration",
+          "max-matches-limit",
+          "crlf-handling",
+          "begin-end-messages"
+        ],
+        "F4": [
+          "JSONBuilder::pretty",
+          "JSONBuilder::always_begin_end",
+          "BinaryDetection::quit",
+          "max_matches"
+        ],
+        "F5": [
+          "json-printer",
+          "printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "json-event",
+          "count",
+          "exact-output"
+        ],
+        "F9": [
+          "json-format-regression",
+          "binary-offset-reporting"
+        ],
+        "F10": [
+          "json-printing",
+          "searcher-integration"
+        ],
+        "F11": "Add tests here for new JSON message types or edge cases in match serialization.",
+        "F12": "Use this file to test the JSON printer's output format, integration with binary detection, and handling of match limits and line terminators.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/jsont.rs",
+      "language": "rust",
+      "chat_id": 41723,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "base64-encoding",
+          "rfc-4648-compliance"
+        ],
+        "F4": [],
+        "F5": [
+          "printer",
+          "json-serialization"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "base64-encoding-regression"
+        ],
+        "F10": [
+          "base64-encoding"
+        ],
+        "F11": "Add tests here for new serialization logic or encoding schemes.",
+        "F12": "Use this file to test the base64 encoding logic used for non-UTF-8 JSON data.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41724,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41725,
+      "fields": {
+        "F0": false,
+        "F1": "rust-test-helper",
+        "F2": [
+          "rust-test-attr"
+        ],
+        "F3": [
+          "assert-string-equality"
+        ],
+        "F4": [],
+        "F5": [
+          "printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [],
+        "F10": [
+          "printer-assertions"
+        ],
+        "F11": "Add new assertion macros here if specific formatting is required for printer tests.",
+        "F12": "Use this file as a helper macro for testing. It defines `assert_eq_printed!` to provide nicer diff output for long string comparisons in tests.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/path.rs",
+      "language": "rust",
+      "chat_id": 41726,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/standard.rs",
+      "language": "rust",
+      "chat_id": 41727,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "report-match",
+          "report-binary",
+          "report-stats",
+          "context-break",
+          "path-printing",
+          "separator-field",
+          "heading-printing",
+          "trim-ascii",
+          "line-number-printing",
+          "column-number-printing",
+          "byte-offset-printing",
+          "max-columns",
+          "max-matches",
+          "only-matching",
+          "per-match",
+          "replacement",
+          "invert-match",
+          "crlf-handling"
+        ],
+        "F4": [
+          "heading",
+          "path",
+          "separator_field_match",
+          "separator_field_context",
+          "separator_path",
+          "path_terminator",
+          "trim_ascii",
+          "column",
+          "byte_offset",
+          "max_columns",
+          "max_columns_preview",
+          "max_matches",
+          "only_matching",
+          "per_match",
+          "per_match_one_line",
+          "replacement",
+          "invert_match"
+        ],
+        "F5": [
+          "printer",
+          "standard-printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK",
+          "SHERLOCK_CRLF"
+        ],
+        "F8": [
+          "exact-output",
+          "stdout"
+        ],
+        "F9": [
+          "output-formatting-regression",
+          "binary-detection-regression",
+          "stats-calculation-regression"
+        ],
+        "F10": [
+          "standard-printer-configuration",
+          "grep-output-formatting"
+        ],
+        "F11": "Add tests here to verify new printer configurations or output formatting behaviors.",
+        "F12": "Use this file to test the standard printer implementation, covering various output formatting options like headings, separators, line numbers, column numbers, byte offsets, replacements, and multi-line matching.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/stats.rs",
+      "language": "rust",
+      "chat_id": 41728,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/summary.rs",
+      "language": "rust",
+      "chat_id": 41729,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "count-matches",
+          "path-with-match",
+          "path-without-match",
+          "quiet-mode",
+          "separator-handling",
+          "path-terminator",
+          "stats-collection",
+          "binary-data-handling"
+        ],
+        "F4": [
+          "SummaryKind::Count",
+          "SummaryKind::CountMatches",
+          "SummaryKind::PathWithMatch",
+          "SummaryKind::PathWithoutMatch",
+          "SummaryKind::QuietWithMatch",
+          "separator_field",
+          "path_terminator",
+          "separator_path",
+          "exclude_zero"
+        ],
+        "F5": [
+          "summary-printer"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "SHERLOCK"
+        ],
+        "F8": [
+          "exact-output",
+          "exit-code",
+          "count"
+        ],
+        "F9": [
+          "summary-output-regression",
+          "path-formatting-regression",
+          "binary-detection-regression"
+        ],
+        "F10": [
+          "summary-printer-logic"
+        ],
+        "F11": "Add tests here for new `SummaryKind` variants or configuration options.",
+        "F12": "Use this file to test the `Summary` printer's various output modes, including counting matches, printing paths, and handling statistics.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/util.rs",
+      "language": "rust",
+      "chat_id": 41730,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41731,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "toml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41732,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/README.md",
+      "language": "markdown",
+      "chat_id": 41733,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41734,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/error.rs",
+      "language": "rust",
+      "chat_id": 41737,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41738,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41739,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "match-word-boundary",
+          "match-crlf-terminator",
+          "match-smart-case",
+          "find-candidate-lines"
+        ],
+        "F4": [
+          "word",
+          "crlf",
+          "case_smart",
+          "find_candidate_line"
+        ],
+        "F5": [
+          "pcre2",
+          "matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "matcher-option-regression",
+          "smart-case-logic-failure"
+        ],
+        "F10": [
+          "pcre2-matcher-options"
+        ],
+        "F11": "Add tests here for new PCRE2 builder options or specific regex matching edge cases.",
+        "F12": "Use this file to test PCRE2 matcher builder options and specific matching behaviors like word boundaries and smart case.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41740,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41741,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "MIT"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/README.md",
+      "language": "markdown",
+      "chat_id": 41742,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41743,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/test_matcher.rs",
+      "language": "rust",
+      "chat_id": 41746,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "cargo-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "find-matches",
+          "iterate-matches",
+          "capture-groups",
+          "replace-matches",
+          "short-circuiting",
+          "error-propagation"
+        ],
+        "F4": [],
+        "F5": [
+          "matcher-trait",
+          "regex-matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "iterator-logic-failure",
+          "capture-index-mismatch"
+        ],
+        "F10": [
+          "matcher-api-usage"
+        ],
+        "F11": "Add tests here to verify Matcher trait behavior, especially for new regex features or edge cases in iteration and capturing.",
+        "F12": "Use this file to test the implementation of the Matcher trait, including finding, iterating, capturing, and replacing matches with various edge cases.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41747,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "cargo-test"
+        ],
+        "F3": [
+          "matcher-integration"
+        ],
+        "F4": [],
+        "F5": [
+          "matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [
+          "matcher-integration"
+        ],
+        "F11": "Add new integration tests for the matcher crate in the `test_matcher` module.",
+        "F12": "Use this file as the entry point for the matcher crate's integration tests.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/util.rs",
+      "language": "rust",
+      "chat_id": 41748,
+      "fields": {
+        "F0": false,
+        "F1": "rust-test-helper",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [
+          "matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [
+          "matcher-mock"
+        ],
+        "F11": "Add new matcher mocks or test utilities here.",
+        "F12": "Use this file as a test helper providing mock implementations of the Matcher trait.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/interpolate.rs",
+      "language": "rust",
+      "chat_id": 41750,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "find-capture-ref",
+          "interpolate-capture-ref",
+          "parse-capture-name",
+          "parse-capture-number",
+          "handle-dollar-sign-escape",
+          "handle-braced-capture-ref"
+        ],
+        "F4": [
+          "interpolate",
+          "find_cap_ref"
+        ],
+        "F5": [
+          "interpolate",
+          "matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [],
+        "F10": [
+          "capture-group-interpolation"
+        ],
+        "F11": "Add tests here when modifying capture reference parsing or interpolation behavior.",
+        "F12": "Use this file to test capture group reference parsing and interpolation logic, including named and numbered groups.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41751,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41752,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41753,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "MIT"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/README.md",
+      "language": "markdown",
+      "chat_id": 41754,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41755,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.gitignore",
+      "language": "plaintext",
+      "chat_id": 41758,
+      "fields": {
+        "F0": false,
+        "F1": "test-fixture-data",
+        "F2": [],
+        "F3": [
+          "gitignore-pattern-matching",
+          "path-matching",
+          "wildcard-expansion",
+          "directory-matching"
+        ],
+        "F4": [],
+        "F5": [
+          "ignore"
+        ],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Update this file to add new gitignore pattern scenarios for testing.",
+        "F12": "Use this file as test fixture data for validating gitignore pattern matching logic.",
+        "F13": "high",
+        "F14": "gitignore"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+      "language": "rust",
+      "chat_id": 41759,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "cargo-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "match-path-or-parents",
+          "ignore-files-in-root",
+          "ignore-files-in-deep",
+          "ignore-directories",
+          "panic-on-invalid-path"
+        ],
+        "F4": [
+          "matched_path_or_any_parents"
+        ],
+        "F5": [
+          "ignore",
+          "gitignore"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "tests/gitignore_matched_path_or_any_parents_tests.gitignore"
+        ],
+        "F8": [
+          "panic",
+          "exact-output"
+        ],
+        "F9": [
+          "gitignore-matching-regression",
+          "path-validation"
+        ],
+        "F10": [
+          "gitignore-parent-matching"
+        ],
+        "F11": "Add tests here for new gitignore matching patterns or edge cases involving parent directory traversal.",
+        "F12": "Use this file to test the `matched_path_or_any_parents` API of the gitignore module, verifying correct ignore behavior for files and directories at various depths.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_skip_bom.gitignore",
+      "language": "plaintext",
+      "chat_id": 41760,
+      "fields": {
+        "F0": false,
+        "F1": "test-fixture-data",
+        "F2": [],
+        "F3": [
+          "bom-handling",
+          "file-parsing",
+          "encoding-robustness"
+        ],
+        "F4": [],
+        "F5": [
+          "ignore"
+        ],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Update this file to add new encoding or BOM scenarios for testing.",
+        "F12": "Use this file as test fixture data for validating BOM handling in gitignore files.",
+        "F13": "high",
+        "F14": "gitignore"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_skip_bom.rs",
+      "language": "rust",
+      "chat_id": 41761,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/default_types.rs",
+      "language": "rust",
+      "chat_id": 41763,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "verify-default-types-sorting"
+        ],
+        "F4": [],
+        "F5": [
+          "ignore",
+          "file-type-definition"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "unsorted-default-types-regression"
+        ],
+        "F10": [
+          "default-types-integrity"
+        ],
+        "F11": "Add tests here to verify the integrity of the `DEFAULT_TYPES` constant, such as sorting or uniqueness checks.",
+        "F12": "Use this file to test that the default file types list is sorted lexicographically.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/dir.rs",
+      "language": "rust",
+      "chat_id": 41764,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "explicit-ignore-matching",
+          "git-exclude-matching",
+          "gitignore-matching",
+          "jj-repo-support",
+          "ignore-precedence",
+          "custom-ignore-precedence",
+          "parent-directory-matching",
+          "absolute-parent-matching",
+          "linked-worktree-support"
+        ],
+        "F4": [
+          "IgnoreBuilder",
+          "Ignore::matched",
+          "Ignore::add_child",
+          "Ignore::add_parents"
+        ],
+        "F5": [
+          "ignore",
+          "gitignore",
+          "directory-traversal"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [
+          "TempDir"
+        ],
+        "F8": [
+          "exact-output",
+          "panic"
+        ],
+        "F9": [
+          "ignore-rule-regression",
+          "gitignore-precedence-bug",
+          "directory-traversal-bug"
+        ],
+        "F10": [
+          "gitignore-precedence",
+          "ignore-matching"
+        ],
+        "F11": "Add tests here to verify ignore rule precedence, directory traversal logic, and VCS integration.",
+        "F12": "Use this file to test the Ignore matcher logic, including gitignore precedence, directory traversal, and VCS integration.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/gitignore.rs",
+      "language": "rust",
+      "chat_id": 41765,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "glob-matching",
+          "path-stripping",
+          "whitelist-matching",
+          "directory-only-matching",
+          "case-insensitive-matching",
+          "parse-excludes-file",
+          "expand-tilde"
+        ],
+        "F4": [
+          "case_insensitive",
+          "allow_unclosed_class"
+        ],
+        "F5": [
+          "gitignore",
+          "glob-matcher"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "boolean-assertion"
+        ],
+        "F9": [
+          "glob-parsing-regression",
+          "path-matching-regression"
+        ],
+        "F10": [
+          "gitignore-semantics",
+          "glob-syntax"
+        ],
+        "F11": "Add tests here to verify specific gitignore glob patterns or edge cases in path matching.",
+        "F12": "Use this file to test gitignore glob parsing and matching logic, including case sensitivity, directory-only matching, and configuration file parsing.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41766,
+      "fields": {
+        "F0": false,
+        "F1": "rust-test-helper",
+        "F2": [
+          "cargo-test",
+          "cfg-test"
+        ],
+        "F3": [],
+        "F4": [],
+        "F5": [
+          "ignore",
+          "walk"
+        ],
+        "F6": [],
+        "F7": [
+          "TempDir"
+        ],
+        "F8": [],
+        "F9": [],
+        "F10": [
+          "temp-directory-setup",
+          "test-error-utilities"
+        ],
+        "F11": "Use this module's helpers (TempDir, err!) in other test files within the crate.",
+        "F12": "Use this file as a test helper module providing utilities like TempDir and error macros for other tests in the crate.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/overrides.rs",
+      "language": "rust",
+      "chat_id": 41767,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "match-glob-override",
+          "handle-whitelist-glob",
+          "handle-ignore-glob",
+          "enforce-glob-precedence",
+          "match-case-insensitive",
+          "match-case-sensitive",
+          "handle-directory-matching"
+        ],
+        "F4": [
+          "OverrideBuilder::new",
+          "OverrideBuilder::add",
+          "OverrideBuilder::case_insensitive",
+          "Override::matched",
+          "Override::is_empty"
+        ],
+        "F5": [
+          "overrides",
+          "gitignore"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "boolean",
+          "panic"
+        ],
+        "F9": [
+          "override-matching-regression",
+          "case-sensitivity-regression",
+          "precedence-bug"
+        ],
+        "F10": [
+          "override-glob-matching",
+          "include-exclude-logic"
+        ],
+        "F11": "Add tests here for new override features, glob precedence edge cases, or matching behavior changes.",
+        "F12": "Use this file to test the override glob matching logic, including precedence, case sensitivity, and directory handling.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41768,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/types.rs",
+      "language": "rust",
+      "chat_id": 41769,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "match-file-type",
+          "negate-file-type",
+          "build-type-matcher",
+          "parse-type-definition"
+        ],
+        "F4": [],
+        "F5": [
+          "ignore",
+          "types"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "file-type-matching-regression"
+        ],
+        "F10": [
+          "file-type-logic"
+        ],
+        "F11": "Add new unit tests here to cover additional file type matching scenarios or edge cases in definition parsing.",
+        "F12": "Use this file to test the file type matching logic. It covers selecting, negating, and building file type definitions, including edge cases for invalid definitions.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/walk.rs",
+      "language": "rust",
+      "chat_id": 41770,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/examples/walk.rs",
+      "language": "rust",
+      "chat_id": 41772,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41773,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/COPYING",
+      "language": "plaintext",
+      "chat_id": 41774,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41775,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/README.md",
+      "language": "markdown",
+      "chat_id": 41776,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41777,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41780,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/examples/simplegrep.rs",
+      "language": "rust",
+      "chat_id": 41782,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41783,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "toml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/COPYING",
+      "language": "plaintext",
+      "chat_id": 41784,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41785,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/README.md",
+      "language": "markdown",
+      "chat_id": 41786,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41787,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/fnv.rs",
+      "language": "rust",
+      "chat_id": 41790,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/glob.rs",
+      "language": "rust",
+      "chat_id": 41791,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test"
+        ],
+        "F3": [
+          "parse-glob-pattern",
+          "generate-regex",
+          "match-path",
+          "handle-character-classes",
+          "handle-alternates",
+          "handle-wildcards",
+          "handle-recursive-patterns",
+          "handle-literal-optimizations"
+        ],
+        "F4": [
+          "GlobBuilder",
+          "Glob::new",
+          "case_insensitive",
+          "literal_separator",
+          "backslash_escape",
+          "empty_alternates",
+          "allow_unclosed_class"
+        ],
+        "F5": [
+          "globset",
+          "parser",
+          "matcher"
+        ],
+        "F6": [
+          "unix",
+          "windows"
+        ],
+        "F7": [],
+        "F8": [
+          "panic",
+          "exact-output"
+        ],
+        "F9": [
+          "glob-parsing-regression",
+          "regex-generation-correctness",
+          "path-matching-logic"
+        ],
+        "F10": [
+          "glob-syntax",
+          "glob-matching"
+        ],
+        "F11": "Add tests here for new glob syntax features or to verify regex generation for complex patterns.",
+        "F12": "Use this file to test glob pattern parsing, regex compilation, and path matching logic, including edge cases for character classes and platform-specific separators.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41792,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "glob-set-matching",
+          "glob-escaping",
+          "empty-set-handling",
+          "regex-state-isolation"
+        ],
+        "F4": [
+          "GlobSetBuilder",
+          "GlobSet::is_match",
+          "GlobSet::matches",
+          "escape"
+        ],
+        "F5": [
+          "globset"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output",
+          "boolean-match"
+        ],
+        "F9": [
+          "glob-matching-regression",
+          "memory-leak-in-matcher"
+        ],
+        "F10": [
+          "globset-core-logic"
+        ],
+        "F11": "Add tests here for new glob syntax features or matching strategies.",
+        "F12": "Use this file to test the core `GlobSet` functionality, including pattern matching, set building, and character escaping.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41793,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "file-extension-extraction",
+          "path-normalization",
+          "platform-specific-separators"
+        ],
+        "F4": [
+          "file_name_ext",
+          "normalize_path"
+        ],
+        "F5": [
+          "pathutil",
+          "globset"
+        ],
+        "F6": [
+          "unix",
+          "windows"
+        ],
+        "F7": [],
+        "F8": [
+          "panic",
+          "exact-output"
+        ],
+        "F9": [
+          "path-handling-regression",
+          "extension-parsing-regression"
+        ],
+        "F10": [
+          "path-utility-functions"
+        ],
+        "F11": "Add tests here for new path manipulation utilities or edge cases in file name parsing.",
+        "F12": "Use this file to test path utility functions, specifically file name extraction, extension parsing, and cross-platform path normalization.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/serde_impl.rs",
+      "language": "rust",
+      "chat_id": 41794,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "glob-deserialization",
+          "glob-serialization",
+          "globset-deserialization",
+          "serde-error-handling"
+        ],
+        "F4": [
+          "serde_json::from_str",
+          "serde_json::to_string",
+          "serde_json::from_value",
+          "Glob::new"
+        ],
+        "F5": [
+          "serde",
+          "globset"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "assert_eq",
+          "assert"
+        ],
+        "F9": [
+          "serde-regression",
+          "invalid-pattern-handling"
+        ],
+        "F10": [
+          "serde-implementation"
+        ],
+        "F11": "Add tests here when modifying serde logic for Glob or GlobSet.",
+        "F12": "Use this file to test serde serialization and deserialization for Glob and GlobSet types.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/benches/bench.rs",
+      "language": "rust",
+      "chat_id": 41796,
+      "fields": {
+        "F0": true,
+        "F1": "rust-benchmark",
+        "F2": [
+          "custom-harness"
+        ],
+        "F3": [
+          "glob-matching-performance",
+          "regex-matching-performance",
+          "set-matching-performance"
+        ],
+        "F4": [
+          "Glob::new",
+          "GlobSetBuilder::build",
+          "GlobMatcher::is_match_candidate"
+        ],
+        "F5": [
+          "globset",
+          "glob"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "assert"
+        ],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [
+          "performance-benchmarks"
+        ],
+        "F11": "Add benchmarks here to measure performance impact of changes to glob matching logic.",
+        "F12": "Use this file to benchmark the performance of glob matching compared to the standard glob crate.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41797,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "toml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/COPYING",
+      "language": "plaintext",
+      "chat_id": 41798,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41799,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/README.md",
+      "language": "markdown",
+      "chat_id": 41800,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41801,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/help.rs",
+      "language": "rust",
+      "chat_id": 41805,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/man.rs",
+      "language": "rust",
+      "chat_id": 41806,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/mod.rs",
+      "language": "rust",
+      "chat_id": 41807,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.long.help",
+      "language": "plaintext",
+      "chat_id": 41808,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "help"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.rg.1",
+      "language": "plaintext",
+      "chat_id": 41809,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/template.short.help",
+      "language": "plaintext",
+      "chat_id": 41810,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "help"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/version.rs",
+      "language": "rust",
+      "chat_id": 41811,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/bash.rs",
+      "language": "rust",
+      "chat_id": 41813,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/encodings.sh",
+      "language": "bash",
+      "chat_id": 41814,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "sh"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/fish.rs",
+      "language": "rust",
+      "chat_id": 41815,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/mod.rs",
+      "language": "rust",
+      "chat_id": 41816,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/powershell.rs",
+      "language": "rust",
+      "chat_id": 41817,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/prelude.fish",
+      "language": "fish",
+      "chat_id": 41818,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "fish"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/rg.zsh",
+      "language": "zsh",
+      "chat_id": 41819,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "zsh"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/zsh.rs",
+      "language": "rust",
+      "chat_id": 41820,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/config.rs",
+      "language": "rust",
+      "chat_id": 41821,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "config-file-parsing",
+          "argument-extraction",
+          "utf-8-handling",
+          "comment-handling"
+        ],
+        "F4": [
+          "RIPGREP_CONFIG_PATH"
+        ],
+        "F5": [
+          "core",
+          "flags",
+          "config"
+        ],
+        "F6": [
+          "unix",
+          "windows"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "config-parsing-regression",
+          "platform-specific-path-handling"
+        ],
+        "F10": [
+          "config-parsing",
+          "rc-file-loading"
+        ],
+        "F11": "Add tests here for new config file formats or edge cases in argument parsing.",
+        "F12": "Use this file to test the parsing of ripgrep configuration files and argument extraction.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/hiargs.rs",
+      "language": "rust",
+      "chat_id": 41823,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/lowargs.rs",
+      "language": "rust",
+      "chat_id": 41824,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/mod.rs",
+      "language": "rust",
+      "chat_id": 41825,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/parse.rs",
+      "language": "rust",
+      "chat_id": 41826,
+      "fields": {
+        "F0": false,
+        "F1": "rust-test-helper",
+        "F2": [
+          "cfg-test"
+        ],
+        "F3": [],
+        "F4": [
+          "parse_low_raw"
+        ],
+        "F5": [
+          "cli-parser"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [
+          "cli-parsing-utilities"
+        ],
+        "F11": "Use this helper in integration tests to verify low-level argument parsing without side effects.",
+        "F12": "Use this file as a test helper providing raw parsing utilities for CLI argument validation.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/haystack.rs",
+      "language": "rust",
+      "chat_id": 41827,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/logger.rs",
+      "language": "rust",
+      "chat_id": 41828,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/main.rs",
+      "language": "rust",
+      "chat_id": 41829,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/messages.rs",
+      "language": "rust",
+      "chat_id": 41830,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/README.md",
+      "language": "markdown",
+      "chat_id": 41831,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/search.rs",
+      "language": "rust",
+      "chat_id": 41832,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/decompress.rs",
+      "language": "rust",
+      "chat_id": 41835,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/escape.rs",
+      "language": "rust",
+      "chat_id": 41836,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "escape-bytes",
+          "unescape-bytes",
+          "escape-os-string",
+          "unescape-os-string",
+          "handle-invalid-utf8",
+          "handle-hex-escapes"
+        ],
+        "F4": [
+          "escape",
+          "escape_os",
+          "unescape",
+          "unescape_os"
+        ],
+        "F5": [
+          "cli",
+          "escape"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "escape-logic-regression",
+          "utf8-handling"
+        ],
+        "F10": [
+          "byte-escaping"
+        ],
+        "F11": "Add tests here for new escape sequences or to verify edge cases in byte string conversion.",
+        "F12": "Use this file to test byte escaping and unescaping logic, including handling of invalid UTF-8 and OS strings.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/hostname.rs",
+      "language": "rust",
+      "chat_id": 41837,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/human.rs",
+      "language": "rust",
+      "chat_id": 41838,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "parse-human-size",
+          "handle-size-suffixes",
+          "validate-size-input",
+          "detect-overflow"
+        ],
+        "F4": [
+          "K",
+          "M",
+          "G"
+        ],
+        "F5": [
+          "cli",
+          "parser"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exact-output"
+        ],
+        "F9": [
+          "parsing-regression",
+          "integer-overflow"
+        ],
+        "F10": [
+          "size-parsing"
+        ],
+        "F11": "Add tests here for new size suffixes or parsing edge cases.",
+        "F12": "Use this file to test human-readable size parsing logic and error handling.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41839,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/pattern.rs",
+      "language": "rust",
+      "chat_id": 41840,
+      "fields": {
+        "F0": true,
+        "F1": "rust-unit-test",
+        "F2": [
+          "cargo-test",
+          "cfg-test",
+          "rust-test-attr"
+        ],
+        "F3": [
+          "pattern-utf8-validation",
+          "invalid-utf8-detection",
+          "os-str-pattern-conversion"
+        ],
+        "F4": [
+          "pattern_from_bytes",
+          "pattern_from_os"
+        ],
+        "F5": [
+          "pattern-parsing"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "panic"
+        ],
+        "F9": [
+          "invalid-pattern-handling",
+          "utf8-conversion-regression"
+        ],
+        "F10": [
+          "pattern-validation"
+        ],
+        "F11": "Add tests here for new pattern conversion logic or error handling scenarios.",
+        "F12": "Use this file to test pattern conversion logic, specifically UTF-8 validation and error handling for OS strings and byte slices.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/process.rs",
+      "language": "rust",
+      "chat_id": 41841,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/wtr.rs",
+      "language": "rust",
+      "chat_id": 41842,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/Cargo.toml",
+      "language": "toml",
+      "chat_id": 41843,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41844,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/README.md",
+      "language": "markdown",
+      "chat_id": 41845,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41846,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/sha256-releases",
+      "language": "plaintext",
+      "chat_id": 41848,
+      "fields": {
+        "F0": true,
+        "F1": "ci-validation",
+        "F2": [
+          "custom-harness"
+        ],
+        "F3": [
+          "verify-release-hash",
+          "download-artifact"
+        ],
+        "F4": [],
+        "F5": [
+          "release-artifacts"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [
+          "exit-code"
+        ],
+        "F9": [
+          "release-tampering"
+        ],
+        "F10": [
+          "release-validation"
+        ],
+        "F11": "Add new release verification steps here if the release process changes.",
+        "F12": "Use this file to validate release artifacts by downloading and verifying SHA256 hashes.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/test-complete",
+      "language": "plaintext",
+      "chat_id": 41849,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/ubuntu-install-packages",
+      "language": "plaintext",
+      "chat_id": 41850,
+      "fields": {
+        "F0": true,
+        "F1": "ci-validation",
+        "F2": [
+          "custom-harness"
+        ],
+        "F3": [
+          "install-dependencies",
+          "configure-ci-environment"
+        ],
+        "F4": [],
+        "F5": [
+          "ci"
+        ],
+        "F6": [
+          "linux"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "missing-dependencies"
+        ],
+        "F10": [
+          "ci-setup"
+        ],
+        "F11": "Update this file when new system-level dependencies are required for the CI pipeline.",
+        "F12": "Use this file to set up the CI environment by installing required system packages.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "ci/utils.sh",
+      "language": "bash",
+      "chat_id": 41851,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "sh"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/raw.csv",
+      "language": "csv",
+      "chat_id": 41855,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output data.",
+        "F12": "Use this file as benchmark data containing performance metrics for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/README.md",
+      "language": "markdown",
+      "chat_id": 41856,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2022-12-16-archlinux-duff/summary",
+      "language": "plaintext",
+      "chat_id": 41857,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [
+          "benchmark-performance",
+          "search-speed",
+          "literal-search",
+          "regex-search",
+          "case-insensitive-search"
+        ],
+        "F4": [],
+        "F5": [
+          "cli",
+          "searcher"
+        ],
+        "F6": [
+          "linux"
+        ],
+        "F7": [],
+        "F8": [
+          "benchmark-result"
+        ],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [
+          "performance-history"
+        ],
+        "F11": "Do not modify this file directly; it is generated by the benchmark harness.",
+        "F12": "Use this file as benchmark data containing performance results for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/raw.csv",
+      "language": "csv",
+      "chat_id": 41859,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output data.",
+        "F12": "Use this file as benchmark data containing performance metrics for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/README.md",
+      "language": "markdown",
+      "chat_id": 41860,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [
+          "cli",
+          "performance"
+        ],
+        "F6": [
+          "all"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "This file is a record of a benchmark run; do not add tests here.",
+        "F12": "This file documents the context and tool versions for a benchmark run performed on 2020-10-14.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2020-10-14-archlinux-frink/summary",
+      "language": "plaintext",
+      "chat_id": 41861,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41863,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as benchmark data for performance regression testing.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/README",
+      "language": "plaintext",
+      "chat_id": 41864,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2018-01-08-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41865,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [
+          "benchmark-performance-analysis",
+          "historical-baseline-comparison"
+        ],
+        "F4": [],
+        "F5": [
+          "cli",
+          "searcher"
+        ],
+        "F6": [
+          "archlinux"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [
+          "benchmark-history"
+        ],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as historical benchmark data to compare performance regression or improvement across different runs and platforms.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-30-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41867,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "This is a benchmark data artifact; do not add tests to this file.",
+        "F12": "Use this file as benchmark result data; it is not a Rust source file and contains no executable tests.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-30-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41868,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [
+          "benchmark-performance-tracking",
+          "historical-baseline-comparison"
+        ],
+        "F4": [],
+        "F5": [
+          "ripgrep"
+        ],
+        "F6": [
+          "archlinux"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as historical benchmark data to compare performance regression or improvement.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-system/raw.csv",
+      "language": "csv",
+      "chat_id": 41870,
+      "fields": {
+        "F0": false,
+        "F1": "rust-fixture",
+        "F2": [],
+        "F3": [
+          "benchmark-performance",
+          "measure-search-speed",
+          "cli-flag-performance",
+          "memory-mapped-io-performance",
+          "case-insensitive-search-performance"
+        ],
+        "F4": [
+          "-n",
+          "-i",
+          "--mmap",
+          "--no-ignore",
+          "-tall",
+          "-w",
+          "-nw"
+        ],
+        "F5": [
+          "cli",
+          "searcher",
+          "matcher",
+          "filesystem-walk"
+        ],
+        "F6": [
+          "linux",
+          "archlinux"
+        ],
+        "F7": [
+          "/data/benchsuite/subtitles/OpenSubtitles2016.raw.sample.en",
+          "/data/benchsuite/subtitles/OpenSubtitles2016.raw.ru"
+        ],
+        "F8": [
+          "benchmark-result"
+        ],
+        "F9": [
+          "performance-regression",
+          "memory-mapped-io-regression"
+        ],
+        "F10": [
+          "performance-benchmarking"
+        ],
+        "F11": "Use this file to verify performance benchmarks and search speed across different tools and configurations, specifically checking for regressions in the musl system environment.",
+        "F12": "Use this file as benchmark output data recording the execution time and line counts of ripgrep (rg) on specific corpora under Arch Linux with musl.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-system/summary",
+      "language": "plaintext",
+      "chat_id": 41871,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as historical benchmark data for performance regression tracking.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-jemalloc/raw.csv",
+      "language": "csv",
+      "chat_id": 41873,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output data.",
+        "F12": "Use this file as benchmark data containing performance metrics for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-musl-jemalloc/summary",
+      "language": "plaintext",
+      "chat_id": 41874,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output.",
+        "F12": "Use this file as historical benchmark data for performance regression tracking.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-system/raw.csv",
+      "language": "csv",
+      "chat_id": 41876,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": "N/A",
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "This is a data file; do not add tests here.",
+        "F12": "Use this file as raw benchmark output data recording performance metrics for ripgrep and other search tools.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-system/summary",
+      "language": "plaintext",
+      "chat_id": 41877,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [
+          "performance"
+        ],
+        "F6": [
+          "linux"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [
+          "performance-baseline"
+        ],
+        "F11": "Do not add tests here; this is generated benchmark output.",
+        "F12": "Use this file as historical benchmark data for performance regression tracking.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-jemalloc/raw.csv",
+      "language": "csv",
+      "chat_id": 41879,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output data.",
+        "F12": "Use this file as benchmark data containing performance metrics for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah-glibc-jemalloc/summary",
+      "language": "plaintext",
+      "chat_id": 41880,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output.",
+        "F12": "Use this file as historical benchmark data for performance regression tracking.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41882,
+      "fields": {
+        "F0": false,
+        "F1": "rust-fixture",
+        "F2": [],
+        "F3": [
+          "benchmark-data-collection",
+          "performance-metrics",
+          "literal-search-performance",
+          "regex-search-performance",
+          "case-insensitive-search-performance"
+        ],
+        "F4": [
+          "-n",
+          "--no-ignore",
+          "-i",
+          "--mmap",
+          "-tall",
+          "-w",
+          "-nw",
+          "(?-u)"
+        ],
+        "F5": [
+          "cli",
+          "searcher",
+          "matcher"
+        ],
+        "F6": [
+          "linux",
+          "archlinux"
+        ],
+        "F7": [
+          "/data/benchsuite/subtitles/OpenSubtitles2016.raw.sample.en",
+          "/data/benchsuite/subtitles/OpenSubtitles2016.raw.ru"
+        ],
+        "F8": [],
+        "F9": [
+          "performance-regression",
+          "search-speed-degradation"
+        ],
+        "F10": [
+          "benchmark-results"
+        ],
+        "F11": "Use this file to compare current benchmark results against historical baselines to detect performance regressions.",
+        "F12": "Use this file as benchmark result data containing performance metrics for ripgrep commands executed on 2016-12-24.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-12-24-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41883,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output.",
+        "F12": "Use this file as historical benchmark data for performance regression tracking.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-22-archlinux-cheetah/raw.csv",
+      "language": "csv",
+      "chat_id": 41885,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; this is generated benchmark output data.",
+        "F12": "Use this file as benchmark data containing performance metrics for ripgrep and competitors.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-22-archlinux-cheetah/summary",
+      "language": "plaintext",
+      "chat_id": 41886,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/raw.csv",
+      "language": "csv",
+      "chat_id": 41888,
+      "fields": {
+        "F0": false,
+        "F1": "rust-fixture",
+        "F2": [],
+        "F3": [
+          "benchmark-performance",
+          "measure-search-speed",
+          "cli-flag-performance",
+          "memory-mapped-io-performance",
+          "case-insensitive-search-performance",
+          "tool-comparison"
+        ],
+        "F4": [
+          "-n",
+          "-i",
+          "--mmap",
+          "--no-ignore",
+          "-tall",
+          "-w",
+          "-nw"
+        ],
+        "F5": [
+          "cli",
+          "searcher",
+          "matcher",
+          "filesystem-walk"
+        ],
+        "F6": [
+          "linux",
+          "ubuntu"
+        ],
+        "F7": [
+          "/mnt/bench/subtitles/OpenSubtitles2016.raw.sample.en",
+          "/mnt/bench/subtitles/OpenSubtitles2016.raw.ru"
+        ],
+        "F8": [
+          "benchmark-result"
+        ],
+        "F9": [
+          "performance-regression",
+          "competitive-performance-regression"
+        ],
+        "F10": [
+          "performance-benchmarking",
+          "tool-comparison"
+        ],
+        "F11": "Use this file to verify performance benchmarks and search speed, specifically comparing ripgrep against other search tools to ensure competitive advantage is maintained.",
+        "F12": "Use this file as benchmark output data comparing the performance of ripgrep (rg) against other search tools (ag, git grep, ucg, pt, sift, grep) on Ubuntu 16.04.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/README.SETUP",
+      "language": "plaintext",
+      "chat_id": 41889,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "SETUP"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-20-ubuntu1604-ec2/summary",
+      "language": "plaintext",
+      "chat_id": 41890,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [
+          "benchmark-performance-analysis",
+          "historical-baseline-comparison"
+        ],
+        "F4": [],
+        "F5": [
+          "cli",
+          "searcher"
+        ],
+        "F6": [
+          "ubuntu1604"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [
+          "benchmark-history"
+        ],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as historical benchmark data to compare performance regression or improvement across different runs and platforms.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/raw.csv",
+      "language": "csv",
+      "chat_id": 41892,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as benchmark data for performance regression testing.",
+        "F13": "high",
+        "F14": "csv"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/README.SETUP",
+      "language": "plaintext",
+      "chat_id": 41893,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "SETUP"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/runs/2016-09-17-ubuntu1604-ec2/summary",
+      "language": "plaintext",
+      "chat_id": 41894,
+      "fields": {
+        "F0": false,
+        "F1": "benchmark-data",
+        "F2": [],
+        "F3": [
+          "benchmark-performance-analysis",
+          "historical-baseline-comparison"
+        ],
+        "F4": [],
+        "F5": [
+          "cli",
+          "searcher"
+        ],
+        "F6": [
+          "ubuntu1604"
+        ],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "performance-regression"
+        ],
+        "F10": [
+          "benchmark-history"
+        ],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "Use this file as historical benchmark data to compare performance regression or improvement across different runs and platforms.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "benchsuite/benchsuite",
+      "language": "plaintext",
+      "chat_id": 41895,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/workflows/ci.yml",
+      "language": "yaml",
+      "chat_id": 41898,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/workflows/release.yml",
+      "language": "yaml",
+      "chat_id": 41899,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "language": "yaml",
+      "chat_id": 41901,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/config.yml",
+      "language": "yaml",
+      "chat_id": 41902,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "language": "markdown",
+      "chat_id": 41903,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".github/FUNDING.yml",
+      "language": "yaml",
+      "chat_id": 41904,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".cargo/config.toml",
+      "language": "toml",
+      "chat_id": 41906,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".gitignore",
+      "language": "plaintext",
+      "chat_id": 41907,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": ".ignore",
+      "language": "plaintext",
+      "chat_id": 41908,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "ignore"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "AI_POLICY.md",
+      "language": "markdown",
+      "chat_id": 41909,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "build.rs",
+      "language": "rust",
+      "chat_id": 41910,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "rs"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "Cargo.lock",
+      "language": "plaintext",
+      "chat_id": 41911,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "lock"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "Cargo.toml",
+      "language": "toml",
+      "chat_id": 41912,
+      "fields": {
+        "F0": true,
+        "F1": "rust-integration-test",
+        "F2": [
+          "cargo-test"
+        ],
+        "F3": [
+          "integration-tests",
+          "cli-validation"
+        ],
+        "F4": [],
+        "F5": [
+          "ripgrep"
+        ],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [
+          "regression"
+        ],
+        "F10": [
+          "integration-tests"
+        ],
+        "F11": "Add new integration test modules by adding `[[test]]` entries here or by adding modules to the existing `tests/` directory.",
+        "F12": "Use this file to define the integration test suite for the ripgrep binary.",
+        "F13": "high",
+        "F14": "toml"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "CHANGELOG.md",
+      "language": "markdown",
+      "chat_id": 41913,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "CONTRIBUTING.md",
+      "language": "markdown",
+      "chat_id": 41914,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "COPYING",
+      "language": "plaintext",
+      "chat_id": 41915,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "FAQ.md",
+      "language": "markdown",
+      "chat_id": 41916,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "GUIDE.md",
+      "language": "markdown",
+      "chat_id": 41917,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "HomebrewFormula",
+      "language": "plaintext",
+      "chat_id": 41918,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "LICENSE-MIT",
+      "language": "plaintext",
+      "chat_id": 41919,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "README.md",
+      "language": "markdown",
+      "chat_id": 41920,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "RELEASE-CHECKLIST.md",
+      "language": "markdown",
+      "chat_id": 41921,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "md"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "rustfmt.toml",
+      "language": "toml",
+      "chat_id": 41922,
+      "fields": {
+        "F0": false,
+        "F1": "N/A",
+        "F2": "N/A",
+        "F3": "N/A",
+        "F4": "N/A",
+        "F5": "N/A",
+        "F6": "N/A",
+        "F7": "N/A",
+        "F8": "N/A",
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "N/A",
+        "F12": "N/A",
+        "F13": "N/A",
+        "F14": "N/A"
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "UNLICENSE",
+      "language": "plaintext",
+      "chat_id": 41923,
+      "fields": {
+        "F0": false,
+        "F1": "not-test",
+        "F2": [],
+        "F3": [],
+        "F4": [],
+        "F5": [],
+        "F6": [],
+        "F7": [],
+        "F8": [],
+        "F9": [],
+        "F10": [],
+        "F11": "Do not add tests here; use the relevant test module for this component.",
+        "F12": "This file does not contain test coverage intent.",
+        "F13": "high",
+        "F14": "N/A"
+      }
+    }
+  ]
+}
