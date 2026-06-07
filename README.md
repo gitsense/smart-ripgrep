@@ -2,13 +2,14 @@
 
 **ripgrep with GitSense intelligence layers**
 
-This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that comes pre-loaded with two GitSense intelligence layers (`code-intent` and `implicit-todos`).
+This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that comes pre-loaded with three GitSense intelligence layers (`code-intent`, `implicit-todos`, and `rust-test-coverage-intent`).
 
 ## What's Included
 
 - The complete ripgrep source code (identical to upstream, with only this README modified and a new .gitsense directory)
 - A `code-intent` manifest that explains what each file does
 - An `implicit-todos` manifest that finds TODOs that grep can't find
+- A `rust-test-coverage-intent` manifest that maps Rust tests to the behaviors, components, and regression risks they cover
 
 ## Quick Start
 
@@ -21,14 +22,18 @@ git clone https://github.com/gitsense/smart-ripgrep
 cd smart-ripgrep
 
 # Import the intelligence layers
-gsc manifest import code-intent
-gsc manifest import implicit-todos
+gsc manifest import .gitsense/manifests/code-intent.json
+gsc manifest import .gitsense/manifests/implicit-todos.json
+gsc manifest import .gitsense/manifests/rust-test-coverage-intent.json
 
 # Search code with metadata context
 gsc rg --db code-intent --fields purpose cache
 
 # Find files with hidden TODOs
 gsc query --db implicit-todos --filter "has_todo=true" --fields todo_summary
+
+# Find Rust tests that cover binary file detection
+gsc query --db rust-test-coverage-intent --filter "tested_behavior=binary-file-detection" --fields test_role,target_components,risk_covered,add_test_guidance
 ```
 
 ### Ask Your Agent
@@ -39,7 +44,11 @@ After importing the intelligence layers, start your agent (Claude Code, Codex, e
 gsc experts init
 ```
 
-Then simply chat with it about the codebase. The AI will know how to query the intelligence layers on your behalf.
+Then simply chat with it about the codebase. The AI will know how to query the intelligence layers on your behalf. For example, you can ask:
+
+> What Rust tests cover binary file detection, and where should I add a new test?
+
+The `rust-test-coverage-intent` layer maps Rust test files to their tested behaviors, target components, covered regression risks, and guidance for where to add tests. It is an intent map, not a line or branch coverage report.
 
 ---
 
