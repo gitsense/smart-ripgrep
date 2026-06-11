@@ -1,0 +1,3873 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-11T01:05:29.825Z",
+  "manifest": {
+    "name": "ripgrep - Rust Codebase Triage Map",
+    "database_name": "agent-file-triage",
+    "description": "Analyzes 214 files across Rust, Ruby, and shell scripts to generate semantic metadata for intelligent code navigation. This manifest tracks action-object keywords, functional parent domains, key entities, and logic constraints to enable AI agents to understand file purpose and discover relevant code segments quickly.",
+    "tags": [
+      "code-intent",
+      "discovery",
+      "polyglot",
+      "semantic-analysis"
+    ]
+  },
+  "repositories": [
+    {
+      "ref": "R0",
+      "name": "gitsense/smart-ripgrep"
+    }
+  ],
+  "branches": [
+    {
+      "ref": "B0",
+      "name": "master"
+    }
+  ],
+  "analyzers": [
+    {
+      "ref": "A0",
+      "id": "agent-file-triage::file-content::default",
+      "name": "agent-file-triage::file-content::default",
+      "description": "Generates file-local triage metadata that helps AI agents decide which candidate files to open, skip, or investigate next.",
+      "version": "1.0.0"
+    }
+  ],
+  "fields": [
+    {
+      "ref": "F0",
+      "name": "file_path",
+      "type": "string",
+      "display_name": "File Path",
+      "description": "No description available.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F1",
+      "name": "file_name",
+      "type": "string",
+      "display_name": "File Name",
+      "description": "No description available.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F2",
+      "name": "file_extension",
+      "type": "string",
+      "display_name": "File Extension",
+      "description": "No description available.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F3",
+      "name": "chat_id",
+      "type": "string",
+      "display_name": "Chat Id",
+      "description": "No description available.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F4",
+      "name": "triage_summary",
+      "type": "string",
+      "display_name": "Triage Summary",
+      "description": "One concise sentence explaining when this file is useful to open during agent navigation.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F5",
+      "name": "surface_area",
+      "type": "string",
+      "display_name": "Surface Area",
+      "description": "One of `primary-implementation`, `public-api`, `adapter`, `config`, `test`, `fixture`, `docs`, `generated`, `helper`, `call-site`, `build-tooling`, or `unknown`.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F6",
+      "name": "open_when",
+      "type": "array",
+      "display_name": "Open When",
+      "description": "1-4 concrete task conditions where an agent should open this file.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F7",
+      "name": "skip_when",
+      "type": "array",
+      "display_name": "Skip When",
+      "description": "1-4 concrete false-positive conditions where an agent should avoid opening this file.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F8",
+      "name": "answers_questions",
+      "type": "array",
+      "display_name": "Answers Questions",
+      "description": "1-4 concrete questions this file can answer.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F9",
+      "name": "context_needed",
+      "type": "string",
+      "display_name": "Context Needed",
+      "description": "Missing context an agent should search for next if this file is relevant but incomplete. Null if none is visible or needed.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F10",
+      "name": "related_context",
+      "type": "string",
+      "display_name": "Related Context",
+      "description": "Only visibly referenced paths, modules, packages, symbols, commands, routes, or config keys. Null if none are visible.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F11",
+      "name": "change_risk",
+      "type": "string",
+      "display_name": "Change Risk",
+      "description": "One of `low`, `medium`, `high`, or `unknown`.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F12",
+      "name": "change_risk_reason",
+      "type": "string",
+      "display_name": "Change Risk Reason",
+      "description": "One sentence explaining the risk using visible evidence.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F13",
+      "name": "confidence",
+      "type": "string",
+      "display_name": "Confidence",
+      "description": "One of `high`, `medium`, or `low`.",
+      "analyzer_ref": "A0"
+    },
+    {
+      "ref": "F14",
+      "name": "confidence_reason",
+      "type": "string",
+      "display_name": "Confidence Reason",
+      "description": "One sentence explaining confidence in the triage metadata using visible evidence.",
+      "analyzer_ref": "A0"
+    }
+  ],
+  "data": [
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/binary.rs",
+      "language": "rust",
+      "chat_id": 41655,
+      "fields": {
+        "F0": "tests/binary.rs",
+        "F1": "binary",
+        "F2": "rs",
+        "F3": "41655",
+        "F4": "This file contains integration tests for binary file detection logic, specifically verifying behavior around NUL bytes, memory maps, and search flags like `--text` and `--binary`.",
+        "F5": "test",
+        "F6": [
+          "Debugging or modifying binary file detection logic.",
+          "Investigating behavior differences between implicit and explicit file search.",
+          "Verifying fixes for issues related to memory maps and binary data.",
+          "Understanding edge cases in match counting for binary files."
+        ],
+        "F7": [
+          "Looking for the implementation of binary detection (this is a test file).",
+          "Modifying CLI argument parsing unrelated to binary flags.",
+          "Searching for standard text search logic.",
+          "Investigating performance optimizations unrelated to binary heuristics."
+        ],
+        "F8": [
+          "How does ripgrep behave when a NUL byte is found in a file searched implicitly vs explicitly?",
+          "What is the expected output when using `--mmap` with a binary file?",
+          "Does `--files-with-matches` report binary files differently than `--count`?",
+          "How does the `--text` flag affect binary file detection warnings?"
+        ],
+        "F9": "[\"Implementation of binary detection in the searcher core\",\"The `rgtest!` macro definition\",\"The test data file `tests/data/sherlock-nul.txt`\"]",
+        "F10": "[\"tests/data/sherlock-nul.txt\",\"grep::searcher::BinaryDetection\",\"--mmap flag logic\",\"--text flag logic\",\"--binary flag logic\"]",
+        "F11": "low",
+        "F12": "Changes here only affect test coverage and assertions, not the core binary search logic.",
+        "F13": "high",
+        "F14": "The file is clearly a test suite with specific assertions and comments explaining the scenarios."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/feature.rs",
+      "language": "rust",
+      "chat_id": 41656,
+      "fields": {
+        "F0": "tests/feature.rs",
+        "F1": "feature",
+        "F2": "rs",
+        "F3": "41656",
+        "F4": "This file contains integration tests for specific ripgrep features and historical bug fixes, useful for verifying expected behavior for complex command-line flags and edge cases.",
+        "F5": "test",
+        "F6": [
+          "Investigating the expected behavior or output format for specific ripgrep flags (e.g., encoding, context, sorting).",
+          "Verifying fixes for historical GitHub issues referenced in comments (e.g., issues #1, #7, #20).",
+          "Adding new integration tests for command-line argument combinations.",
+          "Understanding how `rgtest!` macro tests are structured for encoding or ignore logic."
+        ],
+        "F7": [
+          "Looking for the core implementation of search logic or regex matching.",
+          "Investigating the internal API of the printer or searcher crates.",
+          "Searching for unit tests of specific utility functions."
+        ],
+        "F8": [
+          "What is the expected output when using the `--crlf` flag with multiline matches?",
+          "How does ripgrep handle file encodings like UTF-16 or EUC-JP in integration tests?",
+          "What is the expected exit code when no files are searched due to ignore rules?",
+          "How does the `--max-depth` flag interact with directory structures in tests?"
+        ],
+        "F9": "[\"crate::hay\",\"crate::util\",\"rgtest! macro definition\"]",
+        "F10": "[\"crate::hay\",\"crate::util\",\"rgtest!\",\"SHERLOCK\",\"SHERLOCK_CRLF\"]",
+        "F11": "low",
+        "F12": "This file contains only integration tests; modifications affect CI coverage but do not alter production code behavior directly.",
+        "F13": "high",
+        "F14": "The file structure and purpose as an integration test suite are unambiguous."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/hay.rs",
+      "language": "rust",
+      "chat_id": 41657,
+      "fields": {
+        "F0": "tests/hay.rs",
+        "F1": "hay.rs",
+        "F2": "rs",
+        "F3": "41657",
+        "F4": "This file provides static text constants used as test fixtures for verifying line handling and CRLF behavior.",
+        "F5": "fixture",
+        "F6": [
+          "Writing tests that require a multi-line text input block.",
+          "Debugging issues related to CRLF (\\r\\n) line termination handling.",
+          "Searching for the source of the 'Sherlock Holmes' text used in test cases."
+        ],
+        "F7": [
+          "Modifying the core search or regex logic.",
+          "Investigating binary data detection or memory allocation strategies.",
+          "Looking for implementation details of the test runner itself."
+        ],
+        "F8": [
+          "What is the content of the standard text fixture used in tests?",
+          "Is there a CRLF variant of the text fixture available?",
+          "Does the fixture contain specific characters that might trigger edge cases?"
+        ],
+        "F9": "[\"Which specific test functions or modules import these constants.\"]",
+        "F10": "[\"SHERLOCK\",\"SHERLOCK_CRLF\"]",
+        "F11": "low",
+        "F12": "Modifying these constants only affects tests that specifically reference them.",
+        "F13": "high",
+        "F14": "The file clearly contains only static string literals intended for test data."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/json.rs",
+      "language": "rust",
+      "chat_id": 41658,
+      "fields": {
+        "F0": "tests/json.rs",
+        "F1": "json.rs",
+        "F2": "rs",
+        "F3": "41658",
+        "F4": "This file validates the structure, encoding, and edge-case behavior of ripgrep's JSON output mode, serving as the contract definition for JSON consumers.",
+        "F5": "test",
+        "F6": [
+          "Debugging issues related to JSON output format or schema changes.",
+          "Investigating how non-UTF-8 data is encoded (Base64 vs text) in JSON streams.",
+          "Verifying CRLF handling or replacement logic within JSON output.",
+          "Implementing a parser for ripgrep's JSON output format."
+        ],
+        "F7": [
+          "Modifying core search algorithms or regex engines (this only tests output).",
+          "Changing standard text-based output formats (e.g., standard grep style).",
+          "Investigating performance bottlenecks in file traversal."
+        ],
+        "F8": [
+          "What is the exact schema for the `Message` enum in JSON output?",
+          "How are binary files or invalid UTF-8 sequences represented in JSON?",
+          "Does the JSON output include carriage returns (`\\r`) in match lines?",
+          "What fields are included in the `Summary` message type?"
+        ],
+        "F9": "[\"crates/core/printer/json.rs\",\"crates/core/hay.rs\"]",
+        "F10": "[\"serde_json\",\"crate::hay\",\"crate::util\",\"SHERLOCK\",\"SHERLOCK_CRLF\"]",
+        "F11": "low",
+        "F12": "Changes here only affect test coverage and validation logic, not the runtime behavior of the binary itself.",
+        "F13": "high",
+        "F14": "The file is explicitly a test suite with clear assertions defining expected behavior."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/macros.rs",
+      "language": "rust",
+      "chat_id": 41659,
+      "fields": {
+        "F0": "tests/macros.rs",
+        "F1": "macros.rs",
+        "F2": "rs",
+        "F3": "41659",
+        "F4": "This file defines test utility macros for setting up test environments, handling PCRE2 feature toggling, and asserting output equality.",
+        "F5": "helper",
+        "F6": [
+          "Writing or debugging integration tests that need the standard test harness setup.",
+          "Investigating how the `pcre2` feature conditionally runs tests.",
+          "Understanding the custom assertion logic used for comparing search outputs."
+        ],
+        "F7": [
+          "Modifying the core search implementation or algorithms.",
+          "Analyzing production code paths or CLI argument parsing.",
+          "Investigating binary data detection logic."
+        ],
+        "F8": [
+          "How are test directories and commands initialized in the test suite?",
+          "How does the test suite handle the `pcre2` feature flag?",
+          "What custom assertion macros are available for comparing outputs?"
+        ],
+        "F9": "[\"The implementation of `crate::util::setup` and `crate::util::setup_pcre2`.\"]",
+        "F10": "[\"crate::util\",\"rgtest\",\"eqnice\",\"eqnice_repr\"]",
+        "F11": "medium",
+        "F12": "Changes to these macros affect how all tests are executed and how failures are reported.",
+        "F13": "high",
+        "F14": "The macros are explicitly defined for test setup and assertions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/misc.rs",
+      "language": "rust",
+      "chat_id": 41660,
+      "fields": {
+        "F0": "tests/misc.rs",
+        "F1": "misc.rs",
+        "F2": "rs",
+        "F3": "41660",
+        "F4": "Open this file to verify expected behavior for miscellaneous ripgrep features like search flags, file filtering, and compression handling through integration tests.",
+        "F5": "test",
+        "F6": [
+          "Verifying the expected output format or behavior of specific flags (e.g., --vimgrep, -z, -C).",
+          "Looking for examples of how to set up test directories, files, or symlinks for ripgrep integration testing.",
+          "Investigating regression tests for features that are not explicitly tracked in other test files."
+        ],
+        "F7": [
+          "Looking for the core implementation of search logic or flag parsing algorithms.",
+          "Searching for unit tests for specific internal modules or data structures.",
+          "Trying to understand the high-level architecture or entry points of the application."
+        ],
+        "F8": [
+          "What is the expected output format for the --vimgrep flag?",
+          "How does ripgrep handle binary files or files with null bytes in its test suite?",
+          "What are the specific test cases for file type filtering (-t) and globbing?"
+        ],
+        "F9": "[\"crate::hay module (for SHERLOCK constant)\",\"crate::util module (for Dir, TestCommand, eqnice!)\"]",
+        "F10": "[\"crate::hay::SHERLOCK\",\"crate::util::Dir\",\"crate::util::TestCommand\",\"crate::util::eqnice\",\"crate::util::sort_lines\"]",
+        "F11": "low",
+        "F12": "This is a test file; changes here typically only affect test coverage and rarely break production logic directly.",
+        "F13": "high",
+        "F14": "The file is clearly a test suite using standard integration test patterns and the rgtest! macro."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/multiline.rs",
+      "language": "rust",
+      "chat_id": 41661,
+      "fields": {
+        "F0": "tests/multiline.rs",
+        "F1": "multiline.rs",
+        "F2": "rs",
+        "F3": "41661",
+        "F4": "This file verifies multiline search edge cases like overlapping matches, dot behavior across newlines, and output formatting for multiline results.",
+        "F5": "test",
+        "F6": [
+          "Debugging multiline search bugs",
+          "Verifying --multiline-dotall behavior",
+          "Testing --vimgrep with multiline matches",
+          "Checking stdin handling for multiline patterns"
+        ],
+        "F7": [
+          "Looking for the implementation of the regex engine",
+          "Modifying single-line search logic",
+          "Changing CLI argument parsing (unless verifying behavior)"
+        ],
+        "F8": [
+          "How does ripgrep handle overlapping multiline matches?",
+          "Does . match newlines in multiline mode?",
+          "How does --vimgrep format multiline matches?",
+          "Does multiline search work on stdin?"
+        ],
+        "F9": "[\"Implementation of the multiline search logic\",\"definition of rgtest! macro\"]",
+        "F10": "[\"crate::hay::SHERLOCK\",\"crate::util::{Dir, TestCommand}\",\"rgtest!\"]",
+        "F11": "low",
+        "F12": "Changes here only affect test coverage and do not impact runtime behavior.",
+        "F13": "high",
+        "F14": "The file is clearly a test file with specific assertions and imports."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/regression.rs",
+      "language": "rust",
+      "chat_id": 41662,
+      "fields": {
+        "F0": "tests/regression.rs",
+        "F1": "regression.rs",
+        "F2": "rs",
+        "F3": "41662",
+        "F4": "This file contains a comprehensive suite of regression tests for ripgrep, verifying specific bug fixes and edge cases related to ignore rules, file matching, and output formatting.",
+        "F5": "test",
+        "F6": [
+          "Investigating a specific bug referenced by a GitHub issue number (e.g., r16, r127, r829).",
+          "Verifying the behavior of `.gitignore` or `.ignore` pattern matching.",
+          "Looking for examples of how to use the `rgtest!` testing harness.",
+          "Checking for regressions in file filtering, symlink handling, or output formatting."
+        ],
+        "F7": [
+          "Searching for the main implementation logic of ripgrep (this file only contains tests).",
+          "Looking for general user documentation or CLI usage examples.",
+          "Investigating performance benchmarks or optimization strategies."
+        ],
+        "F8": [
+          "How does ripgrep handle nested `.gitignore` rules or negation patterns?",
+          "What is the expected behavior for specific historical bugs (e.g., issue #127 on Windows)?",
+          "How are symlinks or directory structures tested in the ripgrep test suite?",
+          "What are the specific command-line arguments and expected outputs for a given regression test?"
+        ],
+        "F9": "[\"Implementation of `rgtest!` macro, `Dir`, and `TestCommand` utilities (likely in `tests/util.rs` or similar).\"]",
+        "F10": "[\"crate::hay::SHERLOCK\",\"crate::util::{Dir, TestCommand, sort_lines}\",\"rgtest!\"]",
+        "F11": "low",
+        "F12": "Modifying tests typically does not affect the binary unless a test exposes a bug requiring a fix in the source code.",
+        "F13": "high",
+        "F14": "The file is clearly a test suite with explicit references to specific issues and behaviors."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41663,
+      "fields": {
+        "F0": "tests/tests.rs",
+        "F1": "tests",
+        "F2": "rs",
+        "F3": "41663",
+        "F4": "This file acts as the root module for the integration test suite and should be opened to identify the categorization of tests or to add new test modules.",
+        "F5": "test",
+        "F6": [
+          "Navigating the test suite to find where specific feature tests (e.g., binary, JSON, multiline) are located.",
+          "Adding a new top-level test module or category to the project.",
+          "Understanding the high-level organization of the project's integration tests."
+        ],
+        "F7": [
+          "Looking for specific test logic, assertions, or test cases (check the submodules instead).",
+          "Investigating production code implementation or source files.",
+          "Searching for test utilities or helper functions (check the `util` module)."
+        ],
+        "F8": [
+          "What are the main categories of integration tests in this project?",
+          "Where are the regression tests located?",
+          "Is there a dedicated module for testing JSON output?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"macros\",\"hay\",\"util\",\"binary\",\"feature\",\"json\",\"misc\",\"multiline\",\"regression\"]",
+        "F11": "low",
+        "F12": "Modifying this file typically involves adding or removing module declarations without changing logic.",
+        "F13": "high",
+        "F14": "The file content is a standard Rust module list with clear comments."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "tests/util.rs",
+      "language": "rust",
+      "chat_id": 41664,
+      "fields": {
+        "F0": "tests/util.rs",
+        "F1": "util",
+        "F2": "rs",
+        "F3": "41664",
+        "F4": "This file provides the test harness infrastructure for creating temporary environments, managing test files, and executing the ripgrep binary during integration tests.",
+        "F5": "helper",
+        "F6": [
+          "Writing or debugging integration tests for ripgrep.",
+          "Investigating how the test environment sets up temporary directories or symlinks.",
+          "Configuring test runners for cross-compilation targets (e.g., handling qemu).",
+          "Looking for how the rg binary is invoked and its output is captured in tests."
+        ],
+        "F7": [
+          "Modifying the core search logic or regex engine of the ripgrep binary.",
+          "Analyzing the production CLI argument parsing logic.",
+          "Investigating user-facing configuration file handling (.ripgreprc)."
+        ],
+        "F8": [
+          "How do I create a temporary directory and populate it with files for a test?",
+          "How does the test harness execute the compiled rg binary?",
+          "How are cross-compilation runners like qemu detected and configured in tests?",
+          "How does the test framework handle or strip stderr noise (e.g., jemalloc)?"
+        ],
+        "F9": "[\"The specific integration test files that utilize this module (e.g., tests in the tests/ directory).\"]",
+        "F10": "[\"walkdir\",\"std::process::Command\",\"bstr\",\"std::fs\",\"std::path\"]",
+        "F11": "low",
+        "F12": "Changes here only affect the test harness and execution environment, not the production binary behavior.",
+        "F13": "high",
+        "F14": "The file's purpose as a test utility is explicitly clear from its exports and documentation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "fuzz/fuzz_targets/fuzz_glob.rs",
+      "language": "rust",
+      "chat_id": 41675,
+      "fields": {
+        "F0": "fuzz/fuzz_targets/fuzz_glob.rs",
+        "F1": "fuzz_glob.rs",
+        "F2": "rs",
+        "F3": "41675",
+        "F4": "This file is a libfuzzer harness useful for verifying the consistency and correctness of `Glob` parsing and serialization under random input.",
+        "F5": "test",
+        "F6": [
+          "Investigating potential panics or logic errors in `Glob` parsing discovered by fuzzing.",
+          "Verifying that `Glob::new` and `Glob::from_str` produce identical results.",
+          "Checking if `Glob::glob()` correctly returns the original pattern string."
+        ],
+        "F7": [
+          "Looking for the actual implementation of glob matching logic.",
+          "Investigating `GlobSet` performance or multi-pattern matching.",
+          "Searching for documentation on supported glob syntax."
+        ],
+        "F8": [
+          "Does `Glob::new` produce the same struct as `Glob::from_str` for the same input?",
+          "Does the `glob()` method return the original string used to create the `Glob`?",
+          "What are the immediate failure modes handled by the fuzzer (e.g., `Glob::new` returning `Err`)?"
+        ],
+        "F9": "[\"globset::Glob implementation\"]",
+        "F10": "[\"globset::Glob\",\"libfuzzer_sys::fuzz_target\"]",
+        "F11": "low",
+        "F12": "This is a test harness; changes here only affect the fuzzing process, not the library's runtime behavior.",
+        "F13": "high",
+        "F14": "The file is a standard libfuzzer target with clear, simple assertions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/core.rs",
+      "language": "rust",
+      "chat_id": 41684,
+      "fields": {
+        "F0": "crates/searcher/src/searcher/core.rs",
+        "F1": "core.rs",
+        "F2": "rs",
+        "F3": "41684",
+        "F4": "This file contains the core search loop logic, managing state transitions, binary detection, and the coordination between the matcher and the sink during a search operation.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating performance bottlenecks in the search loop, specifically the 'fast' vs. 'slow' line-by-line matching paths.",
+          "Debugging issues related to binary file detection or how the searcher handles binary data offsets.",
+          "Modifying the logic for handling context lines (before/after context) or how the buffer is rolled.",
+          "Understanding how the searcher interacts with the `Sink` trait to report matches."
+        ],
+        "F7": [
+          "Changing the regex syntax or pattern compilation logic (handled by the `Matcher`).",
+          "Modifying the visual output format of matches (handled by the `Sink` implementation).",
+          "Changing high-level CLI argument parsing or configuration structure (handled upstream)."
+        ],
+        "F8": [
+          "How does the searcher determine whether to use the fast line-by-line searcher versus the slow one?",
+          "How are line numbers and absolute byte offsets tracked and updated as the buffer is consumed?",
+          "What specific conditions trigger the detection of binary data, and how does it affect the search state?",
+          "How are context lines (before/after) extracted and reported to the sink?"
+        ],
+        "F9": "[\"grep_matcher::Matcher implementation details\",\"Sink trait definition\"]",
+        "F10": "[\"grep_matcher::Matcher\",\"grep_searcher::Searcher\",\"sink::Sink\",\"line_buffer::BinaryDetection\",\"lines::LineStep\"]",
+        "F11": "high",
+        "F12": "This is the central execution loop for searching; logic errors here can lead to incorrect matches, missed results, or performance regressions.",
+        "F13": "high",
+        "F14": "The file clearly isolates the core search mechanics and state management logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/glue.rs",
+      "language": "rust",
+      "chat_id": 41685,
+      "fields": {
+        "F0": "crates/searcher/src/searcher/glue.rs",
+        "F1": "glue",
+        "F2": "rs",
+        "F3": "41685",
+        "F4": "This file implements the core search loop strategies (line-by-line, slice-by-line, and multi-line) that coordinate the matcher, sink, and buffer management.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating how multi-line regex matches are detected and reported.",
+          "Debugging issues related to binary data detection or handling during search.",
+          "Modifying the logic for context buffering (before/after context) or passthru mode.",
+          "Understanding how the searcher interacts with the `Core` abstraction and `Sink`."
+        ],
+        "F7": [
+          "Looking for CLI argument parsing or high-level application entry points.",
+          "Investigating the specific regex engine implementation or syntax parsing.",
+          "Searching for file system traversal or recursive search logic."
+        ],
+        "F8": [
+          "How does the searcher handle overlapping multi-line matches?",
+          "What conditions trigger the searcher to stop processing a file as binary?",
+          "How are line terminators handled differently between `ReadByLine` and `SliceByLine`?",
+          "How is the `invert_match` configuration implemented in the search loop?"
+        ],
+        "F9": "[\"searcher::core::Core implementation\",\"Sink trait definition\",\"LineBufferReader implementation\"]",
+        "F10": "[\"grep_matcher::Matcher\",\"crate::searcher::Config\",\"crate::line_buffer::LineBufferReader\",\"crate::sink::Sink\"]",
+        "F11": "high",
+        "F12": "This file contains the primary execution loops for searching; logic errors here directly impact correctness and performance.",
+        "F13": "high",
+        "F14": "The file clearly defines the search strategies and their interaction with the matcher and sink."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mmap.rs",
+      "language": "rust",
+      "chat_id": 41686,
+      "fields": {
+        "F0": "crates/searcher/src/searcher/mmap.rs",
+        "F1": "mmap",
+        "F2": "rs",
+        "F3": "41686",
+        "F4": "This file is useful for understanding or modifying the memory mapping strategy used during file searching, specifically regarding safety constraints and platform-specific heuristics.",
+        "F5": "helper",
+        "F6": [
+          "Investigating search performance optimizations related to memory mapping.",
+          "Debugging platform-specific issues (e.g., macOS performance or SIGBUS errors).",
+          "Modifying the safety contract or heuristics for when to use memmap.",
+          "Reviewing unsafe code blocks related to file handling."
+        ],
+        "F7": [
+          "Changing regex syntax or matching logic.",
+          "Modifying CLI argument parsing or user interface output.",
+          "Working on printer formatting or color themes."
+        ],
+        "F8": [
+          "What are the conditions under which memory maps are used instead of standard reads?",
+          "Why is memory mapping disabled by default or on specific platforms like macOS?",
+          "What safety invariants must the caller uphold when enabling MmapChoice::auto()?",
+          "How are memory map failures handled and logged?"
+        ],
+        "F9": "[\"The configuration builder or caller code that instantiates MmapChoice to understand how the user preference is set.\"]",
+        "F10": "[\"memmap::Mmap\",\"std::fs::File\",\"log::debug\"]",
+        "F11": "low",
+        "F12": "Changes are localized to the memory mapping strategy logic and fallback behavior.",
+        "F13": "high",
+        "F14": "The file has a single, clear responsibility with well-documented safety and platform logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/searcher/mod.rs",
+      "language": "rust",
+      "chat_id": 41687,
+      "fields": {
+        "F0": "crates/searcher/src/searcher/mod.rs",
+        "F1": "mod.rs",
+        "F2": "rs",
+        "F3": "41687",
+        "F4": "This file is the core entry point for configuring and executing searches, handling strategy selection (mmap vs. streaming), encoding transcoding, and binary detection.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Configuring search behavior such as line terminators, context lines, binary detection, or heap limits.",
+          "Understanding how the searcher selects between memory maps, slice searching, and streaming readers.",
+          "Debugging issues related to encoding transcoding or BOM sniffing during searches.",
+          "Investigating how multi-line search mode is implemented and triggered."
+        ],
+        "F7": [
+          "Looking for the specific algorithm used to find regex matches (check `grep_matcher`).",
+          "Investigating how search results are consumed or formatted (check `sink.rs`).",
+          "Looking for low-level memory allocation details for line buffers (check `line_buffer` module)."
+        ],
+        "F8": [
+          "How do I configure the searcher to use memory maps or limit heap usage?",
+          "What are the different strategies for binary data detection and how do they behave?",
+          "How does the searcher decide whether to read a file incrementally or load it entirely into memory?",
+          "How are encodings handled before the search is executed?"
+        ],
+        "F9": "[\"crate::line_buffer\",\"crate::searcher::glue\",\"crate::searcher::mmap\"]",
+        "F10": "[\"crate::line_buffer\",\"crate::searcher::glue\",\"crate::searcher::mmap\",\"crate::sink::Sink\",\"grep_matcher::Matcher\"]",
+        "F11": "high",
+        "F12": "This file contains the central configuration and execution logic; changes here affect all search strategies and behaviors.",
+        "F13": "high",
+        "F14": "The file clearly defines the public API (`Searcher`, `SearcherBuilder`) and the core orchestration logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41688,
+      "fields": {
+        "F0": "crates/searcher/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41688",
+        "F4": "This file serves as the public entry point for the `grep-searcher` crate, defining the main API surface, re-exporting core types like `Searcher` and `Sink`, and providing high-level documentation.",
+        "F5": "public-api",
+        "F6": [
+          "Understanding the public API, types, and usage examples for the `grep-searcher` crate.",
+          "Looking for the definition or re-exports of `Searcher`, `SearcherBuilder`, `Sink`, or `LineIter`.",
+          "Investigating how the crate integrates with `grep-matcher` and `grep-regex`.",
+          "Determining the module structure and organization of the searcher implementation."
+        ],
+        "F7": [
+          "Looking for the internal implementation details of the `Searcher` logic (check `searcher.rs` instead).",
+          "Modifying specific regex patterns or matching logic (handled by `grep-matcher` or `grep-regex`).",
+          "Debugging specific `Sink` implementations other than the convenience ones provided here."
+        ],
+        "F8": [
+          "What are the primary types (`Searcher`, `Sink`, `Matcher`) and how do they interact?",
+          "How do I configure and build a `Searcher` using `SearcherBuilder`?",
+          "What are the available modules and sub-components within this crate?",
+          "Where can I find usage examples for searching bytes or slices?"
+        ],
+        "F9": "[\"searcher.rs\"]",
+        "F10": "[\"grep-matcher\",\"grep-regex\",\"grep-printer\",\"sinks\",\"line_buffer\",\"lines\"]",
+        "F11": "high",
+        "F12": "This file defines the public API and re-exports; changes here affect all consumers of the crate.",
+        "F13": "high",
+        "F14": "The file structure and documentation clearly indicate its role as the crate's public facade."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/line_buffer.rs",
+      "language": "rust",
+      "chat_id": 41689,
+      "fields": {
+        "F0": "crates/searcher/src/line_buffer.rs",
+        "F1": "line_buffer.rs",
+        "F2": "rs",
+        "F3": "41689",
+        "F4": "This file implements the core line buffering logic, managing memory allocation, binary detection, and line termination for the search engine.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating memory usage or allocation limit errors during search.",
+          "Debugging issues related to binary data detection or handling.",
+          "Modifying how line terminators are processed or how long lines are handled.",
+          "Understanding the incremental reading strategy used by the searcher."
+        ],
+        "F7": [
+          "Modifying high-level CLI arguments or user-facing output formatting.",
+          "Changing regex pattern matching logic (which consumes this buffer).",
+          "Investigating file system traversal or recursive search logic."
+        ],
+        "F8": [
+          "What is the default buffer capacity and how does it expand?",
+          "How are binary bytes detected and what actions (quit/convert) are taken?",
+          "How does the buffer handle lines that exceed the initial capacity?",
+          "What is the strategy for rolling the buffer to make space for new data?"
+        ],
+        "F9": "[\"The integration of `LineBufferReader` with the main search loop.\"]",
+        "F10": "[\"bstr::ByteSlice\",\"BufferAllocation\",\"BinaryDetection\",\"LineBufferBuilder\"]",
+        "F11": "high",
+        "F12": "This is core infrastructure for reading data; bugs here affect correctness and performance.",
+        "F13": "high",
+        "F14": "The file is self-contained, well-documented, and clearly defines the buffering strategy."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/lines.rs",
+      "language": "rust",
+      "chat_id": 41690,
+      "fields": {
+        "F0": "crates/searcher/src/lines.rs",
+        "F1": "lines",
+        "F2": "rs",
+        "F3": "41690",
+        "F4": "This file is essential for understanding or modifying how the searcher iterates over lines, calculates line boundaries, and handles byte offsets for context.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating bugs related to line counting, context window calculation, or byte offset mapping.",
+          "Implementing features that require precise line boundary detection or 'preceding line' logic.",
+          "Debugging issues where line terminators (CRLF vs LF) might be causing mismatches.",
+          "Optimizing the performance of line iteration in the searcher crate."
+        ],
+        "F7": [
+          "Searching for the main search loop or regex execution logic (this is lower-level utility).",
+          "Investigating CLI argument parsing or configuration file handling.",
+          "Looking for high-level printer or output formatting logic (though this supports it).",
+          "Modifying the public API of the searcher crate without needing to change internal line handling."
+        ],
+        "F8": [
+          "How does the code determine the start and end byte offsets of a line containing a specific match?",
+          "What is the algorithm for finding the Nth line preceding a given byte position?",
+          "Are line terminators included or excluded from the yielded line slices?",
+          "How are empty lines or lines without terminators handled by the iterator?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"bstr::ByteSlice\",\"grep_matcher::{LineTerminator, Match}\",\"memchr\"]",
+        "F11": "high",
+        "F12": "This is low-level utility code where logic errors can lead to incorrect search results, crashes, or off-by-one errors in output.",
+        "F13": "high",
+        "F14": "The file has clear documentation, specific types, and extensive unit tests demonstrating its intended behavior."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41691,
+      "fields": {
+        "F0": "crates/searcher/src/macros.rs",
+        "F1": "macros",
+        "F2": "rs",
+        "F3": "41691",
+        "F4": "This file provides a test utility macro for better string comparison output and is only relevant when debugging test failures.",
+        "F5": "helper",
+        "F6": [
+          "Debugging a failing test where the error message for string differences is unhelpful or truncated.",
+          "Looking to add similar custom formatting for other test assertions.",
+          "Investigating why a specific test's output formatting looks the way it does."
+        ],
+        "F7": [
+          "Modifying production code or runtime behavior.",
+          "Implementing new features or refactoring non-test code.",
+          "Investigating performance issues or memory usage.",
+          "Looking for the actual logic of the searcher or matcher components."
+        ],
+        "F8": [
+          "How are long string differences formatted in the test suite?",
+          "Is there a custom macro available for improving assertion readability?"
+        ],
+        "F9": "[\"The test files that invoke this macro.\"]",
+        "F10": "N/A",
+        "F11": "low",
+        "F12": "Changes only affect test output formatting, not the functionality of the application.",
+        "F13": "high",
+        "F14": "The macro is simple, well-scoped to tests, and its purpose is explicitly documented."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/sink.rs",
+      "language": "rust",
+      "chat_id": 41692,
+      "fields": {
+        "F0": "crates/searcher/src/sink.rs",
+        "F1": "sink.rs",
+        "F2": "rs",
+        "F3": "41692",
+        "F4": "This file defines the `Sink` trait and related types, which serve as the callback interface for consumers to handle search results, matches, and context.",
+        "F5": "public-api",
+        "F6": [
+          "Implementing custom logic to handle or format search results.",
+          "Understanding the data structure of matches and context (byte offsets, line numbers).",
+          "Debugging how results are passed from the searcher to the consumer.",
+          "Looking for convenience implementations like `UTF8`, `Lossy`, or `Bytes` sinks."
+        ],
+        "F7": [
+          "Configuring how the search is executed or optimized (see `mod.rs`).",
+          "Investigating the performance of the matching algorithm itself.",
+          "Looking for file I/O or memory mapping logic."
+        ],
+        "F8": [
+          "What methods must I implement to create a custom result handler?",
+          "What information is available in a `SinkMatch` versus a `SinkContext`?",
+          "How are errors handled during the result processing phase?",
+          "How do I use the built-in sinks for simple string output?"
+        ],
+        "F9": "[\"crate::lines::LineIter\"]",
+        "F10": "[\"crate::searcher::Searcher\",\"crate::lines::LineIter\",\"grep_matcher::LineTerminator\"]",
+        "F11": "medium",
+        "F12": "The `Sink` trait is a stable public interface, so changes would break consumers, but internal convenience wrappers are lower risk.",
+        "F13": "high",
+        "F14": "The file explicitly defines the trait contract and helper types with clear documentation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/src/testutil.rs",
+      "language": "rust",
+      "chat_id": 41693,
+      "fields": {
+        "F0": "crates/searcher/src/testutil.rs",
+        "F1": "testutil.rs",
+        "F2": "rs",
+        "F3": "41693",
+        "F4": "This file provides testing infrastructure, including a configurable regex matcher, a verbose sink for assertions, and a harness to validate multiple search configurations.",
+        "F5": "test",
+        "F6": [
+          "Writing or debugging tests for the searcher module.",
+          "Understanding how different search strategies (mmap, slice, reader) are verified in the test suite.",
+          "Looking for examples of how to implement the `Sink` or `Matcher` traits for testing purposes."
+        ],
+        "F7": [
+          "Implementing production search logic or features.",
+          "Looking for the public API definition of the searcher.",
+          "Investigating runtime performance or memory usage in a production environment."
+        ],
+        "F8": [
+          "How can I simulate a matcher with specific line terminators for testing?",
+          "What is the expected output format for a specific search configuration?",
+          "How does the test harness verify edge cases like heap limits and multi-line searches?",
+          "How do I capture all search events (matches, context, breaks) for test assertions?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"crate::searcher::Searcher\",\"crate::searcher::BinaryDetection\",\"crate::sink::Sink\"]",
+        "F11": "low",
+        "F12": "This is test infrastructure; changes here generally do not affect production code behavior.",
+        "F13": "high",
+        "F14": "The filename and content (`pub(crate)`, `#[cfg(test)]`) clearly indicate its role as a utility for testing."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/searcher/examples/search-stdin.rs",
+      "language": "rust",
+      "chat_id": 41695,
+      "fields": {
+        "F0": "crates/searcher/examples/search-stdin.rs",
+        "F1": "search-stdin.rs",
+        "F2": "rs",
+        "F3": "41695",
+        "F4": "This file demonstrates how to use the `grep_searcher` and `grep_regex` crates to perform a search on standard input with a custom sink.",
+        "F5": "example",
+        "F6": [
+          "Learning how to implement stdin searching using the `grep_searcher` library.",
+          "Looking for a reference implementation of `Searcher::search_reader`.",
+          "Understanding how to configure a `UTF8` sink for line-by-line output.",
+          "Debugging basic usage of `RegexMatcher`."
+        ],
+        "F7": [
+          "Modifying the core search implementation or performance optimization of the library.",
+          "Investigating the production CLI implementation of `ripgrep`.",
+          "Looking for advanced configuration options not shown in this basic example."
+        ],
+        "F8": [
+          "How do I read from stdin using `grep_searcher`?",
+          "What is the basic setup for a `RegexMatcher`?",
+          "How do I define a simple sink callback for `Searcher`?",
+          "How are errors handled in the example usage?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"grep_regex\",\"grep_searcher\",\"std::io\",\"std::process\"]",
+        "F11": "low",
+        "F12": "Changes to this example only affect documentation/tutorials and do not impact the library's functionality.",
+        "F13": "high",
+        "F14": "The file is clearly an example with a single, well-defined purpose."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ast.rs",
+      "language": "rust",
+      "chat_id": 41702,
+      "fields": {
+        "F0": "crates/regex/src/ast.rs",
+        "F1": "ast",
+        "F2": "rs",
+        "F3": "41702",
+        "F4": "Open this file to understand how regex patterns are analyzed for smart case matching and literal detection.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating smart case matching logic",
+          "Debugging regex literal detection",
+          "Understanding AST traversal for pattern analysis"
+        ],
+        "F7": [
+          "Fixing regex syntax parsing errors",
+          "Modifying regex engine execution speed",
+          "Changing file search filters"
+        ],
+        "F8": [
+          "Does the regex contain uppercase literals?",
+          "Does the regex contain any literal characters?",
+          "How is the regex AST traversed?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"regex_syntax::ast\",\"regex_syntax::ast::parse::Parser\"]",
+        "F11": "low",
+        "F12": "Changes are localized to AST analysis logic and do not affect regex compilation or matching execution directly.",
+        "F13": "high",
+        "F14": "The file has a single, well-defined responsibility with clear tests."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/ban.rs",
+      "language": "rust",
+      "chat_id": 41703,
+      "fields": {
+        "F0": "crates/regex/src/ban.rs",
+        "F1": "ban.rs",
+        "F2": "rs",
+        "F3": "41703",
+        "F4": "Open this file to understand how specific bytes (like NUL) are detected and banned within regex syntax trees.",
+        "F5": "helper",
+        "F6": [
+          "Investigating why a specific regex pattern is rejected as invalid.",
+          "Implementing or modifying restrictions on regex syntax (e.g., banning NUL bytes).",
+          "Debugging `ErrorKind::Banned` errors."
+        ],
+        "F7": [
+          "Looking for regex compilation or parsing logic (this is post-parse validation).",
+          "Searching for regex execution or matching engines.",
+          "Investigating performance optimizations (this is a correctness check)."
+        ],
+        "F8": [
+          "Does this regex pattern contain a banned byte?",
+          "How are literal bytes checked against the HIR?",
+          "What error is raised when a banned byte is found?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"regex_syntax::hir\",\"ErrorKind::Banned\"]",
+        "F11": "low",
+        "F12": "This is a localized validation function with clear inputs and outputs.",
+        "F13": "high",
+        "F14": "The logic is explicit, self-contained, and well-tested."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/config.rs",
+      "language": "rust",
+      "chat_id": 41704,
+      "fields": {
+        "F0": "crates/regex/src/config.rs",
+        "F1": "config.rs",
+        "F2": "rs",
+        "F3": "41704",
+        "F4": "This file is essential for understanding how regex patterns are parsed, configured with flags (like case-insensitivity), and transformed into HIR or Regex objects.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging regex compilation errors or unexpected matching behavior.",
+          "Modifying regex matching flags (e.g., smart case, multiline, dot matches new line).",
+          "Investigating how fixed strings are optimized or how HIR is constructed.",
+          "Understanding size limits for DFAs or NFAs in the regex engine."
+        ],
+        "F7": [
+          "Looking for actual regex matching execution logic (this is configuration/compilation only).",
+          "Investigating file traversal or directory searching logic.",
+          "Looking for CLI argument parsing (this is an internal library module)."
+        ],
+        "F8": [
+          "How are fixed strings optimized compared to full regex parsing?",
+          "What are the default size limits for regex compilation?",
+          "How does smart case detection work based on pattern analysis?",
+          "How are line terminators handled in the HIR transformation?"
+        ],
+        "F9": "[\"ast.rs\",\"ban.rs\",\"strip.rs\"]",
+        "F10": "[\"regex_automata::meta::Regex\",\"regex_syntax::ast\",\"regex_syntax::hir\",\"grep_matcher::ByteSet\"]",
+        "F11": "high",
+        "F12": "Modifications to regex configuration or HIR transformation logic can impact all regex matching behavior and performance.",
+        "F13": "high",
+        "F14": "The file clearly defines the core configuration and HIR building logic with explicit dependencies."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/error.rs",
+      "language": "rust",
+      "chat_id": 41705,
+      "fields": {
+        "F0": "crates/regex/src/error.rs",
+        "F1": "error.rs",
+        "F2": "rs",
+        "F3": "41705",
+        "F4": "Defines the error types and kinds for regex building failures, including syntax errors, size limits, and invalid line terminators.",
+        "F5": "public-api",
+        "F6": [
+          "Investigating why a regex failed to compile or parse",
+          "Handling specific error scenarios like exceeding size limits or finding banned bytes",
+          "Understanding the specific error messages returned by the regex crate"
+        ],
+        "F7": [
+          "Looking for the actual regex matching or execution logic",
+          "Searching for file traversal or search implementation details",
+          "Modifying runtime search behavior or performance"
+        ],
+        "F8": [
+          "What are the specific kinds of errors that can occur during regex building?",
+          "How are size limit errors formatted and reported?",
+          "What constitutes an invalid line terminator in this context?"
+        ],
+        "F9": "[\"regex_automata::meta::BuildError implementation details\",\"call sites handling these errors\"]",
+        "F10": "[\"regex_automata::meta::BuildError\",\"bstr::ByteSlice\"]",
+        "F11": "low",
+        "F12": "Changes are localized to error definitions and formatting, unlikely to break logic unless error variants are removed.",
+        "F13": "high",
+        "F14": "The file clearly defines error structures and display logic with explicit imports."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41706,
+      "fields": {
+        "F0": "crates/regex/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41706",
+        "F4": "This file serves as the crate root and public facade, defining the module structure and re-exporting the primary types for the regex matcher implementation.",
+        "F5": "public-api",
+        "F6": [
+          "Identifying the public API surface and available types for the regex crate.",
+          "Determining the module organization to locate specific implementation details.",
+          "Verifying if this crate implements the `grep-matcher` trait."
+        ],
+        "F7": [
+          "Searching for specific regex compilation or matching algorithms (look in submodules like `matcher` or `ast`).",
+          "Looking for usage examples or integration tests (check documentation or test modules).",
+          "Investigating `globset` functionality (this is the `regex` crate)."
+        ],
+        "F8": [
+          "What are the main public types exported by this crate?",
+          "What internal modules (e.g., `ast`, `matcher`, `literal`) make up this crate?",
+          "Does this crate implement the `grep-matcher` trait?"
+        ],
+        "F9": "[\"matcher.rs\",\"ast.rs\",\"error.rs\"]",
+        "F10": "[\"grep-matcher\",\"error::Error\",\"matcher::RegexMatcher\",\"matcher::RegexMatcherBuilder\"]",
+        "F11": "medium",
+        "F12": "As the public facade, changes to exports or module structure can break downstream consumers.",
+        "F13": "high",
+        "F14": "This is a standard Rust crate root file with clear module declarations and re-exports."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/literal.rs",
+      "language": "rust",
+      "chat_id": 41707,
+      "fields": {
+        "F0": "crates/regex/src/literal.rs",
+        "F1": "literal.rs",
+        "F2": "rs",
+        "F3": "41707",
+        "F4": "Use this file to understand or modify the heuristics used to extract inner literals from regex patterns for performance optimization in ripgrep.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating why a specific regex pattern is not being accelerated or is performing poorly.",
+          "Debugging the logic that determines which literals are extracted from complex regex expressions.",
+          "Modifying the limits or thresholds for literal extraction (e.g., limit_class, limit_repeat).",
+          "Analyzing how concatenation, alternation, and repetition affect literal sequence generation."
+        ],
+        "F7": [
+          "Looking for the general regex parser or syntax definition (handled by regex-syntax).",
+          "Searching for PCRE2 specific features or syntax.",
+          "Modifying the high-level command-line interface or argument parsing.",
+          "Investigating file system traversal or filtering logic unrelated to regex matching."
+        ],
+        "F8": [
+          "What specific heuristics determine if a sequence of literals is considered \"good\" for acceleration?",
+          "How does the extractor handle regex repetitions (e.g., a*, a+, a{3}) when generating literals?",
+          "Under what conditions will the extractor return an infinite sequence to disable optimization?",
+          "How are character classes (Unicode or Bytes) converted into literal sequences?"
+        ],
+        "F9": "[\"regex_automata::meta::Regex\",\"regex_syntax::hir\"]",
+        "F10": "[\"regex_automata\",\"regex_syntax\",\"ConfiguredHIR\",\"Hir\",\"Literal\",\"Seq\"]",
+        "F11": "high",
+        "F12": "This file contains performance-critical optimization logic. Changes to heuristics or limits can significantly impact search throughput or correctness.",
+        "F13": "high",
+        "F14": "The file contains extensive documentation, comments explaining the 'why' behind heuristics, and comprehensive unit tests covering edge cases."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41708,
+      "fields": {
+        "F0": "crates/regex/src/matcher.rs",
+        "F1": "matcher",
+        "F2": "rs",
+        "F3": "41708",
+        "F4": "This file is useful when an agent needs to understand how regex patterns are compiled into matchers, how specific matching options (like line terminators or smart case) are configured, or how the `Matcher` trait is implemented for the regex engine.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating how regex patterns are compiled or configured via `RegexMatcherBuilder`.",
+          "Debugging issues related to line terminators, word boundaries, or case sensitivity in matching behavior.",
+          "Understanding the implementation of the `grep_matcher::Matcher` trait for the regex engine.",
+          "Analyzing the `fast_line_regex` optimization logic used for candidate line searching."
+        ],
+        "F7": [
+          "Looking for high-level search orchestration or file traversal logic (handled by searcher/walker).",
+          "Investigating output formatting or color schemes (handled by printer).",
+          "Looking for glob-based file filtering or ignore rules (handled by ignore/types)."
+        ],
+        "F8": [
+          "How are line terminators handled during regex compilation and matching?",
+          "What configuration options are available for the regex matcher (e.g., `case_smart`, `crlf`, `word`)?",
+          "How does the `fast_line_regex` optimization work to speed up line-oriented searching?",
+          "How are capturing groups handled in the `RegexCaptures` struct?"
+        ],
+        "F9": "[\"grep_matcher trait definitions\",\"regex_automata internals\",\"crate::config::Config struct\"]",
+        "F10": "[\"grep_matcher::Matcher\",\"regex_automata::meta::Regex\",\"crate::config::Config\",\"crate::literal::InnerLiterals\"]",
+        "F11": "medium",
+        "F12": "Changes to matching logic or configuration handling can affect all regex operations, but the file is relatively self-contained within the regex crate.",
+        "F13": "high",
+        "F14": "The file clearly defines the matcher implementation and builder with explicit imports and struct definitions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/non_matching.rs",
+      "language": "rust",
+      "chat_id": 41709,
+      "fields": {
+        "F0": "crates/regex/src/non_matching.rs",
+        "F1": "non_matching",
+        "F2": "rs",
+        "F3": "41709",
+        "F4": "This file provides an optimization routine that analyzes a regex AST to determine which bytes can never match, allowing the search engine to skip them.",
+        "F5": "helper",
+        "F6": [
+          "Debugging performance issues related to literal search optimization.",
+          "Investigating why specific bytes are being skipped or not skipped during a search.",
+          "Modifying how Unicode character classes are analyzed for non-matching bytes.",
+          "Fixing edge cases in regex optimization logic (e.g., anchors, look-arounds)."
+        ],
+        "F7": [
+          "Looking for the main regex execution engine or NFA/DFA construction.",
+          "Investigating the parser that converts string patterns to the AST (`Hir`).",
+          "Debugging high-level search flow or file iteration logic."
+        ],
+        "F8": [
+          "Which bytes are considered non-matching for a given regex pattern?",
+          "How does the optimization handle Unicode classes versus byte classes?",
+          "Are look-around assertions considered when determining non-matching bytes?",
+          "How are line anchors (`^`, `$`) treated in the byte set analysis?"
+        ],
+        "F9": "[\"regex_syntax::hir::Hir definition\",\"grep_matcher::ByteSet implementation\"]",
+        "F10": "[\"regex_syntax::hir\",\"grep_matcher::ByteSet\",\"regex_syntax::utf8::Utf8Sequences\"]",
+        "F11": "medium",
+        "F12": "This is an optimization layer; bugs could cause missed matches or reduced performance, but are less likely to crash the application.",
+        "F13": "high",
+        "F14": "The purpose is clearly defined in the comments and function signatures."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/regex/src/strip.rs",
+      "language": "rust",
+      "chat_id": 41710,
+      "fields": {
+        "F0": "crates/regex/src/strip.rs",
+        "F1": "strip",
+        "F2": "rs",
+        "F3": "41710",
+        "F4": "Open this file to understand how line terminators are removed from regex patterns to prevent multi-line matching in single-line mode.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging 'literal line terminator not allowed' errors",
+          "Modifying how regexes handle newline characters",
+          "Implementing custom line terminator stripping"
+        ],
+        "F7": [
+          "Investigating regex syntax parsing",
+          "Modifying match execution performance",
+          "Changing file reading logic"
+        ],
+        "F8": [
+          "How are line terminators removed from the regex HIR?",
+          "What happens when a regex contains a literal newline?",
+          "How are CRLF line terminators handled?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"regex_syntax::hir\",\"grep_matcher::LineTerminator\",\"crate::error\"]",
+        "F11": "medium",
+        "F12": "Modifying HIR transformation logic can alter which regexes are accepted and how they match.",
+        "F13": "high",
+        "F14": "The logic is explicitly documented and tested with clear examples."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/aliases.rs",
+      "language": "rust",
+      "chat_id": 41718,
+      "fields": {
+        "F0": "crates/printer/src/hyperlink/aliases.rs",
+        "F1": "aliases",
+        "F2": "rs",
+        "F3": "41718",
+        "F4": "Open this file to inspect or modify the list of supported hyperlink schemes and their URL formats.",
+        "F5": "config",
+        "F6": [
+          "Adding support for a new text editor hyperlink scheme",
+          "Debugging the URL format string for a specific scheme like VS Code or Cursor",
+          "Checking the priority or description of existing hyperlink aliases"
+        ],
+        "F7": [
+          "Changing the core logic of how hyperlinks are rendered or written to output",
+          "Modifying the search algorithm or matcher logic",
+          "Investigating runtime performance issues unrelated to string formatting"
+        ],
+        "F8": [
+          "What is the URL format string for the 'vscode' hyperlink scheme?",
+          "Which hyperlink aliases are marked with a specific display priority?",
+          "Does the list include support for the 'cursor' editor?"
+        ],
+        "F9": "[\"Definition of the `HyperlinkAlias` struct to understand field constraints\"]",
+        "F10": "[\"crate::hyperlink::HyperlinkAlias\"]",
+        "F11": "low",
+        "F12": "Modifying this static list of constants only affects the specific hyperlink scheme being changed and does not alter control flow.",
+        "F13": "high",
+        "F14": "The file is small, self-contained, and consists solely of static data definitions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/hyperlink/mod.rs",
+      "language": "rust",
+      "chat_id": 41719,
+      "fields": {
+        "F0": "crates/printer/src/hyperlink/mod.rs",
+        "F1": "mod.rs",
+        "F2": "rs",
+        "F3": "41719",
+        "F4": "This file is useful when an agent needs to understand, modify, or debug how hyperlink formats are parsed, validated, and interpolated into terminal output.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating how hyperlink variables (e.g., `{path}`, `{line}`, `{column}`) are substituted with actual values.",
+          "Debugging hyperlink format parsing errors or validation failures (e.g., invalid schemes or missing variables).",
+          "Modifying the list of built-in hyperlink aliases or their display priorities.",
+          "Adjusting platform-specific path encoding logic for hyperlinks on Windows or Unix."
+        ],
+        "F7": [
+          "Investigating the core search algorithm or regex matching logic.",
+          "Configuring CLI flags unrelated to hyperlinks or terminal output.",
+          "Looking for printer implementations that do not involve hyperlinking."
+        ],
+        "F8": [
+          "What variables are supported in hyperlink formats and what are their validation rules?",
+          "How are file paths converted to hyperlink URLs on Windows versus Unix?",
+          "What are the built-in aliases for hyperlink formats and how are they resolved?",
+          "How does the interpolator handle terminal writers that do not support hyperlinks?"
+        ],
+        "F9": "[\"aliases module\",\"crate::util::DecimalFormatter\"]",
+        "F10": "[\"termcolor\",\"bstr\",\"std::path::Path\",\"log\"]",
+        "F11": "medium",
+        "F12": "Changes to parsing logic or path encoding could break hyperlink generation across different platforms or formats.",
+        "F13": "high",
+        "F14": "The file has clear responsibilities, extensive documentation, and explicit logic for its domain."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/color.rs",
+      "language": "rust",
+      "chat_id": 41720,
+      "fields": {
+        "F0": "crates/printer/src/color.rs",
+        "F1": "color",
+        "F2": "rs",
+        "F3": "41720",
+        "F4": "Open this file to understand how color specifications are parsed, validated, and converted into terminal styling for the printer.",
+        "F5": "helper",
+        "F6": [
+          "Modifying or adding new color attributes (e.g., bold, italic) for output types.",
+          "Debugging errors related to invalid color specification formats.",
+          "Changing the default color theme used by the printer.",
+          "Investigating how user-provided color strings are translated to termcolor specifications."
+        ],
+        "F7": [
+          "Investigating core search performance or regex matching logic.",
+          "Modifying file I/O or path traversal mechanisms.",
+          "Changing the structure of the JSON or standard output format (other than colors)."
+        ],
+        "F8": [
+          "What is the string format for defining a color specification?",
+          "How are default colors defined for different operating systems?",
+          "What specific error types are returned when a color specification fails to parse?",
+          "How are UserColorSpec objects merged into the final ColorSpecs?"
+        ],
+        "F9": "[\"Usage of ColorSpecs within the main printer implementation\"]",
+        "F10": "[\"termcolor\",\"UserColorSpec\",\"ColorSpecs\",\"ColorError\",\"ParseColorError\"]",
+        "F11": "low",
+        "F12": "Changes affect visual output formatting but do not alter search logic or data correctness.",
+        "F13": "high",
+        "F14": "The file contains clear parsing logic, well-defined enums, and comprehensive documentation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/counter.rs",
+      "language": "rust",
+      "chat_id": 41721,
+      "fields": {
+        "F0": "crates/printer/src/counter.rs",
+        "F1": "counter.rs",
+        "F2": "rs",
+        "F3": "41721",
+        "F4": "This file provides a `CounterWriter` wrapper that tracks the number of bytes written to an output stream, useful for statistics and progress reporting.",
+        "F5": "helper",
+        "F6": [
+          "Debugging issues related to output statistics or byte counting in ripgrep.",
+          "Implementing features that require tracking the volume of data processed or printed.",
+          "Understanding how color and hyperlink support is maintained while counting output bytes."
+        ],
+        "F7": [
+          "Investigating regex matching or search logic (unrelated to output counting).",
+          "Looking for file system traversal or ignore rule implementation.",
+          "Modifying the core search algorithm or pattern compilation."
+        ],
+        "F8": [
+          "How does ripgrep track the total number of bytes searched or printed?",
+          "Does the byte counting logic interfere with terminal color codes or hyperlinks?",
+          "How can the byte count be reset or retrieved during a write operation?"
+        ],
+        "F9": "[\"Where `CounterWriter` is instantiated and used within the printer module.\"]",
+        "F10": "[\"std::io::{self, Write}\",\"termcolor::{ColorSpec, HyperlinkSpec, WriteColor}\"]",
+        "F11": "low",
+        "F12": "This is a small, self-contained utility wrapper; changes are unlikely to break core functionality.",
+        "F13": "high",
+        "F14": "The code is simple, well-documented, and has a single clear responsibility."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/json.rs",
+      "language": "rust",
+      "chat_id": 41722,
+      "fields": {
+        "F0": "crates/printer/src/json.rs",
+        "F1": "json",
+        "F2": "rs",
+        "F3": "41722",
+        "F4": "Open this file to understand or modify the JSON Lines output format, message structure, or serialization logic for search results.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging the structure or content of JSON output messages",
+          "Modifying how binary data or invalid UTF-8 is encoded in JSON",
+          "Changing the fields included in 'begin', 'end', 'match', or 'context' messages"
+        ],
+        "F7": [
+          "Changing the underlying search or matching algorithm logic",
+          "Modifying the standard terminal printer output format",
+          "Configuring command-line argument parsing for JSON flags"
+        ],
+        "F8": [
+          "How are file paths with invalid UTF-8 represented in the JSON output?",
+          "What statistics are included in the 'end' message?",
+          "How are submatches and replacement text serialized in a 'match' message?"
+        ],
+        "F9": "[\"`grep_searcher::Sink` trait definition to understand the callback interface\",\"`crate::util::Replacer` implementation to understand replacement interpolation\"]",
+        "F10": "[\"grep_matcher::Match\",\"grep_searcher::{Searcher, Sink, SinkMatch, SinkContext, SinkFinish}\",\"serde_json\",\"crate::counter::CounterWriter\",\"crate::util::Replacer\"]",
+        "F11": "high",
+        "F12": "This file defines the public wire format for JSON output; modifications will likely break compatibility for downstream consumers.",
+        "F13": "high",
+        "F14": "The file contains extensive documentation and explicit implementation of the JSON protocol."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/jsont.rs",
+      "language": "rust",
+      "chat_id": 41723,
+      "fields": {
+        "F0": "crates/printer/src/jsont.rs",
+        "F1": "jsont",
+        "F2": "rs",
+        "F3": "41723",
+        "F4": "This file defines the JSON serialization schema and types for ripgrep's output, handling UTF-8 validity checks and custom base64 encoding for non-text data.",
+        "F5": "helper",
+        "F6": [
+          "Modifying the JSON output format or structure (e.g., adding fields to `Match` or `Begin`).",
+          "Debugging serialization issues related to invalid UTF-8 paths or binary data.",
+          "Investigating how binary data is represented in JSON output (base64 encoding).",
+          "Understanding the contract between the printer and downstream JSON consumers."
+        ],
+        "F7": [
+          "Changing the text-based printer output logic.",
+          "Modifying the core search or matching algorithms.",
+          "Working on CLI argument parsing that doesn't affect JSON structure."
+        ],
+        "F8": [
+          "How are file paths with invalid UTF-8 characters serialized in JSON?",
+          "What is the structure of the `Message` enum used for JSON streaming?",
+          "How is binary data encoded within the JSON output?",
+          "What fields are included in the `End` message statistics?"
+        ],
+        "F9": "[\"Usage in main printer logic\",\"crate::stats::Stats definition\"]",
+        "F10": "[\"serde\",\"crate::stats::Stats\",\"std::path::Path\",\"base64_standard\"]",
+        "F11": "medium",
+        "F12": "Changes to the serialization schema or encoding logic will break the JSON output contract for consumers.",
+        "F13": "high",
+        "F14": "The module has a clear, single responsibility for JSON serialization types."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41724,
+      "fields": {
+        "F0": "crates/printer/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41724",
+        "F4": "This file defines the public interface and module structure for the `grep-printer` crate, helping agents identify available printer types and their entry points.",
+        "F5": "public-api",
+        "F6": [
+          "Determining the public API surface of the `grep-printer` crate.",
+          "Finding the module responsible for a specific printer type (e.g., `Standard`, `JSON`).",
+          "Understanding the high-level organization of the printer crate."
+        ],
+        "F7": [
+          "Looking for the implementation details of a specific printer (check the submodules like `standard.rs` or `json.rs`).",
+          "Investigating internal utility functions not exposed in the public API."
+        ],
+        "F8": [
+          "What printer types are available in this crate?",
+          "Which module handles color specifications?",
+          "What are the top-level re-exports for this library?"
+        ],
+        "F9": "[\"Implementation details for specific printers (e.g., `src/standard.rs`, `src/json.rs`).\"]",
+        "F10": "[\"grep-searcher\",\"grep-regex\",\"color\",\"standard\",\"json\",\"summary\"]",
+        "F11": "medium",
+        "F12": "Modifying re-exports or module structure changes the public API surface for downstream consumers.",
+        "F13": "high",
+        "F14": "The file is a standard Rust library entry point with clear documentation and module declarations."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/macros.rs",
+      "language": "rust",
+      "chat_id": 41725,
+      "fields": {
+        "F0": "crates/printer/src/macros.rs",
+        "F1": "macros",
+        "F2": "rs",
+        "F3": "41725",
+        "F4": "Open this file to understand or modify how test assertion failures for long strings are formatted and displayed.",
+        "F5": "helper",
+        "F6": [
+          "Debugging test failures where string comparison diffs are difficult to read.",
+          "Modifying the visual format of test assertion error messages.",
+          "Adding new test utility macros for the printer crate."
+        ],
+        "F7": [
+          "Investigating production code logic or file traversal.",
+          "Configuring application logging or runtime behavior.",
+          "Looking for file system interaction logic."
+        ],
+        "F8": [
+          "How are string comparison errors formatted in tests?",
+          "Is there a custom macro available for improved test failure output?"
+        ],
+        "F9": "N/A",
+        "F10": "N/A",
+        "F11": "low",
+        "F12": "Changes are localized to test output formatting and do not affect runtime logic.",
+        "F13": "high",
+        "F14": "The file is small, self-contained, and its purpose is explicitly defined by the macro."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/path.rs",
+      "language": "rust",
+      "chat_id": 41726,
+      "fields": {
+        "F0": "crates/printer/src/path.rs",
+        "F1": "path.rs",
+        "F2": "rs",
+        "F3": "41726",
+        "F4": "Provides a builder and printer for formatting and emitting file paths with optional color, hyperlinks, and custom separators.",
+        "F5": "public-api",
+        "F6": [
+          "Changing how file paths are displayed or formatted (e.g., colors, hyperlinks)",
+          "Modifying path separator logic for specific environments (e.g., Cygwin)",
+          "Debugging output formatting issues related to file paths"
+        ],
+        "F7": [
+          "Searching for file system traversal or recursive search logic",
+          "Implementing regex pattern matching or search filters",
+          "Analyzing core search algorithms or performance"
+        ],
+        "F8": [
+          "How are hyperlinks interpolated into the path output?",
+          "What color specifications are used for paths?",
+          "How is the path separator normalized or configured?"
+        ],
+        "F9": "[\"crate::color::ColorSpecs definition\",\"crate::hyperlink::Interpolator implementation\"]",
+        "F10": "[\"termcolor::WriteColor\",\"crate::color::ColorSpecs\",\"crate::hyperlink\",\"crate::util::PrinterPath\"]",
+        "F11": "medium",
+        "F12": "Changes affect user-facing output formatting and configuration options, potentially impacting display consistency.",
+        "F13": "high",
+        "F14": "The file follows a standard builder pattern with clear documentation for public methods."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/standard.rs",
+      "language": "rust",
+      "chat_id": 41727,
+      "fields": {
+        "F0": "crates/printer/src/standard.rs",
+        "F1": "standard",
+        "F2": "rs",
+        "F3": "41727",
+        "F4": "This file is useful when an agent needs to modify how search results are formatted, colored, or printed to the output stream, including handling replacements, separators, and hyperlinks.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Changing the output format (e.g., adding fields, changing separators, modifying path display).",
+          "Debugging color application, hyperlink formatting, or ANSI escape sequences in the output.",
+          "Implementing or modifying replacement logic for matched patterns.",
+          "Handling binary data messages or long line truncation logic."
+        ],
+        "F7": [
+          "Investigating how files are searched or matched (handled by searcher/matcher).",
+          "Looking for CLI argument parsing or command-line interface logic.",
+          "Investigating file system traversal or directory walking (handled by walk/ignore)."
+        ],
+        "F8": [
+          "How are match highlights and colors applied to the output lines?",
+          "How does the printer handle multi-line matches and context breaks?",
+          "What is the format for path separators and field separators in the output?",
+          "How are replacements interpolated and written to the output?"
+        ],
+        "F9": "[\"grep_searcher::Sink trait definition\",\"termcolor::WriteColor trait\",\"crate::color::ColorSpecs\"]",
+        "F10": "[\"grep_searcher::Sink\",\"grep_matcher::Match\",\"termcolor::WriteColor\",\"crate::color::ColorSpecs\",\"crate::hyperlink::HyperlinkConfig\"]",
+        "F11": "medium",
+        "F12": "Changes affect the user-facing output format significantly, potentially breaking scripts relying on specific output structure.",
+        "F13": "high",
+        "F14": "The file is clearly the standard printer implementation with extensive configuration and formatting logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/stats.rs",
+      "language": "rust",
+      "chat_id": 41728,
+      "fields": {
+        "F0": "crates/printer/src/stats.rs",
+        "F1": "stats",
+        "F2": "rs",
+        "F3": "41728",
+        "F4": "Open this file to inspect the data structure used for aggregating and reporting search performance metrics.",
+        "F5": "helper",
+        "F6": [
+          "Adding new metrics to the search statistics output.",
+          "Modifying how statistics are aggregated or serialized (e.g., for JSON output).",
+          "Debugging discrepancies in reported search times or match counts.",
+          "Implementing custom statistics formatting or display logic."
+        ],
+        "F7": [
+          "Changing the actual search algorithm or filtering logic.",
+          "Modifying color schemes or terminal output formatting.",
+          "Fixing issues related to file path resolution or globbing."
+        ],
+        "F8": [
+          "What specific metrics are tracked during a search operation?",
+          "How are statistics aggregated when multiple searches are performed?",
+          "What fields are included in the serialized JSON output for stats?",
+          "How is elapsed time calculated and stored?"
+        ],
+        "F9": "[\"The locations where Stats methods are called to populate the data\"]",
+        "F10": "[\"NiceDuration\",\"serde\",\"Duration\"]",
+        "F11": "low",
+        "F12": "This is a data structure definition; changes are localized to aggregation and serialization logic.",
+        "F13": "high",
+        "F14": "The file is a straightforward implementation of a statistics data structure with standard trait implementations."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/summary.rs",
+      "language": "rust",
+      "chat_id": 41729,
+      "fields": {
+        "F0": "crates/printer/src/summary.rs",
+        "F1": "summary.rs",
+        "F2": "rs",
+        "F3": "41729",
+        "F4": "This file implements the summary printer, which aggregates search results into counts, file paths, or statistics instead of printing individual match lines.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Modifying how match counts are calculated, particularly for multi-line matches or the `CountMatches` mode.",
+          "Changing the formatting of summary output (e.g., separators, path display, zero-count exclusion).",
+          "Debugging statistics collection or performance issues related to the `QuietWithMatch` mode.",
+          "Implementing new summary output modes or modifying the behavior of existing `SummaryKind` variants."
+        ],
+        "F7": [
+          "Changing the underlying search algorithm or regex engine (handled by the searcher).",
+          "Modifying the standard printer that outputs individual match lines with context.",
+          "Changing the definition of command-line flags (this file consumes configuration, it does not define flags)."
+        ],
+        "F8": [
+          "How does the `CountMatches` mode differ from `Count` mode when dealing with multiple matches on a single line?",
+          "How are statistics (bytes searched, elapsed time) gathered and reported by the summary printer?",
+          "How does the printer handle binary data detection in relation to printing summary results?",
+          "What are the specific conditions that cause the `QuietWithMatch` mode to stop searching early?"
+        ],
+        "F9": "[\"grep_searcher::Sink trait definition\",\"Stats struct implementation\"]",
+        "F10": "[\"grep_matcher::Matcher\",\"grep_searcher::Searcher\",\"termcolor::WriteColor\",\"stats::Stats\",\"hyperlink::HyperlinkConfig\"]",
+        "F11": "medium",
+        "F12": "Logic is specific to output formatting and counting; errors affect user-visible correctness of counts but rarely cause crashes.",
+        "F13": "high",
+        "F14": "The file has a clear responsibility for summary output and stats aggregation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/printer/src/util.rs",
+      "language": "rust",
+      "chat_id": 41730,
+      "fields": {
+        "F0": "crates/printer/src/util.rs",
+        "F1": "util",
+        "F2": "rs",
+        "F3": "41730",
+        "F4": "This file provides utility types and functions for the printer crate, handling replacements, path formatting, duration display, and low-level byte manipulation for output generation.",
+        "F5": "helper",
+        "F6": [
+          "Debugging or modifying the logic for replacing matches with capture groups.",
+          "Changing how file paths are formatted or converted (e.g., separators, hyperlinks).",
+          "Optimizing the performance of output formatting (e.g., `DecimalFormatter`).",
+          "Investigating edge cases in multiline context handling or line terminator trimming."
+        ],
+        "F7": [
+          "Modifying the JSON schema definitions (see `jsont.rs`).",
+          "Changing the core search logic or regex engine configuration.",
+          "Working on high-level CLI argument parsing unrelated to output formatting."
+        ],
+        "F8": [
+          "How are match replacements interpolated with capture groups?",
+          "How does the `PrinterPath` type handle non-UTF-8 paths on different operating systems?",
+          "What is the implementation of the custom `DecimalFormatter` used for performance?",
+          "How are line terminators handled during replacement operations?"
+        ],
+        "F9": "[\"grep_matcher\",\"grep_searcher\",\"crate::hyperlink::HyperlinkPath\"]",
+        "F10": "[\"grep_matcher::Matcher\",\"grep_searcher::Searcher\",\"grep_matcher::Captures\",\"crate::hyperlink\",\"bstr::ByteVec\"]",
+        "F11": "medium",
+        "F12": "These utilities are core to the printing process; bugs here can affect output correctness and performance.",
+        "F13": "high",
+        "F14": "The file is well-commented and clearly separates concerns for printing utilities."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/error.rs",
+      "language": "rust",
+      "chat_id": 41737,
+      "fields": {
+        "F0": "crates/pcre2/src/error.rs",
+        "F1": "error",
+        "F2": "rs",
+        "F3": "41737",
+        "F4": "This file defines the error types and kinds for the pcre2 crate and should be opened to understand regex failure modes or modify error reporting.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging a regex compilation or parsing failure specific to the pcre2 backend.",
+          "Adding new error variants or modifying error messages/descriptions.",
+          "Implementing error handling logic that consumes this crate's error type."
+        ],
+        "F7": [
+          "Looking for regex matching or searching logic (this file only defines error structures).",
+          "Investigating errors from other crates or the main application.",
+          "Searching for test cases or usage examples (none are present in this file)."
+        ],
+        "F8": [
+          "What specific error kinds does the pcre2 crate expose?",
+          "How are regex errors formatted or displayed in this crate?",
+          "Does the error type capture the underlying regex error string?"
+        ],
+        "F9": "[\"Usage sites of this `Error` type to see how it is handled in the broader codebase.\"]",
+        "F10": "[\"ErrorKind\",\"std::error::Error\"]",
+        "F11": "low",
+        "F12": "This is a self-contained error definition; changes are usually additive or string updates.",
+        "F13": "high",
+        "F14": "The code is straightforward, standard Rust error handling, and well-documented."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41738,
+      "fields": {
+        "F0": "crates/pcre2/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41738",
+        "F4": "Use this file to identify the public API exports and entry points for the PCRE2 matcher implementation crate.",
+        "F5": "public-api",
+        "F6": [
+          "Determining how to consume or integrate the PCRE2 matcher crate.",
+          "Checking which types, functions, or modules are publicly exposed by this crate.",
+          "Verifying if PCRE2 JIT compilation is available or checking the PCRE2 version.",
+          "Understanding the high-level module structure of the crate."
+        ],
+        "F7": [
+          "Looking for the actual implementation details of the RegexMatcher or error handling (see matcher.rs or error.rs).",
+          "Investigating the default regex engine implementation (this is specifically for PCRE2).",
+          "Modifying the core regex syntax or parsing logic."
+        ],
+        "F8": [
+          "What are the top-level exports of this crate?",
+          "How can I check if PCRE2 JIT support is available at runtime?",
+          "What modules (error, matcher) are defined within this crate?",
+          "Does this crate re-export types from the underlying pcre2 library?"
+        ],
+        "F9": "[\"error.rs\",\"matcher.rs\"]",
+        "F10": "[\"pcre2\",\"grep-matcher\",\"error\",\"matcher\",\"RegexCaptures\",\"RegexMatcher\",\"RegexMatcherBuilder\"]",
+        "F11": "low",
+        "F12": "This file primarily consists of re-exports and module declarations. Changes are typically structural or additive.",
+        "F13": "high",
+        "F14": "The file is small, explicit, and follows standard Rust crate root conventions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/pcre2/src/matcher.rs",
+      "language": "rust",
+      "chat_id": 41739,
+      "fields": {
+        "F0": "crates/pcre2/src/matcher.rs",
+        "F1": "matcher.rs",
+        "F2": "rs",
+        "F3": "41739",
+        "F4": "This file implements the PCRE2 regex engine adapter, translating ripgrep's configuration options into PCRE2-specific flags and compilation logic.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging issues specific to PCRE2 regex matching or compilation.",
+          "Adding or modifying support for PCRE2-specific features (e.g., JIT, stack size, UTF modes).",
+          "Understanding how \"smart case\" or \"word matching\" logic is applied specifically for the PCRE2 engine."
+        ],
+        "F7": [
+          "Investigating the default regex engine (likely the Rust `regex` crate).",
+          "Looking for file system traversal or ignore rule logic.",
+          "Modifying general CLI argument parsing that is not specific to PCRE2."
+        ],
+        "F8": [
+          "How does ripgrep enable or configure PCRE2's JIT compilation?",
+          "How are smart case rules implemented for PCRE2 patterns?",
+          "What is the specific implementation of \"word matching\" versus `\\b` boundaries in this adapter?",
+          "How are PCRE2 errors mapped to ripgrep's error types?"
+        ],
+        "F9": "[\"The `grep_matcher` trait definitions to understand the interface being implemented.\"]",
+        "F10": "[\"grep_matcher::{Captures, Match, Matcher}\",\"pcre2::bytes::{CaptureLocations, Regex, RegexBuilder}\",\"crate::error::Error\"]",
+        "F11": "medium",
+        "F12": "Changes to regex compilation or matching logic can affect correctness and performance for users relying on the PCRE2 engine.",
+        "F13": "high",
+        "F14": "The file clearly acts as the bridge between the generic matcher interface and the specific PCRE2 library."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/test_matcher.rs",
+      "language": "rust",
+      "chat_id": 41746,
+      "fields": {
+        "F0": "crates/matcher/tests/test_matcher.rs",
+        "F1": "test_matcher.rs",
+        "F2": "rs",
+        "F3": "41746",
+        "F4": "This file is useful for verifying the correctness of the `RegexMatcher` wrapper's default trait implementations, specifically regarding iteration, capturing, and replacement behaviors.",
+        "F5": "test",
+        "F6": [
+          "Debugging unexpected behavior in `RegexMatcher`'s `find_iter` or `captures_iter` methods.",
+          "Verifying that short-circuiting logic works correctly in iterator callbacks.",
+          "Checking how the matcher handles underlying regex engines that do not support capturing groups.",
+          "Adding test coverage for new `grep_matcher` trait methods."
+        ],
+        "F7": [
+          "Looking for the core implementation of the `RegexMatcher` struct (check `util` or the main library file).",
+          "Investigating the internal logic of the `regex` crate itself.",
+          "Modifying the actual search algorithm or performance characteristics (this is functional testing)."
+        ],
+        "F8": [
+          "Does the `RegexMatcher` correctly implement short-circuiting for `find_iter`?",
+          "How does the matcher behave when the underlying regex engine does not support captures?",
+          "What is the expected output format for `replace_with_captures`?",
+          "Are there specific tests for the `try_find_iter` error handling variants?"
+        ],
+        "F9": "[\"The implementation of `RegexMatcher` and `RegexMatcherNoCaps` (likely in `src/util.rs` or similar).\"]",
+        "F10": "[\"grep_matcher\",\"regex::bytes::Regex\",\"crate::util\"]",
+        "F11": "low",
+        "F12": "Changes here only affect test coverage and do not alter runtime behavior.",
+        "F13": "high",
+        "F14": "The file structure and test intent are explicit and standard for Rust unit tests."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/tests.rs",
+      "language": "rust",
+      "chat_id": 41747,
+      "fields": {
+        "F0": "crates/matcher/tests/tests.rs",
+        "F1": "tests",
+        "F2": "rs",
+        "F3": "41747",
+        "F4": "This file acts as a module organizer for integration tests and is useful only for navigating to the actual test implementations.",
+        "F5": "test",
+        "F6": [
+          "Trying to understand the structure or hierarchy of the integration test suite.",
+          "Looking for the entry point to locate specific test modules like `util` or `test_matcher`.",
+          "Setting up a new integration test module and need to know where to declare it."
+        ],
+        "F7": [
+          "Looking for the actual test logic or assertions (check the submodules instead).",
+          "Investigating production code bugs or implementation details.",
+          "Searching for the main library code for the `matcher` crate."
+        ],
+        "F8": [
+          "What are the top-level modules in the matcher integration test suite?",
+          "Where is the `test_matcher` integration test located?"
+        ],
+        "F9": "[\"util.rs\",\"test_matcher.rs\"]",
+        "F10": "[\"util\",\"test_matcher\"]",
+        "F11": "low",
+        "F12": "This file only contains module declarations; modifying it is unlikely to break logic unless paths are incorrect.",
+        "F13": "high",
+        "F14": "The file content is minimal and follows standard Rust module conventions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/tests/util.rs",
+      "language": "rust",
+      "chat_id": 41748,
+      "fields": {
+        "F0": "crates/matcher/tests/util.rs",
+        "F1": "util",
+        "F2": "rs",
+        "F3": "41748",
+        "F4": "This file provides mock implementations of the `Matcher` trait for testing and should be opened to debug test harness issues or understand how test regexes are constructed.",
+        "F5": "helper",
+        "F6": [
+          "Debugging failures in the `matcher` crate's tests that involve the `Matcher` trait.",
+          "Understanding how the `Matcher` trait is mocked or implemented in the test suite.",
+          "Adding new test utilities or modifying how test regexes are created."
+        ],
+        "F7": [
+          "Looking for the production implementation of the `Matcher` trait or the actual regex engine.",
+          "Investigating application-level logic or performance characteristics.",
+          "Searching for specific test cases or assertions (this file provides the tools, not the tests)."
+        ],
+        "F8": [
+          "How is the `Matcher` trait implemented for testing purposes?",
+          "What regex engine backs the test matcher implementations?",
+          "How are capture names handled in the test utilities?"
+        ],
+        "F9": "[\"The definition of the `Matcher` trait (likely in `grep_matcher`) to understand the contract being mocked.\"]",
+        "F10": "[\"grep_matcher::{Captures, Match, Matcher, NoCaptures, NoError}\",\"regex::bytes::{CaptureLocations, Regex}\"]",
+        "F11": "medium",
+        "F12": "Changes to this mock implementation could break a large number of tests if the behavior diverges from the real implementation.",
+        "F13": "high",
+        "F14": "The file explicitly implements traits for testing and includes comments explaining its purpose."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/interpolate.rs",
+      "language": "rust",
+      "chat_id": 41750,
+      "fields": {
+        "F0": "crates/matcher/src/interpolate.rs",
+        "F1": "interpolate",
+        "F2": "rs",
+        "F3": "41750",
+        "F4": "Open this file to debug or modify the parsing and interpolation logic for replacement strings containing capture group references.",
+        "F5": "helper",
+        "F6": [
+          "Debugging why a specific replacement string syntax (e.g., `${name}`) is not working",
+          "Adding support for new capture reference formats or escape characters",
+          "Understanding how named capture groups are resolved during replacement"
+        ],
+        "F7": [
+          "Changing the regex pattern compilation or matching engine",
+          "Modifying the printer's output formatting or color schemes",
+          "Investigating file I/O or search performance issues"
+        ],
+        "F8": [
+          "Does the interpolation logic support the `${name}` syntax for named captures?",
+          "How are escaped dollar signs (`$$`) handled in the replacement string?",
+          "What characters are valid in a capture group name reference?"
+        ],
+        "F9": "[\"The implementation of the `name_to_index` closure provided by the caller to resolve names to indices\"]",
+        "F10": "[\"memchr\"]",
+        "F11": "medium",
+        "F12": "This is a core utility for replacement logic; bugs could affect all replacement operations, but the logic is localized to this function.",
+        "F13": "high",
+        "F14": "The parsing logic is explicit, well-tested, and isolated within a single public function."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/matcher/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41751,
+      "fields": {
+        "F0": "crates/matcher/src/lib.rs",
+        "F1": "lib",
+        "F2": "rs",
+        "F3": "41751",
+        "F4": "This file defines the core `Matcher` trait and supporting types for regex/search implementations, serving as the primary public API contract for the crate.",
+        "F5": "public-api",
+        "F6": [
+          "Implementing a new search backend or regex engine compatible with this crate.",
+          "Understanding the exact behavior of `find_at`, `captures_at`, or `replace` methods.",
+          "Debugging type errors related to `Matcher`, `Captures`, or `Match` usage.",
+          "Checking optimization hints like `non_matching_bytes` or `line_terminator`."
+        ],
+        "F7": [
+          "Looking for specific regex syntax or pattern compilation logic.",
+          "Searching for high-level command-line argument parsing or user-facing output formatting.",
+          "Investigating file system traversal or search orchestration logic."
+        ],
+        "F8": [
+          "What methods must a custom matcher implement?",
+          "How are match offsets represented and manipulated?",
+          "How does the internal iteration (push model) work for finding matches?",
+          "What are the constraints on capturing groups?"
+        ],
+        "F9": "[\"Concrete implementations of the `Matcher` trait\",\"Implementation of the private `interpolate` module\"]",
+        "F10": "[\"grep-searcher\",\"crate::interpolate\"]",
+        "F11": "high",
+        "F12": "This file defines the core public trait and data structures; modifications will likely break all downstream implementations and consumers.",
+        "F13": "high",
+        "F14": "The file is the main library entry point (`lib.rs`) containing extensive documentation and explicit trait definitions, clearly indicating its role as the public API."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+      "language": "rust",
+      "chat_id": 41759,
+      "fields": {
+        "F0": "crates/ignore/tests/gitignore_matched_path_or_any_parents_tests.rs",
+        "F1": "gitignore_matched_path_or_any_parents_tests",
+        "F2": "rs",
+        "F3": "41759",
+        "F4": "This file is useful to open when verifying the correctness of gitignore matching logic, specifically how parent directory rules affect child paths.",
+        "F5": "test",
+        "F6": [
+          "Verifying the behavior of the `matched_path_or_any_parents` method.",
+          "Understanding how gitignore rules apply to directories versus files in nested structures.",
+          "Checking edge cases for path matching relative to a root directory.",
+          "Investigating test coverage for ignore patterns."
+        ],
+        "F7": [
+          "Looking for the actual implementation of the `Gitignore` logic (this is a test file).",
+          "Investigating performance characteristics of ignore matching.",
+          "Searching for CLI argument parsing or handling."
+        ],
+        "F8": [
+          "Does `matched_path_or_any_parents` panic if the path is not under the root?",
+          "How are files in nested directories handled by specific gitignore patterns?",
+          "What is the expected behavior for directories that do not match a pattern but contain children that do?",
+          "What specific patterns are tested for root-level versus deep-level files?"
+        ],
+        "F9": "[\"Gitignore implementation\",\"GitignoreBuilder implementation\",\"content of tests/gitignore_matched_path_or_any_parents_tests.gitignore\"]",
+        "F10": "[\"ignore::gitignore::{Gitignore, GitignoreBuilder}\",\"std::path::Path\"]",
+        "F11": "low",
+        "F12": "This is a test file; changes here only affect test coverage and assertions, not the runtime logic of the application.",
+        "F13": "high",
+        "F14": "The file is clearly a Rust test module with specific assertions and imports."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/tests/gitignore_skip_bom.rs",
+      "language": "rust",
+      "chat_id": 41761,
+      "fields": {
+        "F0": "crates/ignore/tests/gitignore_skip_bom.rs",
+        "F1": "gitignore_skip_bom.rs",
+        "F2": "rs",
+        "F3": "41761",
+        "F4": "This file verifies that the `GitignoreBuilder` correctly handles BOMs in gitignore files, helping agents validate specific edge-case behavior.",
+        "F5": "test",
+        "F6": [
+          "Investigating how the `ignore` crate handles BOMs in gitignore files.",
+          "Debugging issues related to parsing gitignore files with unusual encodings.",
+          "Looking for usage examples of `GitignoreBuilder`."
+        ],
+        "F7": [
+          "Looking for the implementation of the BOM skipping logic (this is a test, not the source).",
+          "Investigating general gitignore matching rules unrelated to BOMs."
+        ],
+        "F8": [
+          "Does the `ignore` crate support BOMs in gitignore files?",
+          "How is `GitignoreBuilder` initialized for a specific root?",
+          "What is the expected behavior when a gitignore file starts with a BOM?"
+        ],
+        "F9": "[\"Implementation of `GitignoreBuilder` and the BOM parsing logic.\"]",
+        "F10": "[\"ignore::gitignore::GitignoreBuilder\",\"tests/gitignore_skip_bom.gitignore\"]",
+        "F11": "low",
+        "F12": "This is a test file; modifications typically only affect test coverage and do not change runtime behavior.",
+        "F13": "high",
+        "F14": "The file is a simple, self-contained unit test with a clear purpose."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/default_types.rs",
+      "language": "rust",
+      "chat_id": 41763,
+      "fields": {
+        "F0": "crates/ignore/src/default_types.rs",
+        "F1": "default_types.rs",
+        "F2": "rs",
+        "F3": "41763",
+        "F4": "This file is useful for identifying which file extensions and globs are mapped to specific file types by default in ripgrep.",
+        "F5": "config",
+        "F6": [
+          "Adding support for a new programming language or file format to ripgrep's default type list.",
+          "Verifying if a specific file extension (e.g., `.tsx`) is included in a type definition.",
+          "Debugging why a specific file type is not being detected or filtered correctly.",
+          "Checking the sorting order or formatting rules for the type definitions."
+        ],
+        "F7": [
+          "Looking for the logic that parses user-defined types via command-line flags (e.g., `--type-add`).",
+          "Investigating the actual file system traversal or ignore logic implementation.",
+          "Trying to modify how types are matched against file paths (this is the data source, not the matching logic)."
+        ],
+        "F8": [
+          "What glob patterns are associated with the `rust` file type?",
+          "Is the `markdown` type configured to recognize `.mdx` files?",
+          "Are the type definitions sorted lexicographically as required?",
+          "What is the default mapping for `docker` related files?"
+        ],
+        "F9": "[\"The code that consumes `DEFAULT_TYPES` to build the type matcher (likely in `src/types.rs` or the main `ignore` library logic).\"]",
+        "F10": "N/A",
+        "F11": "low",
+        "F12": "Changes are typically additive (adding types) and have limited blast radius, though sorting violations might cause test failures.",
+        "F13": "high",
+        "F14": "The file is a static data array with clear documentation and a validation test."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/dir.rs",
+      "language": "rust",
+      "chat_id": 41764,
+      "fields": {
+        "F0": "crates/ignore/src/dir.rs",
+        "F1": "dir",
+        "F2": "rs",
+        "F3": "41764",
+        "F4": "This file implements the hierarchical ignore logic that determines which files are skipped during directory traversal based on gitignore and other ignore rules.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging why specific files are being incorrectly ignored or included in search results.",
+          "Modifying the precedence or loading logic for ignore files (.gitignore, .ignore, .git/info/exclude).",
+          "Investigating support for git worktrees or linked checkouts.",
+          "Adding or modifying custom ignore file types or global ignore handling."
+        ],
+        "F7": [
+          "Changing the actual regex matching logic used within ignore rules (located in the gitignore module).",
+          "Modifying the raw file system traversal iterator (located in the walk module).",
+          "Changing the CLI arguments that control ignore behavior (located in the CLI module)."
+        ],
+        "F8": [
+          "How are parent directory ignore rules loaded and merged with child rules?",
+          "What is the precedence order between overrides, types, custom ignores, and gitignores?",
+          "How does the system detect and handle .git directories to stop searching for parent gitignores?",
+          "How are global gitignore files resolved and applied relative to the current directory?"
+        ],
+        "F9": "[\"The gitignore module for specific glob matching logic, and the walk module for traversal integration.\"]",
+        "F10": "[\"crate::gitignore\",\"crate::overrides\",\"crate::types\",\"crate::walk::DirEntry\",\".gitignore\",\".ignore\",\".git/info/exclude\",\".git\"]",
+        "F11": "high",
+        "F12": "Logic here directly controls which files are searched; bugs can cause data loss (skipping files) or performance issues.",
+        "F13": "high",
+        "F14": "The module is well-documented with comments explaining its design and purpose."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/gitignore.rs",
+      "language": "rust",
+      "chat_id": 41765,
+      "fields": {
+        "F0": "crates/ignore/src/gitignore.rs",
+        "F1": "gitignore.rs",
+        "F2": "rs",
+        "F3": "41765",
+        "F4": "This file implements the core logic for parsing and matching `.gitignore` globs, useful for tasks involving ignore rule filtering, debugging pattern matching behavior, or modifying glob semantics.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging why a specific file path is ignored or whitelisted by a glob pattern.",
+          "Modifying glob parsing logic or gitignore semantics (e.g., negation, directory-only matching).",
+          "Implementing custom ignore rule handling or integrating ignore matching into a new context.",
+          "Investigating how global gitignore files are located and parsed."
+        ],
+        "F7": [
+          "Looking for high-level directory traversal iteration logic (check the `walk` module).",
+          "Searching for CLI argument parsing definitions or command-line interface code.",
+          "Investigating file type filtering logic (check the `types` module)."
+        ],
+        "F8": [
+          "How are negation patterns (prefixed with `!`) processed and prioritized?",
+          "What is the precedence order when multiple globs match a single path?",
+          "How does the matcher determine if a path is relative to the gitignore root?",
+          "Where does the library look for the global gitignore file defined by `core.excludesFile`?"
+        ],
+        "F9": "[\"walk module (for traversal integration)\",\"overrides module (for user-specified globs)\"]",
+        "F10": "[\"globset\",\"regex_automata\",\"crate::Error\",\"crate::Match\",\"crate::pathutil\"]",
+        "F11": "high",
+        "F12": "Changes to glob parsing or matching logic affect all ignore behavior across the application.",
+        "F13": "high",
+        "F14": "The file is self-contained, well-documented, and clearly defines the core matching semantics."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41766,
+      "fields": {
+        "F0": "crates/ignore/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41766",
+        "F4": "This file defines the public API, common error types, and match results for the crate, useful for understanding how to consume the library, handling errors, or determining the structure of match results.",
+        "F5": "public-api",
+        "F6": [
+          "Understanding the public API structure and exported items of the crate.",
+          "Handling or interpreting specific library errors (e.g., `Error::Glob`, `Error::Loop`).",
+          "Determining the structure of `Match` results returned by the ignore logic.",
+          "Integrating the ignore crate as a dependency and needing to know the available types."
+        ],
+        "F7": [
+          "Looking for specific implementation details of walking or gitignore parsing (check submodules).",
+          "Searching for CLI usage examples or argument parsing logic.",
+          "Investigating file system traversal algorithms or performance optimizations."
+        ],
+        "F8": [
+          "What error types can this crate return and how are they structured?",
+          "What variants does the `Match` enum support and what do they represent?",
+          "How are partial errors represented and propagated through the API?",
+          "What are the top-level re-exports and modules provided by this crate?"
+        ],
+        "F9": "[\"walk module implementation\",\"gitignore module implementation\"]",
+        "F10": "[\"walk\",\"gitignore\",\"overrides\",\"types\",\"walkdir\"]",
+        "F11": "medium",
+        "F12": "Changes to public enums or error types affect the entire API surface and downstream consumers.",
+        "F13": "high",
+        "F14": "This is a standard library entry point that clearly aggregates and re-exports submodules."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/overrides.rs",
+      "language": "rust",
+      "chat_id": 41767,
+      "fields": {
+        "F0": "crates/ignore/src/overrides.rs",
+        "F1": "overrides.rs",
+        "F2": "rs",
+        "F3": "41767",
+        "F4": "Open this file to understand or modify the logic for processing file path overrides (include/exclude globs) and their matching precedence.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating how `--include` or `--exclude` flags are implemented or matched.",
+          "Debugging issues related to glob matching, file filtering, or override precedence.",
+          "Modifying the behavior of case sensitivity or unclosed character classes in overrides."
+        ],
+        "F7": [
+          "Looking for standard `.gitignore` file parsing logic (handled by the `gitignore` module).",
+          "Investigating CLI argument parsing or flag definitions (this is the logic layer).",
+          "Searching for file system traversal logic (this handles matching only)."
+        ],
+        "F8": [
+          "How does the `Override` struct differ from a standard `Gitignore` in terms of matching logic?",
+          "What is the matching behavior when a file path does not match any glob in a non-empty set?",
+          "How are case-insensitive overrides configured and applied?"
+        ],
+        "F9": "[\"crate::gitignore module implementation\"]",
+        "F10": "[\"crate::Error\",\"crate::Match\",\"crate::gitignore::Gitignore\",\"crate::gitignore::GitignoreBuilder\"]",
+        "F11": "medium",
+        "F12": "This file controls core filtering logic; changes could inadvertently alter which files are searched or ignored.",
+        "F13": "high",
+        "F14": "The file has clear documentation, tests, and a focused responsibility."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41768,
+      "fields": {
+        "F0": "crates/ignore/src/pathutil.rs",
+        "F1": "pathutil.rs",
+        "F2": "rs",
+        "F3": "41768",
+        "F4": "This file provides platform-optimized utilities for determining hidden status and manipulating path components, used during directory traversal.",
+        "F5": "helper",
+        "F6": [
+          "Debugging hidden file detection logic on Windows or Unix.",
+          "Fixing path stripping or component extraction issues.",
+          "Optimizing directory traversal performance related to path operations."
+        ],
+        "F7": [
+          "Investigating ignore rule parsing (e.g., .gitignore syntax).",
+          "Looking for regex matching logic.",
+          "Modifying high-level application flow or search strategies."
+        ],
+        "F8": [
+          "How are hidden files detected on Windows versus Unix?",
+          "How is path stripping optimized on Unix using byte comparisons?",
+          "What constitutes a 'file name' in this context?"
+        ],
+        "F9": "[\"walk::DirEntry\"]",
+        "F10": "[\"std::path::Path\",\"memchr\",\"winapi_util\"]",
+        "F11": "medium",
+        "F12": "Platform-specific path logic is critical for correct traversal behavior but changes are isolated to utility functions.",
+        "F13": "high",
+        "F14": "The file contains clear, platform-specific utility implementations with well-defined inputs and outputs."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/types.rs",
+      "language": "rust",
+      "chat_id": 41769,
+      "fields": {
+        "F0": "crates/ignore/src/types.rs",
+        "F1": "types",
+        "F2": "rs",
+        "F3": "41769",
+        "F4": "This file is useful when an agent needs to understand or modify how file types are defined, selected, or matched against file paths using glob patterns.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Adding or modifying file type definitions (e.g., adding a new language extension).",
+          "Debugging why a specific file is or isn't matched by a file type filter (e.g., `-t rust`).",
+          "Understanding how file type negation or inclusion logic works.",
+          "Investigating the syntax for custom file type definitions."
+        ],
+        "F7": [
+          "Investigating regex-based content searching (handled by regex/matcher).",
+          "Looking for `.gitignore` or `.ignore` rule parsing logic (handled elsewhere in the ignore crate).",
+          "Investigating output formatting or result printing."
+        ],
+        "F8": [
+          "How are file type globs compiled and matched against file paths?",
+          "What is the syntax for defining a new file type or including existing types?",
+          "How does the `TypesBuilder` construct the final `Types` matcher?",
+          "How are file names extracted and matched against the glob set?"
+        ],
+        "F9": "[\"globset crate usage\",\"crate::default_types::DEFAULT_TYPES\"]",
+        "F10": "[\"globset::GlobSet\",\"crate::default_types::DEFAULT_TYPES\",\"crate::Error\",\"crate::pathutil::file_name\"]",
+        "F11": "low",
+        "F12": "Changes are mostly additive (new types) or internal logic changes to matching, unlikely to break the broader system unless the matching logic is fundamentally altered.",
+        "F13": "high",
+        "F14": "The file clearly handles file type definitions and matching with explicit builder and matcher structs."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/src/walk.rs",
+      "language": "rust",
+      "chat_id": 41770,
+      "fields": {
+        "F0": "crates/ignore/src/walk.rs",
+        "F1": "walk",
+        "F2": "rs",
+        "F3": "41770",
+        "F4": "Open this file to understand or modify the core recursive directory traversal logic, ignore rule application, and parallel iteration strategy.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging issues with file traversal performance, order, or correctness.",
+          "Modifying how `.gitignore` or other ignore rules are applied during a walk.",
+          "Investigating parallel walk behavior, thread synchronization, or work stealing.",
+          "Changing how symbolic links or file system boundaries are handled."
+        ],
+        "F7": [
+          "Looking for the specific syntax parsing logic for ignore files (likely in `gitignore.rs` or `dir.rs`).",
+          "Modifying command-line argument parsing or user interface logic.",
+          "Changing the printer output or result formatting logic."
+        ],
+        "F8": [
+          "How does the walker handle parallel traversal and work stealing?",
+          "What is the precedence order for ignore rules during a walk?",
+          "How are symlinks and file system devices checked to prevent loops or cross-device traversal?",
+          "How does the walker integrate with the `Ignore` matcher?"
+        ],
+        "F9": "[\"crate::dir::Ignore implementation\",\"crate::Error types\"]",
+        "F10": "[\"crate::dir::Ignore\",\"crate::dir::IgnoreBuilder\",\"crate::gitignore::GitignoreBuilder\",\"crate::overrides::Override\",\"crate::types::Types\",\"walkdir::WalkDir\"]",
+        "F11": "high",
+        "F12": "This is core traversal logic affecting performance, correctness, and resource usage across the application.",
+        "F13": "high",
+        "F14": "The file is clearly the central implementation for walking, containing the builder, iterators, and worker logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/ignore/examples/walk.rs",
+      "language": "rust",
+      "chat_id": 41772,
+      "fields": {
+        "F0": "crates/ignore/examples/walk.rs",
+        "F1": "walk.rs",
+        "F2": "rs",
+        "F3": "41772",
+        "F4": "Demonstrates how to use the `ignore` crate's `WalkBuilder` for parallel and sequential directory traversal and printing paths.",
+        "F5": "fixture",
+        "F6": [
+          "Learning how to use the `ignore` crate's walk API",
+          "Looking for examples of parallel directory traversal implementation",
+          "Understanding how to integrate `WalkBuilder` with channels for output"
+        ],
+        "F7": [
+          "Modifying the core `ignore` library walking logic",
+          "Fixing bugs in the main production codebase",
+          "Analyzing the internal implementation details of the ignore crate"
+        ],
+        "F8": [
+          "How do I configure a parallel walk using `WalkBuilder`?",
+          "How do I use `WalkBuilder` compared to `WalkDir`?",
+          "How can I send walk results over a channel to a separate thread?"
+        ],
+        "F9": "[\"ignore::WalkBuilder API documentation\",\"walkdir::WalkDir API documentation\"]",
+        "F10": "[\"ignore::WalkBuilder\",\"walkdir::WalkDir\",\"crossbeam_channel\",\"bstr::ByteVec\"]",
+        "F11": "low",
+        "F12": "This is an example file; changes do not affect the library's functionality.",
+        "F13": "high",
+        "F14": "The file is explicitly located in an `examples` directory and contains a `main` function."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41780,
+      "fields": {
+        "F0": "crates/grep/src/lib.rs",
+        "F1": "lib",
+        "F2": "rs",
+        "F3": "41780",
+        "F4": "This file serves as the top-level library facade for ripgrep, defining the public exports and structure for users integrating the crate.",
+        "F5": "public-api",
+        "F6": [
+          "Integrating ripgrep as a library in another Rust project.",
+          "Determining which sub-crates (matcher, printer, searcher) are publicly exposed.",
+          "Checking for optional feature flags (like pcre2) at the crate root.",
+          "Understanding the high-level module organization of the ripgrep ecosystem."
+        ],
+        "F7": [
+          "Implementing specific search algorithms or regex engines.",
+          "Modifying command-line argument parsing or binary execution logic.",
+          "Changing internal implementation details of specific sub-crates."
+        ],
+        "F8": [
+          "What are the public modules available when using the grep crate?",
+          "Is PCRE2 support enabled as a feature in this build?",
+          "How are the core components (cli, matcher, searcher) re-exported?",
+          "Where is the high-level documentation for library usage located?"
+        ],
+        "F9": "[\"Documentation or examples for the re-exported crates (grep_matcher, grep_searcher, etc.) to understand how to compose them.\"]",
+        "F10": "[\"grep_cli\",\"grep_matcher\",\"grep_pcre2\",\"grep_printer\",\"grep_regex\",\"grep_searcher\"]",
+        "F11": "low",
+        "F12": "Modifications primarily affect public API surface and re-exports rather than core logic.",
+        "F13": "high",
+        "F14": "The file is a standard crate root with clear re-exports and documentation comments."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/grep/examples/simplegrep.rs",
+      "language": "rust",
+      "chat_id": 41782,
+      "fields": {
+        "F0": "crates/grep/examples/simplegrep.rs",
+        "F1": "simplegrep",
+        "F2": "rs",
+        "F3": "41782",
+        "F4": "This file demonstrates how to use the grep crate library to implement a basic recursive search command with standard printing.",
+        "F5": "fixture",
+        "F6": [
+          "Learning how to integrate the grep crate into a custom Rust application.",
+          "Looking for boilerplate code for setting up a Searcher, RegexMatcher, and Printer.",
+          "Understanding how to walk a directory and pipe results into the grep searcher."
+        ],
+        "F7": [
+          "Investigating the internal implementation details of the grep matcher or searcher.",
+          "Debugging the main ripgrep CLI binary's specific flags or behaviors.",
+          "Looking for advanced ignore logic or configuration handling (not present in this simple example)."
+        ],
+        "F8": [
+          "How do I initialize a RegexMatcher from a string pattern?",
+          "How do I configure a SearcherBuilder to handle binary detection or line numbers?",
+          "How do I use the StandardBuilder to create a printer for terminal output?",
+          "How do I iterate over files using walkdir and search them with the grep library?"
+        ],
+        "F9": "[\"The grep crate's API documentation for detailed configuration options of the used components.\"]",
+        "F10": "[\"grep::cli\",\"grep::printer\",\"grep::regex\",\"grep::searcher\",\"walkdir\",\"termcolor\"]",
+        "F11": "low",
+        "F12": "This is an example file; changes do not affect the library or the main binary.",
+        "F13": "high",
+        "F14": "The file is explicitly located in an examples/ directory and demonstrates standard usage."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/fnv.rs",
+      "language": "rust",
+      "chat_id": 41790,
+      "fields": {
+        "F0": "crates/globset/src/fnv.rs",
+        "F1": "fnv",
+        "F2": "rs",
+        "F3": "41790",
+        "F4": "This file provides an internal FNV hasher implementation and a type alias for a HashMap using this hasher, likely for performance optimization within the globset crate.",
+        "F5": "helper",
+        "F6": [
+          "Debugging performance issues related to hashing in glob pattern matching.",
+          "Modifying the internal hashing strategy used by the globset crate.",
+          "Investigating hash collisions or map behavior specific to globset internals."
+        ],
+        "F7": [
+          "Modifying the public API of the globset crate.",
+          "Changing glob pattern syntax or matching logic.",
+          "Working on features unrelated to internal data structures or performance."
+        ],
+        "F8": [
+          "Which hashing algorithm is used for internal HashMaps in globset?",
+          "What are the constants (offset basis, prime) used in this FNV implementation?",
+          "Is the hasher implementation standard or customized for specific needs?"
+        ],
+        "F9": "[\"Usage sites within globset to see where this HashMap is utilized and why FNV was chosen.\"]",
+        "F10": "[\"std::collections::HashMap\",\"std::hash::Hasher\"]",
+        "F11": "low",
+        "F12": "This is an internal utility with localized usage and a standard algorithm implementation.",
+        "F13": "high",
+        "F14": "The code is a straightforward implementation of a known hashing algorithm with clear visibility scope."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/glob.rs",
+      "language": "rust",
+      "chat_id": 41791,
+      "fields": {
+        "F0": "crates/globset/src/glob.rs",
+        "F1": "glob",
+        "F2": "rs",
+        "F3": "41791",
+        "F4": "This file is useful to open when modifying glob pattern parsing, adding new syntax support, or optimizing glob matching strategies.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Implementing or debugging glob pattern matching (e.g., `**`, `*`, `?`, character classes).",
+          "Changing how globs are converted to regular expressions.",
+          "Optimizing match strategies (literal vs regex).",
+          "Adding new glob options (case insensitive, literal separator)."
+        ],
+        "F7": [
+          "Looking for high-level file walking logic (this is just pattern matching).",
+          "Investigating CLI flag parsing for globs.",
+          "Searching for gitignore specific logic (this is generic globbing)."
+        ],
+        "F8": [
+          "How are recursive wildcards (`**`) tokenized and converted to regex?",
+          "What optimizations are applied to literal globs?",
+          "How are character classes and alternates parsed?",
+          "What is the regex representation of a specific glob pattern?"
+        ],
+        "F9": "[\"Usage of `Glob` and `GlobSet` in the broader codebase\",\"regex_automata crate API details\"]",
+        "F10": "[\"regex_automata::meta::Regex\",\"crate::{Candidate, Error, ErrorKind}\",\"GlobSetBuilder\"]",
+        "F11": "high",
+        "F12": "This is core parsing and matching logic; bugs here affect all pattern matching functionality.",
+        "F13": "high",
+        "F14": "The file contains the primary implementation with extensive documentation and tests."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41792,
+      "fields": {
+        "F0": "crates/globset/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41792",
+        "F4": "This file contains the core implementation for parsing, compiling, and matching glob patterns, including optimized strategies for single and multiple glob sets.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Understanding how glob patterns are parsed and converted into matchers.",
+          "Debugging specific glob matching behavior or performance issues.",
+          "Investigating the optimization strategies used by `GlobSet` (e.g., literal, extension, regex).",
+          "Checking the exact syntax supported by this glob implementation."
+        ],
+        "F7": [
+          "Looking for high-level usage examples of the library (check the top-level documentation).",
+          "Searching for integration logic with `ripgrep` or `grep` (this is a lower-level library).",
+          "Investigating the `regex` crate implementation (this is `globset`)."
+        ],
+        "F8": [
+          "How does `GlobSet` optimize matching multiple patterns simultaneously?",
+          "What specific glob syntax features (e.g., `**`, `[]`, `{}`) are supported?",
+          "What are the different `MatchStrategy` types used for optimization?",
+          "How are errors handled during glob parsing?"
+        ],
+        "F9": "[\"glob.rs\",\"pathutil.rs\"]",
+        "F10": "[\"aho_corasick\",\"regex_automata\",\"Glob\",\"GlobSet\",\"Candidate\",\"MatchStrategy\"]",
+        "F11": "high",
+        "F12": "This is the core implementation logic; changes can significantly impact correctness and performance of glob matching.",
+        "F13": "high",
+        "F14": "The file is self-documenting, extensive, and clearly the primary implementation for the crate."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/pathutil.rs",
+      "language": "rust",
+      "chat_id": 41793,
+      "fields": {
+        "F0": "crates/globset/src/pathutil.rs",
+        "F1": "pathutil",
+        "F2": "rs",
+        "F3": "41793",
+        "F4": "Open this file to understand how file names and extensions are extracted from byte paths and how paths are normalized across platforms.",
+        "F5": "helper",
+        "F6": [
+          "Debugging glob matching issues related to file extensions.",
+          "Fixing path handling bugs specific to Windows or non-Unix platforms.",
+          "Modifying the logic for what constitutes a file extension.",
+          "Investigating why specific file paths are being ignored or mismatched."
+        ],
+        "F7": [
+          "Changing the syntax or parsing of glob patterns themselves.",
+          "Modifying the core traversal logic of the filesystem walker.",
+          "Adjusting regex patterns used for content matching."
+        ],
+        "F8": [
+          "How does the extension extraction logic differ from the standard library?",
+          "How are paths normalized to ensure consistent separator usage?",
+          "What happens to file paths ending in '..'?",
+          "How are byte strings handled versus standard UTF-8 strings in path operations?"
+        ],
+        "F9": "[\"The glob matching logic that consumes these utilities to filter files\"]",
+        "F10": "[\"bstr\",\"ByteSlice\",\"ByteVec\",\"Cow\"]",
+        "F11": "medium",
+        "F12": "Path manipulation is critical for correct file matching; bugs here could lead to missed files or false positives.",
+        "F13": "high",
+        "F14": "The utility functions are explicit, well-tested, and clearly documented regarding their deviation from standard library behavior."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/src/serde_impl.rs",
+      "language": "rust",
+      "chat_id": 41794,
+      "fields": {
+        "F0": "crates/globset/src/serde_impl.rs",
+        "F1": "serde_impl.rs",
+        "F2": "rs",
+        "F3": "41794",
+        "F4": "Use this file to understand how Glob and GlobSet types are serialized to and deserialized from data formats like JSON.",
+        "F5": "adapter",
+        "F6": [
+          "Debugging serialization or deserialization errors involving glob patterns.",
+          "Implementing custom configuration loading that involves glob sets.",
+          "Understanding how invalid glob patterns are handled during the deserialization process.",
+          "Adding support for serialization formats other than JSON (though logic is generic)."
+        ],
+        "F7": [
+          "Modifying the actual glob matching algorithm or syntax parsing.",
+          "Investigating runtime performance of glob matching (this is for data conversion).",
+          "Looking for the builder logic for GlobSet outside of a serialization context."
+        ],
+        "F8": [
+          "How is a Glob object represented when serialized to a string or JSON?",
+          "What happens when deserializing a string that is not a valid glob pattern?",
+          "How is a GlobSet reconstructed from a serialized array of glob strings?",
+          "Does the serialization preserve the exact state of the Glob or just its pattern string?"
+        ],
+        "F9": "[\"Glob\",\"GlobSet\",\"GlobSetBuilder\"]",
+        "F10": "[\"serde\",\"Glob\",\"GlobSet\",\"GlobSetBuilder\"]",
+        "F11": "medium",
+        "F12": "Serialization logic affects data interchange. Errors here could break configuration loading or data persistence for applications using this library.",
+        "F13": "high",
+        "F14": "The implementation is straightforward, using standard serde traits with clear logic for converting to/from strings."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/globset/benches/bench.rs",
+      "language": "rust",
+      "chat_id": 41796,
+      "fields": {
+        "F0": "crates/globset/benches/bench.rs",
+        "F1": "bench.rs",
+        "F2": "rs",
+        "F3": "41796",
+        "F4": "Useful for evaluating and comparing the performance characteristics of glob matching implementations.",
+        "F5": "test",
+        "F6": [
+          "Investigating performance regressions in glob matching logic.",
+          "Comparing the performance of GlobSet versus individual Glob patterns.",
+          "Optimizing the globset crate for specific pattern types."
+        ],
+        "F7": [
+          "Fixing functional bugs in glob matching logic.",
+          "Adding new syntax features to glob patterns.",
+          "Understanding the public API for using globset in application code."
+        ],
+        "F8": [
+          "How does GlobSet performance compare to iterating over individual Globs?",
+          "What is the performance overhead of creating a Candidate object?",
+          "Which glob pattern types are most expensive to match?"
+        ],
+        "F9": "[\"Implementation details of Glob, GlobMatcher, and GlobSet in the globset library.\"]",
+        "F10": "[\"globset\",\"glob\"]",
+        "F11": "low",
+        "F12": "Modifying benchmarks does not affect the runtime behavior or correctness of the application.",
+        "F13": "high",
+        "F14": "The file is clearly a benchmark suite with standard Rust benchmarking structure."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/help.rs",
+      "language": "rust",
+      "chat_id": 41805,
+      "fields": {
+        "F0": "crates/core/flags/doc/help.rs",
+        "F1": "help.rs",
+        "F2": "rs",
+        "F3": "41805",
+        "F4": "Useful for modifying the formatting, structure, or content generation logic for ripgrep's command-line help text.",
+        "F5": "helper",
+        "F6": [
+          "Changing the layout or formatting of the `-h` or `--help` output.",
+          "Fixing rendering issues with roff markup or text wrapping.",
+          "Adding or modifying flag categories in the help documentation."
+        ],
+        "F7": [
+          "Implementing the runtime logic for a specific command-line flag.",
+          "Changing the argument parsing logic itself.",
+          "Modifying the textwrap library implementation."
+        ],
+        "F8": [
+          "How are flags grouped and sorted in the help output?",
+          "How is roff syntax converted to plain text for the long help?",
+          "Where are the templates for short and long help defined?"
+        ],
+        "F9": "[\"The FLAGS definitions to understand available flag metadata.\",\"The template.short.help and template.long.help files.\"]",
+        "F10": "[\"crate::flags\",\"textwrap\",\"version\"]",
+        "F11": "medium",
+        "F12": "Changes affect the user-facing documentation output and could introduce formatting errors.",
+        "F13": "high",
+        "F14": "The file explicitly states its purpose is generating help documentation and shows clear logic for formatting."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/man.rs",
+      "language": "rust",
+      "chat_id": 41806,
+      "fields": {
+        "F0": "crates/core/flags/doc/man.rs",
+        "F1": "man.rs",
+        "F2": "rs",
+        "F3": "41806",
+        "F4": "This file generates the ripgrep man page in roff format by iterating over defined flags, formatting their documentation, and populating a template.",
+        "F5": "build-tooling",
+        "F6": [
+          "Fixing formatting issues or roff syntax errors in the generated man page.",
+          "Modifying how flags are categorized or sorted within the man page.",
+          "Updating the logic that renders custom markup (e.g., `\\flag{}`) in the documentation.",
+          "Changing the template structure or variable substitution logic for the man page."
+        ],
+        "F7": [
+          "Changing the runtime behavior or implementation of a specific flag.",
+          "Updating the help text output for the terminal (handled by a different formatter).",
+          "Modifying the flag definitions or argument parsing logic (this file consumes the definitions)."
+        ],
+        "F8": [
+          "How are flags grouped into sections in the generated man page?",
+          "How are cross-references between flags (e.g., `\\flag{foo}`) resolved and formatted in roff?",
+          "What template is used for the man page generation, and how are variables substituted?",
+          "How is the version string injected into the man page during generation?"
+        ],
+        "F9": "[\"template.rg.1 file content\",\"crate::flags::defs::FLAGS list\"]",
+        "F10": "[\"crate::flags::Flag\",\"crate::flags::defs::FLAGS\",\"crate::flags::doc::version\",\"template.rg.1\"]",
+        "F11": "low",
+        "F12": "This file generates documentation; errors here affect the man page artifact but do not impact the binary's functionality.",
+        "F13": "high",
+        "F14": "The logic is straightforward string manipulation and template filling."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/mod.rs",
+      "language": "rust",
+      "chat_id": 41807,
+      "fields": {
+        "F0": "crates/core/flags/doc/mod.rs",
+        "F1": "mod.rs",
+        "F2": "rs",
+        "F3": "41807",
+        "F4": "Open this file to modify the custom markup rendering logic used in ripgrep's documentation generation.",
+        "F5": "helper",
+        "F6": [
+          "Changing the syntax or processing of custom tags (e.g., `\\tag{...}`) in documentation strings.",
+          "Debugging issues with help text or man page generation output.",
+          "Adding or refactoring documentation sub-modules (like `help` or `man`)."
+        ],
+        "F7": [
+          "Modifying the actual content of the documentation strings (those are in flag definitions).",
+          "Changing the CLI flags themselves (this only renders their docs).",
+          "Looking for main application entry points or runtime logic."
+        ],
+        "F8": [
+          "How are custom tags like `\\tag{...}` replaced in the documentation strings?",
+          "What sub-modules are responsible for specific documentation formats?"
+        ],
+        "F9": "[\"help\",\"man\",\"version modules\"]",
+        "F10": "[\"help\",\"man\",\"version\"]",
+        "F11": "low",
+        "F12": "This is a text processing utility; errors would likely result in malformed docs rather than runtime crashes.",
+        "F13": "high",
+        "F14": "The function is small, self-contained, and well-documented."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/doc/version.rs",
+      "language": "rust",
+      "chat_id": 41811,
+      "fields": {
+        "F0": "crates/core/flags/doc/version.rs",
+        "F1": "version.rs",
+        "F2": "rs",
+        "F3": "41811",
+        "F4": "This file is useful for understanding how ripgrep constructs its version output string, including the reporting of build-time and runtime CPU features like SIMD and PCRE2.",
+        "F5": "helper",
+        "F6": [
+          "Modifying the format or content of the `--version` output.",
+          "Adding a new build feature flag to the version reporting (e.g., a new regex engine).",
+          "Debugging issues related to CPU feature detection (SIMD) reporting.",
+          "Investigating how the git revision hash is embedded in the version string."
+        ],
+        "F7": [
+          "Changing the actual version number of the crate (that is defined in `Cargo.toml`).",
+          "Implementing the actual PCRE2 JIT logic or SIMD optimizations (this file only reports their availability).",
+          "Looking for command-line argument parsing logic (this is a display helper)."
+        ],
+        "F8": [
+          "How does ripgrep determine if PCRE2 is available at compile time?",
+          "Which SIMD features (AVX2, SSE2, NEON) are checked at runtime versus compile time?",
+          "What is the format of the long version string?",
+          "Does the version output include the git commit hash?"
+        ],
+        "F9": "[\"The build script (`build.rs`) if investigating how `RIPGREP_BUILD_GIT_HASH` is set.\"]",
+        "F10": "[\"grep::pcre2\"]",
+        "F11": "low",
+        "F12": "Modifications affect only the informational output displayed to the user.",
+        "F13": "high",
+        "F14": "The functions are pure data formatting routines with clear side-effect free logic."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/bash.rs",
+      "language": "rust",
+      "chat_id": 41813,
+      "fields": {
+        "F0": "crates/core/flags/complete/bash.rs",
+        "F1": "bash.rs",
+        "F2": "rs",
+        "F3": "41813",
+        "F4": "Open this file to modify the template or logic used to generate bash shell completion scripts for ripgrep.",
+        "F5": "helper",
+        "F6": [
+          "Fixing bugs in the bash completion script output or structure.",
+          "Updating the completion script to support new flag types or choices.",
+          "Changing the formatting or template used for the bash completion function."
+        ],
+        "F7": [
+          "Modifying the actual flag definitions or logic (this consumes them via `FLAGS`).",
+          "Working on completions for other shells (zsh, fish, etc.).",
+          "Investigating runtime search performance or core application logic."
+        ],
+        "F8": [
+          "What template is used to generate the bash completion function?",
+          "How are flag choices (e.g., enum values) handled in the completion script generation?"
+        ],
+        "F9": "[\"crate::flags::defs::FLAGS\"]",
+        "F10": "[\"crate::flags::defs::FLAGS\"]",
+        "F11": "low",
+        "F12": "Changes only affect the generated bash script content, not the core binary functionality.",
+        "F13": "high",
+        "F14": "The logic is straightforward string templating based on a known list of flags."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/fish.rs",
+      "language": "rust",
+      "chat_id": 41815,
+      "fields": {
+        "F0": "crates/core/flags/complete/fish.rs",
+        "F1": "fish.rs",
+        "F2": "rs",
+        "F3": "41815",
+        "F4": "This file generates Fish shell completion scripts by iterating over internal flag definitions and applying shell-specific templates.",
+        "F5": "build-tooling",
+        "F6": [
+          "Modifying how Fish shell completions are generated or formatted.",
+          "Adding or updating completion logic for specific `CompletionType` variants (e.g., filetypes, encodings).",
+          "Debugging why a specific flag does not appear correctly in Fish shell.",
+          "Investigating how negated flags are handled in Fish completions."
+        ],
+        "F7": [
+          "Modifying the core CLI argument parsing logic or flag definitions themselves.",
+          "Working on Zsh or Bash completion scripts.",
+          "Investigating runtime behavior of the `ripgrep` binary unrelated to shell completion."
+        ],
+        "F8": [
+          "How are `CompletionType` enums mapped to Fish completion arguments?",
+          "What template strings are used to generate standard and negated Fish completions?",
+          "How are documentation strings escaped for the Fish shell?",
+          "Where is the list of encodings sourced from for Fish completions?"
+        ],
+        "F9": "[\"crate::flags::defs::FLAGS\",\"prelude.fish\"]",
+        "F10": "[\"crate::flags\",\"CompletionType\",\"prelude.fish\",\"super::ENCODINGS\"]",
+        "F11": "medium",
+        "F12": "Changes affect the user experience for Fish users and require understanding the specific shell syntax, but logic is localized.",
+        "F13": "high",
+        "F14": "The file's role in generating completions is explicit and clearly structured."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/mod.rs",
+      "language": "rust",
+      "chat_id": 41816,
+      "fields": {
+        "F0": "crates/core/flags/complete/mod.rs",
+        "F1": "mod.rs",
+        "F2": "rs",
+        "F3": "41816",
+        "F4": "This module organizes shell-specific completion logic and includes static encoding data used for generating shell completions.",
+        "F5": "helper",
+        "F6": [
+          "Adding or modifying support for a specific shell's completion scripts (bash, fish, powershell, zsh).",
+          "Updating the list of supported encodings used in shell completions.",
+          "Understanding how shell completion modules are structured within the `flags` crate."
+        ],
+        "F7": [
+          "Modifying the core command-line argument parsing logic (handled by parent `flags` modules).",
+          "Changing the actual search behavior or output formatting of the application.",
+          "Looking for runtime logic, as this file primarily contains module declarations and static data."
+        ],
+        "F8": [
+          "Which shells are supported for auto-completion?",
+          "Where is the static list of encodings for completions defined?",
+          "How are the shell-specific completion modules organized?"
+        ],
+        "F9": "[\"bash.rs\",\"fish.rs\",\"powershell.rs\",\"zsh.rs\"]",
+        "F10": "[\"encodings.sh\",\"bash\",\"fish\",\"powershell\",\"zsh\"]",
+        "F11": "low",
+        "F12": "This file primarily aggregates modules and static data with minimal logic.",
+        "F13": "high",
+        "F14": "The content is straightforward module organization and static includes."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/powershell.rs",
+      "language": "rust",
+      "chat_id": 41817,
+      "fields": {
+        "F0": "crates/core/flags/complete/powershell.rs",
+        "F1": "powershell",
+        "F2": "rs",
+        "F3": "41817",
+        "F4": "This file generates the PowerShell argument completion script by iterating over the defined CLI flags and formatting them into a PowerShell script block.",
+        "F5": "build-tooling",
+        "F6": [
+          "Fixing bugs in PowerShell tab completion (e.g., missing flags, incorrect descriptions).",
+          "Adding new flags that need to appear in PowerShell completions.",
+          "Changing the format or structure of the generated PowerShell script.",
+          "Investigating how flag documentation is extracted for shell completion."
+        ],
+        "F7": [
+          "Investigating the core search logic or regex engine.",
+          "Modifying the runtime behavior of the CLI flags (this file only generates completion text).",
+          "Working on completions for other shells (e.g., Bash, Zsh) unless they share logic."
+        ],
+        "F8": [
+          "How are short flags, long flags, and negated flags formatted for PowerShell?",
+          "Where is the list of flags (`FLAGS`) defined that this generator iterates over?",
+          "How is the documentation string for each flag processed for the completion output?"
+        ],
+        "F9": "[\"crate::flags::defs::FLAGS\"]",
+        "F10": "[\"crate::flags::defs::FLAGS\"]",
+        "F11": "low",
+        "F12": "This file generates a static script for user convenience; logic errors here only affect the shell integration, not the core tool functionality.",
+        "F13": "high",
+        "F14": "The logic is straightforward string templating based on a list of flags."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/complete/zsh.rs",
+      "language": "rust",
+      "chat_id": 41820,
+      "fields": {
+        "F0": "crates/core/flags/complete/zsh.rs",
+        "F1": "zsh.rs",
+        "F2": "rs",
+        "F3": "41820",
+        "F4": "This file generates Zsh shell completions by injecting dynamic data (encodings, hyperlink aliases) into a manually maintained static script.",
+        "F5": "build-tooling",
+        "F6": [
+          "Updating the dynamic lists of encodings or hyperlink aliases used in Zsh completions.",
+          "Understanding the build process for Zsh completions versus other shells.",
+          "Debugging issues related to the specific dynamic substitutions in the Zsh script.",
+          "Investigating why Zsh completions are treated differently than others (as per the documentation comments)."
+        ],
+        "F7": [
+          "Adding a new flag to the CLI (the comments indicate this requires manual editing of the included `rg.zsh` file).",
+          "Modifying the core logic of how flags are defined in the application.",
+          "Changing the completion logic for Fish or Bash shells."
+        ],
+        "F8": [
+          "Why are Zsh completions generated differently than Fish or Bash completions?",
+          "How are hyperlink aliases formatted and injected into the Zsh completion script?",
+          "What is the source of the encoding list used in Zsh completions?",
+          "What static file is included as the base for Zsh completions?"
+        ],
+        "F9": "[\"rg.zsh\",\"grep::printer::hyperlink_aliases\"]",
+        "F10": "[\"grep::printer\",\"rg.zsh\",\"super::ENCODINGS\"]",
+        "F11": "low",
+        "F12": "The logic is primarily string replacement into a static file, and the comments explicitly warn against modifying the structure here.",
+        "F13": "high",
+        "F14": "The extensive comments clearly define the file's limited role and the manual maintenance requirements for Zsh."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/config.rs",
+      "language": "rust",
+      "chat_id": 41821,
+      "fields": {
+        "F0": "crates/core/flags/config.rs",
+        "F1": "config.rs",
+        "F2": "rs",
+        "F3": "41821",
+        "F4": "Open this file to understand how ripgrep loads and parses arguments from configuration files specified via environment variables.",
+        "F5": "config",
+        "F6": [
+          "Debugging issues related to RIPGREP_CONFIG_PATH not being respected or loaded correctly.",
+          "Modifying how configuration arguments are parsed, validated, or ordered relative to CLI arguments.",
+          "Investigating how invalid UTF-8 or malformed lines in config files are handled and reported."
+        ],
+        "F7": [
+          "Looking for command-line argument parsing logic (this module handles file-based config only).",
+          "Searching for the definition or implementation of specific ripgrep flags (this module only produces argument strings).",
+          "Investigating runtime search behavior or performance (this is startup logic)."
+        ],
+        "F8": [
+          "How does ripgrep determine which configuration file path to load?",
+          "Are comments and empty lines allowed in ripgrep configuration files?",
+          "How are parsing errors in the configuration file reported to the user?"
+        ],
+        "F9": "[\"The location where the returned Vec<OsString> arguments are consumed (likely the main argument parser)\"]",
+        "F10": "[\"RIPGREP_CONFIG_PATH\",\"std::env::var_os\",\"std::fs::File\",\"bstr::ByteSlice\"]",
+        "F11": "medium",
+        "F12": "Changes to config parsing can affect how the application starts for all users relying on config files, potentially breaking argument precedence.",
+        "F13": "high",
+        "F14": "The module docstring and function names clearly define the scope as reading and parsing rc files."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/defs.rs",
+      "language": "rust",
+      "chat_id": 41822,
+      "fields": {
+        "F0": "crates/core/flags/defs.rs",
+        "F1": "defs",
+        "F2": "rs",
+        "F3": "41822",
+        "F4": "Open this file to understand the definition, behavior, documentation, and argument parsing logic for specific ripgrep command-line flags, or to add/modify a flag.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Adding a new command-line flag or changing the behavior of an existing one.",
+          "Investigating how specific flags interact with the `LowArgs` configuration struct.",
+          "Looking up the short name, long name, aliases, or category for a specific flag.",
+          "Verifying the unit tests for flag parsing logic and overrides."
+        ],
+        "F7": [
+          "Looking for the main entry point for argument parsing (likely in a `parse` module).",
+          "Investigating the runtime search execution engine or file system traversal.",
+          "Looking for the definition of the `LowArgs` struct fields themselves.",
+          "Debugging the actual regex matching logic or performance issues."
+        ],
+        "F8": [
+          "What is the short flag alias for `--case-sensitive`?",
+          "How does the `--unrestricted` flag affect `--hidden` and `--binary` settings?",
+          "What category does the `--json` flag belong to?",
+          "What are the valid choices for the `--sort` flag?"
+        ],
+        "F9": "[\"Definition of `LowArgs` struct fields to understand state mutations\",\"Flag trait definition\",\"Main parser loop implementation\"]",
+        "F10": "[\"crate::flags::lowargs::LowArgs\",\"crate::flags::Flag\",\"crate::flags::parse::parse_low_raw\",\"crate::flags::Category\",\"crate::flags::CompletionType\"]",
+        "F11": "medium",
+        "F12": "Changes here directly impact the CLI interface and how arguments are translated to internal state, potentially breaking user workflows if flag interactions are altered.",
+        "F13": "high",
+        "F14": "The file explicitly defines all flags and their update logic, making its purpose and scope very clear."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/hiargs.rs",
+      "language": "rust",
+      "chat_id": 41823,
+      "fields": {
+        "F0": "crates/core/flags/hiargs.rs",
+        "F1": "hiargs",
+        "F2": "rs",
+        "F3": "41823",
+        "F4": "This file constructs the high-level configuration (`HiArgs`) from parsed CLI flags, building matchers, printers, and searchers required to execute a ripgrep search.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Adding or modifying high-level CLI configuration logic.",
+          "Changing how matchers (Rust regex vs PCRE2) are constructed.",
+          "Modifying printer configuration (JSON, Standard, Summary).",
+          "Adjusting binary detection heuristics or search worker setup."
+        ],
+        "F7": [
+          "Defining new CLI flags (that happens in `lowargs` or `defs`).",
+          "Implementing the actual search algorithm (that's in the searcher/worker).",
+          "Modifying the raw argument parser syntax.",
+          "Changing the ignore/glob logic implementation details (though this file uses it)."
+        ],
+        "F8": [
+          "How are PCRE2 matchers configured differently from Rust regex matchers?",
+          "What determines the number of threads used for a search?",
+          "How does the `HiArgs` struct decide whether to use memory maps?",
+          "What are the differences between implicit and explicit binary detection modes?"
+        ],
+        "F9": "[\"LowArgs definition to understand input\",\"grep::matcher, grep::printer, grep::searcher crate APIs\",\"ignore crate API for walk builder\"]",
+        "F10": "[\"LowArgs\",\"PatternMatcher\",\"SearchWorker\",\"ignore::WalkBuilder\",\"grep::printer::Standard\",\"grep::searcher::Searcher\"]",
+        "F11": "high",
+        "F12": "This file is the central hub for configuring the search engine; changes here can affect how all searches are executed.",
+        "F13": "high",
+        "F14": "The file structure and comments clearly define its role as the high-level argument processor and builder."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/lowargs.rs",
+      "language": "rust",
+      "chat_id": 41824,
+      "fields": {
+        "F0": "crates/core/flags/lowargs.rs",
+        "F1": "lowargs",
+        "F2": "rs",
+        "F3": "41824",
+        "F4": "This file is useful to open when adding new CLI flags, changing the structure of command-line arguments, or understanding how raw flags are represented internally before high-level processing.",
+        "F5": "config",
+        "F6": [
+          "Adding a new command-line flag or option.",
+          "Modifying the behavior of existing flags (e.g., changing default values or types).",
+          "Understanding the data flow from CLI parser to the search engine configuration.",
+          "Debugging issues related to flag precedence or overrides."
+        ],
+        "F7": [
+          "Looking for the actual CLI parser implementation (likely using a library like `clap` or a custom parser elsewhere).",
+          "Searching for the high-level search execution logic.",
+          "Investigating glob pattern implementation details."
+        ],
+        "F8": [
+          "What are the possible modes of operation (Search, Files, Types, Generate)?",
+          "How are binary files handled based on flags?",
+          "What data structures represent color choices or context modes?",
+          "What is the internal representation of the `--sort` flag?"
+        ],
+        "F9": "[\"The code that populates `LowArgs` (the parser)\",\"The code that consumes `LowArgs` to build the high-level configuration\"]",
+        "F10": "[\"grep::printer::{HyperlinkFormat, UserColorSpec}\",\"bstr::{BString, ByteVec}\",\"grep::searcher::Encoding\"]",
+        "F11": "medium",
+        "F12": "Changes here affect the interface between the CLI and the core logic, potentially breaking argument parsing or configuration building.",
+        "F13": "high",
+        "F14": "The file is explicitly documented as \"low level arguments\" and contains clear struct definitions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/mod.rs",
+      "language": "rust",
+      "chat_id": 41825,
+      "fields": {
+        "F0": "crates/core/flags/mod.rs",
+        "F1": "mod",
+        "F2": "rs",
+        "F3": "41825",
+        "F4": "This file defines the module structure for CLI flag handling, the `Flag` trait interface, and re-exports the primary types used for parsing and configuration.",
+        "F5": "public-api",
+        "F6": [
+          "Adding a new category for CLI flags.",
+          "Modifying the `Flag` trait interface.",
+          "Understanding the module organization of the flags system.",
+          "Changing how flag values are represented (`FlagValue`)."
+        ],
+        "F7": [
+          "Implementing the logic for a specific flag (that's in `defs` or `lowargs`).",
+          "Changing the help text generation (that's in `doc`).",
+          "Modifying the high-level argument conversion (that's in `hiargs`)."
+        ],
+        "F8": [
+          "What traits must a struct implement to be considered a CLI flag?",
+          "What are the available categories for organizing flags in documentation?",
+          "How are flag values (switches vs values) represented internally?",
+          "What submodules are responsible for parsing vs. documentation?"
+        ],
+        "F9": "[\"Implementations of the `Flag` trait in `defs`\",\"Usage of `LowArgs` and `HiArgs`\"]",
+        "F10": "[\"Flag trait\",\"defs module\",\"lowargs module\",\"parse module\",\"LowArgs struct\"]",
+        "F11": "medium",
+        "F12": "Changes to the `Flag` trait or module structure require updates across multiple submodules.",
+        "F13": "high",
+        "F14": "The file is a standard module definition with clear trait definitions."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/flags/parse.rs",
+      "language": "rust",
+      "chat_id": 41826,
+      "fields": {
+        "F0": "crates/core/flags/parse.rs",
+        "F1": "parse.rs",
+        "F2": "rs",
+        "F3": "41826",
+        "F4": "This file is useful when an agent needs to debug argument parsing, understand how config files merge with CLI args, or modify flag definitions and error handling.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Debugging why a specific CLI flag isn't being recognized or parsed correctly.",
+          "Investigating how configuration files (`RIPGREP_CONFIG_PATH`) interact with and override command-line arguments.",
+          "Modifying the behavior of \"special\" modes like `--help` or `--version`.",
+          "Adjusting the fuzzy suggestion logic for typos in flag names."
+        ],
+        "F7": [
+          "Investigating the core search algorithm or regex engine internals.",
+          "Modifying the printer output format (unless related to flag configuration).",
+          "Looking for the definition of what a specific flag *does* (logic is in `Flag` implementations, not just parsing)."
+        ],
+        "F8": [
+          "How are config file arguments merged with command-line arguments?",
+          "What is the order of precedence for conflicting flags between CLI and config files?",
+          "How does ripgrep suggest similar flags when a typo is made?",
+          "Which flags trigger \"special\" modes that bypass normal execution?"
+        ],
+        "F9": "[\"crate::flags::defs::FLAGS\",\"crate::flags::config\"]",
+        "F10": "[\"lexopt\",\"anyhow\",\"crate::logger\",\"crate::messages\",\"crate::flags::hiargs\",\"crate::flags::lowargs\"]",
+        "F11": "high",
+        "F12": "Parsing logic is critical for user-facing functionality; errors here can crash the CLI or ignore user input.",
+        "F13": "high",
+        "F14": "The flow from raw args to structured args is explicit and well-documented."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/haystack.rs",
+      "language": "rust",
+      "chat_id": 41827,
+      "fields": {
+        "F0": "crates/core/haystack.rs",
+        "F1": "haystack.rs",
+        "F2": "rs",
+        "F3": "41827",
+        "F4": "This file wraps directory entries to determine if they are valid search targets, handling logic for explicit paths, symlinks, and path normalization.",
+        "F5": "helper",
+        "F6": [
+          "Debugging why specific files or directories are being skipped during a search.",
+          "Modifying the logic that distinguishes between user-provided paths and recursive traversal results.",
+          "Changing how symlinks are resolved or filtered before searching.",
+          "Adjusting path display formatting, such as stripping the `./` prefix."
+        ],
+        "F7": [
+          "Changing the actual regex matching or content scanning logic.",
+          "Modifying the text printer or JSON output formats.",
+          "Configuring ignore rules (`.gitignore`), which are handled by the `ignore` crate."
+        ],
+        "F8": [
+          "Does ripgrep treat this file as an explicit search target or a recursive find?",
+          "How are symlinks handled in the search traversal?",
+          "Is stdin treated differently than a standard file path?",
+          "What criteria cause a directory entry to be filtered out before searching?"
+        ],
+        "F9": "[\"crates/core/main.rs\",\"crates/core/flags.rs\"]",
+        "F10": "[\"ignore::DirEntry\",\"ignore::Error\",\"std::path::Path\"]",
+        "F11": "medium",
+        "F12": "It controls the filtering logic for the search loop; bugs here could cause valid files to be skipped or invalid entries to crash the searcher.",
+        "F13": "high",
+        "F14": "The file is small, well-documented, and has a single clear responsibility for filtering search targets."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/logger.rs",
+      "language": "rust",
+      "chat_id": 41828,
+      "fields": {
+        "F0": "crates/core/logger.rs",
+        "F1": "logger",
+        "F2": "rs",
+        "F3": "41828",
+        "F4": "Open this file to change the log message format or to understand how the global logger is initialized for the application.",
+        "F5": "helper",
+        "F6": [
+          "Changing the format or structure of log messages (e.g., adding timestamps, changing separators).",
+          "Debugging issues related to logger initialization or stderr output.",
+          "Investigating how the `log` crate is integrated into the application."
+        ],
+        "F7": [
+          "Changing log levels at runtime (handled by `log::set_max_level`).",
+          "Implementing business logic or file traversal features.",
+          "Investigating ignore rule parsing or application logic."
+        ],
+        "F8": [
+          "What is the specific format of log messages written to stderr?",
+          "How is the global logger initialized and set?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"log crate\"]",
+        "F11": "low",
+        "F12": "Changes only affect the visual formatting of log output.",
+        "F13": "high",
+        "F14": "The file is small, focused on a single struct, and clearly documents its simple purpose."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/main.rs",
+      "language": "rust",
+      "chat_id": 41829,
+      "fields": {
+        "F0": "crates/core/main.rs",
+        "F1": "main.rs",
+        "F2": "rs",
+        "F3": "41829",
+        "F4": "This file is the main entry point that orchestrates argument parsing, mode selection, and the dispatch of single or multi-threaded search strategies.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Understanding the high-level application flow or lifecycle.",
+          "Modifying the threading model or parallel search strategy.",
+          "Changing global error handling, such as broken pipe behavior or exit codes.",
+          "Adding new top-level command-line modes or special flags."
+        ],
+        "F7": [
+          "Changing the specific implementation of regex matching or file reading.",
+          "Modifying the JSON schema or text formatting details.",
+          "Adjusting ignore file parsing logic."
+        ],
+        "F8": [
+          "How does ripgrep decide between single-threaded and multi-threaded execution?",
+          "What are the exit codes for different error scenarios (e.g., broken pipe)?",
+          "How are statistics collected and aggregated across threads?",
+          "Where is the global allocator configured for musl builds?"
+        ],
+        "F9": "[\"crates/core/flags.rs\",\"crates/core/search.rs\",\"crates/core/printer/mod.rs\"]",
+        "F10": "[\"flags::HiArgs\",\"flags::SearchMode\",\"ignore::WalkState\",\"tikv_jemallocator::Jemalloc\"]",
+        "F11": "high",
+        "F12": "It controls the main execution loops, threading model, and error handling, affecting the entire program's stability.",
+        "F13": "high",
+        "F14": "It is the standard entry point for the binary, clearly structured with distinct functions for different operational modes."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/messages.rs",
+      "language": "rust",
+      "chat_id": 41830,
+      "fields": {
+        "F0": "crates/core/messages.rs",
+        "F1": "messages.rs",
+        "F2": "rs",
+        "F3": "41830",
+        "F4": "This file manages global state and macros for user-facing messaging and error tracking, useful for modifying how ripgrep reports errors, controls output verbosity, or determines exit status.",
+        "F5": "helper",
+        "F6": [
+          "Modifying how errors or status messages are printed to stderr.",
+          "Changing the logic that determines the process exit status based on encountered errors.",
+          "Adding new types of user-facing messages or macros.",
+          "Debugging output interleaving issues between stdout and stderr."
+        ],
+        "F7": [
+          "Looking for search pattern matching logic or regex implementation.",
+          "Investigating ignore rule parsing or application logic.",
+          "Searching for file system traversal code or directory walking logic."
+        ],
+        "F8": [
+          "How does ripgrep decide whether to exit with a non-zero status code?",
+          "How are stderr messages synchronized with stdout to prevent line interleaving?",
+          "What global state controls the visibility of ignore-related messages?",
+          "How are broken pipe errors handled during message output?"
+        ],
+        "F9": "[\"CLI argument parsing logic (to see where message flags are set)\"]",
+        "F10": "[\"std::sync::atomic\",\"std::io::stdout\",\"std::io::stderr\"]",
+        "F11": "low",
+        "F12": "Changes are mostly localized to output formatting and exit codes, though locking logic is sensitive.",
+        "F13": "high",
+        "F14": "The file is small, focused on a single concern (messaging state), and clearly documented."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/core/search.rs",
+      "language": "rust",
+      "chat_id": 41832,
+      "fields": {
+        "F0": "crates/core/search.rs",
+        "F1": "search.rs",
+        "F2": "rs",
+        "F3": "41832",
+        "F4": "This file is useful when an agent needs to understand the high-level search execution flow, including how preprocessors, decompression, and binary detection are integrated with the matcher and printer.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating how files are preprocessed or decompressed before searching.",
+          "Modifying the binary detection logic for implicit vs. explicit paths.",
+          "Understanding how the searcher, matcher, and printer interact during execution.",
+          "Debugging issues related to searching compressed files or using external preprocessors."
+        ],
+        "F7": [
+          "Investigating the specific regex syntax or engine internals (handled by `grep` crate).",
+          "Modifying the specific output format of the printer (handled by printer implementations).",
+          "Looking for CLI argument parsing logic."
+        ],
+        "F8": [
+          "How are preprocessors configured and executed during a search?",
+          "What is the difference between binary detection for implicit vs. explicit paths?",
+          "How does the search worker handle stdin versus file paths?",
+          "When is decompression triggered for a file and how is it integrated?"
+        ],
+        "F9": "[\"crate::haystack\",\"grep::matcher\",\"grep::searcher\"]",
+        "F10": "[\"grep::cli\",\"ignore\",\"termcolor\",\"std::process::Command\"]",
+        "F11": "medium",
+        "F12": "It orchestrates complex components (IO, regex, printing), but changes are usually localized to the orchestration logic.",
+        "F13": "high",
+        "F14": "The file clearly documents its role as a high-level abstraction for search workers."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/decompress.rs",
+      "language": "rust",
+      "chat_id": 41835,
+      "fields": {
+        "F0": "crates/cli/src/decompress.rs",
+        "F1": "decompress.rs",
+        "F2": "rs",
+        "F3": "41835",
+        "F4": "Open this file to configure or understand how file extensions are mapped to external decompression commands and how those commands are spawned securely.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Adding support for a new compression format (e.g., zip, rar).",
+          "Debugging issues with searching compressed files (`-z` flag).",
+          "Investigating security concerns regarding binary execution on Windows.",
+          "Modifying how decompression errors are handled (passthru vs error)."
+        ],
+        "F7": [
+          "Looking for the actual regex search logic (this is pre-processing).",
+          "Investigating internal decompression library implementations (this uses external binaries).",
+          "Modifying core CLI argument parsing (this is downstream of config)."
+        ],
+        "F8": [
+          "Which external commands are used to decompress `.gz` or `.xz` files?",
+          "How does ripgrep prevent executing untrusted binaries on Windows?",
+          "What happens if a decompression command fails to spawn?",
+          "How are file globs matched to decompression strategies?"
+        ],
+        "F9": "[\"CommandReader implementation\"]",
+        "F10": "[\"globset\",\"std::process::Command\",\"crate::process::CommandReader\",\"gzip\",\"bzip2\",\"xz\"]",
+        "F11": "medium",
+        "F12": "Changes affect how files are read and external processes are spawned, impacting security and compatibility.",
+        "F13": "high",
+        "F14": "The purpose and logic are clearly documented and structured."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/escape.rs",
+      "language": "rust",
+      "chat_id": 41836,
+      "fields": {
+        "F0": "crates/cli/src/escape.rs",
+        "F1": "escape",
+        "F2": "rs",
+        "F3": "41836",
+        "F4": "Open this file to understand how arbitrary bytes and invalid UTF-8 are escaped for display or command-line arguments.",
+        "F5": "helper",
+        "F6": [
+          "Debugging display of binary data or invalid UTF-8",
+          "Modifying command-line argument parsing for bytes",
+          "Changing how non-printable characters are rendered"
+        ],
+        "F7": [
+          "Modifying core regex matching logic",
+          "Changing file system traversal behavior",
+          "Investigating search performance"
+        ],
+        "F8": [
+          "How are non-printable bytes escaped to strings?",
+          "How are hex escape sequences like \\xFF parsed?",
+          "How are OS strings converted for escaping?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"bstr\",\"std::ffi::OsStr\"]",
+        "F11": "low",
+        "F12": "Utility functions with isolated logic for byte/string conversion.",
+        "F13": "high",
+        "F14": "Standard implementation with comprehensive test coverage."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/hostname.rs",
+      "language": "rust",
+      "chat_id": 41837,
+      "fields": {
+        "F0": "crates/cli/src/hostname.rs",
+        "F1": "hostname.rs",
+        "F2": "rs",
+        "F3": "41837",
+        "F4": "This file implements cross-platform hostname retrieval logic, helping agents understand how system hostnames are resolved within the CLI application.",
+        "F5": "primary-implementation",
+        "F6": [
+          "Investigating hostname resolution logic or errors.",
+          "Adding support for a new platform's hostname retrieval.",
+          "Debugging platform-specific issues related to system info."
+        ],
+        "F7": [
+          "Looking for where the hostname is actually used in the CLI application (this is just the retrieval logic).",
+          "Investigating unrelated CLI argument parsing or configuration."
+        ],
+        "F8": [
+          "How does the application retrieve the system hostname on Windows vs. Unix?",
+          "What error conditions can occur when fetching the hostname?",
+          "What is the maximum hostname length limit handled by this implementation?"
+        ],
+        "F9": "[\"Callers of the `hostname()` function within the CLI crate.\"]",
+        "F10": "[\"winapi_util\",\"libc\",\"std::ffi::OsString\"]",
+        "F11": "medium",
+        "F12": "Modifying system-level integration logic can introduce platform-specific bugs or change error handling behavior.",
+        "F13": "high",
+        "F14": "The implementation is explicit, well-documented, and clearly separated by platform."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/human.rs",
+      "language": "rust",
+      "chat_id": 41838,
+      "fields": {
+        "F0": "crates/cli/src/human.rs",
+        "F1": "human.rs",
+        "F2": "rs",
+        "F3": "41838",
+        "F4": "This file provides a utility function to parse human-readable size strings (e.g., \"10M\", \"2K\") into byte counts, including error handling for invalid formats and overflows.",
+        "F5": "helper",
+        "F6": [
+          "Debugging issues related to parsing size arguments (e.g., `--max-filesize`) in the CLI.",
+          "Adding support for additional size suffixes (e.g., terabytes) or changing the multiplier logic.",
+          "Investigating how size overflow errors are reported to the user."
+        ],
+        "F7": [
+          "Modifying the actual search logic or file reading mechanisms.",
+          "Changing the output format of search results.",
+          "Working on regex pattern matching or configuration."
+        ],
+        "F8": [
+          "How are size suffixes like 'K', 'M', and 'G' converted into bytes?",
+          "What error messages are shown when a user provides an invalid size format?",
+          "Does the parser handle overflow for extremely large size values?"
+        ],
+        "F9": "[\"CLI argument parsing code\"]",
+        "F10": "[\"std::io::Error\",\"std::num::ParseIntError\"]",
+        "F11": "low",
+        "F12": "This is an isolated utility function with clear inputs and outputs.",
+        "F13": "high",
+        "F14": "The file contains a single, well-documented utility function and associated tests."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/lib.rs",
+      "language": "rust",
+      "chat_id": 41839,
+      "fields": {
+        "F0": "crates/cli/src/lib.rs",
+        "F1": "lib.rs",
+        "F2": "rs",
+        "F3": "41839",
+        "F4": "This file defines the public API and documentation for the `grep-cli` crate, aggregating utilities for I/O, escaping, and pattern handling.",
+        "F5": "public-api",
+        "F6": [
+          "Understanding the public interface of the `grep-cli` crate.",
+          "Checking available utilities for stdin or stdout handling.",
+          "Verifying deprecation status of TTY checks or finding specific high-level functions."
+        ],
+        "F7": [
+          "Looking for internal implementation details of specific utilities (look in submodules like `escape` or `process`).",
+          "Investigating core regex matching logic (this is a utility library).",
+          "Modifying the logic of decompression or escaping algorithms."
+        ],
+        "F8": [
+          "What utilities are available for handling stdin?",
+          "How are patterns parsed from files according to the public API?",
+          "Is `is_tty_stdin` deprecated and what should replace it?"
+        ],
+        "F9": "[\"decompress\",\"escape\",\"hostname\",\"human\",\"pattern\",\"process\",\"wtr\"]",
+        "F10": "[\"termcolor::WriteColor\",\"std::io::IsTerminal\"]",
+        "F11": "medium",
+        "F12": "Changes to re-exports or public function signatures affect the crate's API stability.",
+        "F13": "high",
+        "F14": "The file is a standard library entry point with clear documentation and re-exports."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/pattern.rs",
+      "language": "rust",
+      "chat_id": 41840,
+      "fields": {
+        "F0": "crates/cli/src/pattern.rs",
+        "F1": "pattern.rs",
+        "F2": "rs",
+        "F3": "41840",
+        "F4": "This file handles the parsing and validation of regex patterns from various sources (files, stdin, args), ensuring UTF-8 correctness and providing detailed error messages.",
+        "F5": "helper",
+        "F6": [
+          "Investigating pattern parsing errors",
+          "Adding support for new pattern input sources",
+          "Modifying how invalid UTF-8 in patterns is reported",
+          "Understanding how patterns are loaded from files"
+        ],
+        "F7": [
+          "Modifying the actual regex matching algorithm",
+          "Changing output formatting (colors, JSON)",
+          "Changing file traversal logic"
+        ],
+        "F8": [
+          "How are patterns loaded from a file?",
+          "What error is raised for invalid UTF-8 patterns?",
+          "How are OS strings converted to regex patterns?",
+          "Does pattern reading support stdin?"
+        ],
+        "F9": "[\"Usage of these functions in the main CLI argument parsing logic\",\"definition of escape and escape_os\"]",
+        "F10": "[\"crate::escape::{escape, escape_os}\",\"std::ffi::OsStr\",\"bstr::io::BufReadExt\"]",
+        "F11": "medium",
+        "F12": "It handles input validation and conversion; bugs here could prevent valid patterns from being used or cause crashes on invalid input.",
+        "F13": "high",
+        "F14": "The code is straightforward utility logic with clear documentation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/process.rs",
+      "language": "rust",
+      "chat_id": 41841,
+      "fields": {
+        "F0": "crates/cli/src/process.rs",
+        "F1": "process.rs",
+        "F2": "rs",
+        "F3": "41841",
+        "F4": "Open this file to understand how ripgrep executes external commands (like preprocessors) and handles their output streams and errors.",
+        "F5": "helper",
+        "F6": [
+          "Debugging issues with external preprocessors (e.g., --pre flag) failing, deadlocking, or not outputting data.",
+          "Modifying how child process errors are captured, formatted, or reported to the user.",
+          "Investigating how stderr is handled asynchronously to prevent blocking during process execution."
+        ],
+        "F7": [
+          "Looking for the main ripgrep search loop or internal regex matching logic.",
+          "Searching for configuration file parsing or command-line argument definitions.",
+          "Investigating pure Rust file I/O operations that do not involve spawning processes."
+        ],
+        "F8": [
+          "How does ripgrep prevent deadlocks when reading from a process's stdout and stderr simultaneously?",
+          "What happens to the stderr output if the child process exits successfully?",
+          "How is the CommandError constructed and converted from a process failure?"
+        ],
+        "F9": "[\"Callers of CommandReader (likely the preprocessor logic in the search module)\"]",
+        "F10": "[\"std::process::Command\",\"std::process::Child\",\"std::io::Read\",\"grep_cli::CommandReader\"]",
+        "F11": "medium",
+        "F12": "This handles external process execution; bugs here can cause deadlocks, resource leaks, or silent failures in subprocess handling.",
+        "F13": "high",
+        "F14": "The code is a well-documented wrapper around standard library process handling with clear intent."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "crates/cli/src/wtr.rs",
+      "language": "rust",
+      "chat_id": 41842,
+      "fields": {
+        "F0": "crates/cli/src/wtr.rs",
+        "F1": "wtr.rs",
+        "F2": "rs",
+        "F3": "41842",
+        "F4": "Open this file to understand how output buffering strategies (line vs. block) are selected based on terminal detection.",
+        "F5": "adapter",
+        "F6": [
+          "Debugging output buffering issues (e.g., delayed output in pipes).",
+          "Modifying how terminal detection affects color or buffering choices.",
+          "Investigating why output is not appearing immediately in a TTY."
+        ],
+        "F7": [
+          "Looking for the actual content being printed (this is just the writer mechanism).",
+          "Modifying color schemes or styles (handled by `termcolor` config).",
+          "Investigating file reading logic."
+        ],
+        "F8": [
+          "Does ripgrep use line or block buffering for stdout?",
+          "How is the buffering mode determined?",
+          "Which `termcolor` struct is used for line buffering?"
+        ],
+        "F9": "N/A",
+        "F10": "[\"termcolor\",\"std::io::IsTerminal\"]",
+        "F11": "low",
+        "F12": "It is a wrapper around standard library and `termcolor` functionality.",
+        "F13": "high",
+        "F14": "The code is straightforward delegation."
+      }
+    },
+    {
+      "repo_ref": "R0",
+      "branch_ref": "B0",
+      "file_path": "build.rs",
+      "language": "rust",
+      "chat_id": 41910,
+      "fields": {
+        "F0": "build.rs",
+        "F1": "build.rs",
+        "F2": "rs",
+        "F3": "41910",
+        "F4": "Useful for configuring build-time environment variables, embedding git hashes, and setting Windows-specific linker options.",
+        "F5": "build-tooling",
+        "F6": [
+          "Troubleshooting build failures specifically on Windows.",
+          "Changing how the git revision hash is embedded in the binary.",
+          "Modifying linker arguments or the embedded application manifest."
+        ],
+        "F7": [
+          "Fixing runtime application logic or search algorithms.",
+          "Modifying behavior specific to Linux or macOS (unless related to env vars).",
+          "Changing the source code of the ripgrep binary itself."
+        ],
+        "F8": [
+          "What environment variable contains the git hash at build time?",
+          "How is long path support enabled for the Windows executable?",
+          "What linker flags are applied during the build process?"
+        ],
+        "F9": "[\"pkg/windows/Manifest.xml\"]",
+        "F10": "[\"git\",\"cargo\",\"pkg/windows/Manifest.xml\"]",
+        "F11": "medium",
+        "F12": "Incorrect changes can break the build process or result in a malformed binary.",
+        "F13": "high",
+        "F14": "The file is a standard Cargo build script with clear, documented functions."
+      }
+    }
+  ]
+}

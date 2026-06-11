@@ -11,6 +11,8 @@ This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) th
 - An `implicit-todos` manifest that finds TODOs that grep can't find
 - A `rust-test-coverage-intent` manifest that maps Rust tests to the behaviors, components, and regression risks they cover
 
+and more. 
+
 ## Quick Start
 
 ```bash
@@ -22,8 +24,10 @@ git clone https://github.com/gitsense/smart-ripgrep
 cd smart-ripgrep
 
 # Import the intelligence layers
+gsc manifest import .gitsense/manifests/agent-file-triage.json
 gsc manifest import .gitsense/manifests/code-intent.json
 gsc manifest import .gitsense/manifests/implicit-todos.json
+gsc manifest import .gitsense/manifests/rust-blast-radius.json
 gsc manifest import .gitsense/manifests/rust-test-coverage-intent.json
 
 # Search code with metadata context

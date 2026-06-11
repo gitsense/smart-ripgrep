@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "generated_at": "2026-06-07T17:26:31.968Z",
   "manifest": {
-    "name": "Rust Test Intent & Coverage Map",
+    "name": "ripgrep - Rust Test Intent & Coverage Map",
     "database_name": "rust-test-coverage-intent",
     "description": "Catalogs the intent and scope of the Rust test suite across 99 rust files. This manifest tracks test_role, tested_behavior, risk_covered, and target_components to enable agents to quickly locate relevant tests, understand coverage gaps, and identify regression risks.",
     "tags": [
