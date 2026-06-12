@@ -9,6 +9,7 @@ This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) th
 - The complete ripgrep source code (identical to upstream, with only this README modified and a new .gitsense directory)
 - A `code-intent` manifest that explains what each file does
 - An `implicit-todos` manifest that finds TODOs that grep can't find
+- A `rust-blast-radius` manifest that shows the blast radius of changes across a Rust workspace
 - A `rust-test-coverage-intent` manifest that maps Rust tests to the behaviors, components, and regression risks they cover
 
 and more. 
