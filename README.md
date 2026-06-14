@@ -1,15 +1,33 @@
 # smart-ripgrep
 
-A fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) with GitSense intelligence layers committed alongside the source. The repo is identical to upstream except for this README and the `.gitsense/` directory.
+A demo fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that ships agent readable repository intelligence alongside the source.
+
+The ripgrep source is unchanged from upstream. The only additions are this README and `.gitsense/`, which contains committed manifests and lesson records that can be imported into local GitSense Brains.
+
+The point of this repo is to show what a coding agent can do when a repository includes structured context about file intent, prior decisions, change risk, hidden TODOs, blast radius, and test coverage.
+
+## Why This Exists
+
+Most coding agents rediscover the same repository facts every session. This repo demonstrates a different model: commit structured engineering memory with the code, then let agents query it before they edit.
+
+After setup, an agent can answer questions like these:
+
+1. Where should I start if I want to change max filesize behavior?
+2. Are there prior lessons about this area?
+3. Which files are risky to edit?
+4. What does this file exist to do?
+5. What test coverage already exists for this behavior?
+
+This is a concrete demo of repository intelligence as a committed artifact. It is not a separate RAG pipeline or private knowledge base.
 
 ## What This Repo Is
 
-The `.gitsense/manifests/` directory contains JSON manifests — one per Brain. Each manifest is the output of an Analyzer run over this codebase. When you clone the repo, you have the JSON files but not the Brains. Running `gsc manifest import` constructs a local SQLite database (the Brain) from each manifest. That's the step that makes the repo queryable.
+The `.gitsense/manifests/` directory contains JSON manifests, one per Brain. Each manifest is the output of an Analyzer run over this codebase. When you clone the repo, you have the JSON files but not the Brains. Running `gsc manifest import` constructs a local SQLite database from each manifest. That is the step that makes the repo queryable.
 
 Two Brains are the focus of this walkthrough:
 
-- **`gsc-lessons`** — built from `.gitsense/lessons/records.jsonl`, which stores insights captured during prior sessions
-- **`code-intent`** — maps what each file does, indexed for search
+1. **`gsc-lessons`** stores insights captured during prior sessions from `.gitsense/lessons/records.jsonl`.
+2. **`code-intent`** maps what each file does, indexed for search.
 
 Four more are described in [What Else Is Here](#what-else-is-here).
 
@@ -40,17 +58,17 @@ This loads the Brain context so your agent knows how to query them on your behal
 
 ## The Lessons Brain
 
-Lessons are records in `.gitsense/lessons/records.jsonl`. Each one captures something worth knowing that isn't obvious from the code — a constraint, a failed approach, a cross-file dependency.
+Lessons are records in `.gitsense/lessons/records.jsonl`. Each one captures something worth knowing that is not obvious from the code, such as a constraint, a failed approach, or a cross file dependency.
 
 **Try this with your agent:**
 
-> I want to add a `--max-filesize-warning` flag that notifies users when files are skipped due to `--max-filesize`. Where should I start? Check if there are any lessons first.
+> I want to add a `--max-filesize-warning` flag that notifies users when files are skipped due to `--max-filesize`. Where should I start? Check if there are any lessons first. Do not make any changes yet.
 
 The agent will query the `gsc-lessons` Brain and find this has already been explored:
 
-- ripgrep has a three-tier messaging system in `crates/core/messages.rs`: `message!`, `err_message!`, and `ignore_message!`, all gated by `--messages` / `--no-messages`. A new `--max-filesize-warning` flag would bypass this and create a one-off solution.
-- The skip currently happens in `crates/ignore/src/walk.rs` and only calls `log::debug!()` — files silently disappear unless `--debug` is passed.
-- The right fix is to route through `ignore_message!`, but `crates/ignore` doesn't depend on `crates/core`, so you can't call it directly. You need a callback or hook on `WalkBuilder`/`Walk` so core can wire the notification through the existing message system.
+1. ripgrep has a three tier messaging system in `crates/core/messages.rs`: `message!`, `err_message!`, and `ignore_message!`, all gated by `--messages` / `--no-messages`. A new `--max-filesize-warning` flag would bypass this and create a one off solution.
+2. The skip currently happens in `crates/ignore/src/walk.rs` and only calls `log::debug!()`. Files silently disappear unless `--debug` is passed.
+3. The right fix is to route through `ignore_message!`, but `crates/ignore` does not depend on `crates/core`, so you cannot call it directly. You need a callback or hook on `WalkBuilder`/`Walk` so core can wire the notification through the existing message system.
 
 The agent caught a design mistake and a crate boundary constraint before any code was written.
 
@@ -74,7 +92,7 @@ gsc rg cache --fields purpose --db code-intent
 278:        .hybrid_cache_capacity(10 * (1 << 20));
 ```
 
-Plain `rg cache` gives you the line and filename. With `code-intent`, your agent knows a cache constant in a glob library isn't the same as caching logic in the directory walker — without opening either file.
+Plain `rg cache` gives you the line and filename. With `code-intent`, your agent knows a cache constant in a glob library is not the same as caching logic in the directory walker without opening either file.
 
 ## What Else Is Here
 
