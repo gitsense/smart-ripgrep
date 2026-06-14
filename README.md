@@ -1,59 +1,101 @@
 # smart-ripgrep
 
-**ripgrep with GitSense intelligence layers**
+A fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) with GitSense intelligence layers committed alongside the source. The repo is identical to upstream except for this README and the `.gitsense/` directory.
 
-This is a fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that comes pre-loaded with three GitSense intelligence layers (`code-intent`, `implicit-todos`, and `rust-test-coverage-intent`).
+## What This Repo Is
 
-## What's Included
+The `.gitsense/manifests/` directory contains JSON manifests — one per Brain. Each manifest is the output of an Analyzer run over this codebase. When you clone the repo, you have the JSON files but not the Brains. Running `gsc manifest import` constructs a local SQLite database (the Brain) from each manifest. That's the step that makes the repo queryable.
 
-- The complete ripgrep source code (identical to upstream, with only this README modified and a new .gitsense directory)
-- A `code-intent` manifest that explains what each file does
-- An `implicit-todos` manifest that finds TODOs that grep can't find
-- A `rust-blast-radius` manifest that shows the blast radius of changes across a Rust workspace
-- A `rust-test-coverage-intent` manifest that maps Rust tests to the behaviors, components, and regression risks they cover
+Two Brains are the focus of this walkthrough:
 
-and more. 
+- **`gsc-lessons`** — built from `.gitsense/lessons/records.jsonl`, which stores insights captured during prior sessions
+- **`code-intent`** — maps what each file does, indexed for search
+
+Four more are described in [What Else Is Here](#what-else-is-here).
 
 ## Quick Start
 
 ```bash
-# Install the GSC CLI (if not already installed)
+# Install gsc (read the script before running)
 curl https://raw.githubusercontent.com/gitsense/chat/refs/heads/main/install.sh | bash
 
-# Clone this repository
+# Clone the repo
 git clone https://github.com/gitsense/smart-ripgrep
 cd smart-ripgrep
 
-# Import the intelligence layers
-gsc manifest import .gitsense/manifests/agent-file-triage.json
-gsc manifest import .gitsense/manifests/code-intent.json
-gsc manifest import .gitsense/manifests/implicit-todos.json
-gsc manifest import .gitsense/manifests/rust-blast-radius.json
-gsc manifest import .gitsense/manifests/rust-test-coverage-intent.json
+# Build the Lessons Brain from committed records in .gitsense/lessons/records.jsonl
+gsc lessons build
 
-# Search code with metadata context
-gsc rg --db code-intent --fields purpose cache
-
-# Find files with hidden TODOs
-gsc query --db implicit-todos --filter "has_todo=true" --fields todo_summary
-
-# Find Rust tests that cover binary file detection
-gsc query --db rust-test-coverage-intent --filter "tested_behavior=binary-file-detection" --fields test_role,target_components,risk_covered,add_test_guidance
+# Build the Code-Intent Brain from the committed manifest
+gsc manifest import code-intent
 ```
 
-### Ask Your Agent
-
-After importing the intelligence layers, start your agent (Claude Code, Codex, etc.) and have it run
+Then start your agent (Claude Code, Codex, etc.) and run:
 
 ```
 gsc experts init
 ```
 
-Then simply chat with it about the codebase. The AI will know how to query the intelligence layers on your behalf. For example, you can ask:
+This loads the Brain context so your agent knows how to query them on your behalf.
 
-> What Rust tests cover binary file detection, and where should I add a new test?
+## The Lessons Brain
 
-The `rust-test-coverage-intent` layer maps Rust test files to their tested behaviors, target components, covered regression risks, and guidance for where to add tests. It is an intent map, not a line or branch coverage report.
+Lessons are records in `.gitsense/lessons/records.jsonl`. Each one captures something worth knowing that isn't obvious from the code — a constraint, a failed approach, a cross-file dependency.
+
+**Try this with your agent:**
+
+> I want to add a `--max-filesize-warning` flag that notifies users when files are skipped due to `--max-filesize`. Where should I start? Check if there are any lessons first.
+
+The agent will query the `gsc-lessons` Brain and find this has already been explored:
+
+- ripgrep has a three-tier messaging system in `crates/core/messages.rs`: `message!`, `err_message!`, and `ignore_message!`, all gated by `--messages` / `--no-messages`. A new `--max-filesize-warning` flag would bypass this and create a one-off solution.
+- The skip currently happens in `crates/ignore/src/walk.rs` and only calls `log::debug!()` — files silently disappear unless `--debug` is passed.
+- The right fix is to route through `ignore_message!`, but `crates/ignore` doesn't depend on `crates/core`, so you can't call it directly. You need a callback or hook on `WalkBuilder`/`Walk` so core can wire the notification through the existing message system.
+
+The agent caught a design mistake and a crate boundary constraint before any code was written.
+
+## The Code-Intent Brain
+
+`gsc rg` enriches search results with metadata from the active Brain, so you can filter by intent rather than just text.
+
+```bash
+gsc rg cache --fields purpose --db code-intent
+```
+
+```
+✓ crates/ignore/src/dir.rs
+; purpose: Modify this file to change how ignore rules are loaded, matched,
+  and prioritized during directory traversal.
+96:    // Parent matchers are cached independently of the path being walked...
+
+✓ crates/globset/src/lib.rs
+; purpose: Modify this file to change how glob patterns are parsed, compiled
+  into optimized regex automata, and matched against file paths.
+278:        .hybrid_cache_capacity(10 * (1 << 20));
+```
+
+Plain `rg cache` gives you the line and filename. With `code-intent`, your agent knows a cache constant in a glob library isn't the same as caching logic in the directory walker — without opening either file.
+
+## What Else Is Here
+
+Four more Brains are committed as manifests. Import them the same way:
+
+```bash
+gsc manifest import agent-file-triage       # change risk, open/skip guidance
+gsc manifest import implicit-todos          # hidden TODOs in comments
+gsc manifest import rust-blast-radius       # coupling risk, blast radius
+gsc manifest import rust-test-coverage-intent  # test intent, coverage gaps
+```
+
+To record lessons from your own sessions:
+
+```bash
+gsc lessons new
+gsc lessons review
+gsc lessons commit
+```
+
+Full documentation: [github.com/gitsense/gsc-cli](https://github.com/gitsense/gsc-cli)
 
 ---
 
