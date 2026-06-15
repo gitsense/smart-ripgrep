@@ -1,119 +1,161 @@
 # smart-ripgrep
 
-A demo fork of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) that ships agent readable repository intelligence alongside the source.
+A short, hands-on guide to working in a repository that carries its own intelligence, built on a copy of [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep). It is the quick companion to [smart-codex](https://github.com/gitsense/smart-codex), which runs the same ideas on a large codebase.
 
-The ripgrep source is unchanged from upstream. The only additions are this README and `.gitsense/`, which contains committed manifests and lesson records that can be imported into local GitSense Brains.
+## What this repository is
 
-The point of this repo is to show what a coding agent can do when a repository includes structured context about file intent, prior decisions, change risk, hidden TODOs, blast radius, and test coverage.
+This is a learning repository, not a project. The ripgrep source is upstream's, unchanged, kept here as the dataset for the guide below. The only things added are this README and the `.gitsense/` directory, which holds the Brains, their manifests, and the lessons this guide uses.
 
-## Why This Exists
+To use the real project, contribute, or file an issue, go to [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep). Nothing here stands in for it.
 
-Most coding agents rediscover the same repository facts every session. This repo demonstrates a different model: commit structured engineering memory with the code, then let agents query it before they edit.
+## The guide
 
-After setup, an agent can answer questions like these:
+The repo is the data, so every command below runs against the files in front of you, and you will see the same results, give or take small drift as the repo and the Brains change. We follow one real task the whole way:
 
-1. Where should I start if I want to change max filesize behavior?
-2. Are there prior lessons about this area?
-3. Which files are risky to edit?
-4. What does this file exist to do?
-5. What test coverage already exists for this behavior?
+> I want to add a --max-filesize-warning flag, so users are told when a file is skipped for being too big.
 
-This is a concrete demo of repository intelligence as a committed artifact. It is not a separate RAG pipeline or private knowledge base.
+ripgrep is small and fast. An agent can search the whole tree in well under a second, so finding files was never the problem. The problem is knowing which of them matter, and not building the wrong thing because nobody wrote down what the last person already worked out. That is what this repo adds.
 
-## What This Repo Is
+A note on the numbers below. They were true the day this was written. The repo moves, so a slightly different count is expected. The pasted output is what the command printed.
 
-The `.gitsense/manifests/` directory contains JSON manifests, one per Brain. Each manifest is the output of an Analyzer run over this codebase. When you clone the repo, you have the JSON files but not the Brains. Running `gsc manifest import` constructs a local SQLite database from each manifest. That is the step that makes the repo queryable.
-
-Two Brains are the focus of this walkthrough:
-
-1. **`gsc-lessons`** stores insights captured during prior sessions from `.gitsense/lessons/records.jsonl`.
-2. **`code-intent`** maps what each file does, indexed for search.
-
-Four more are described in [What Else Is Here](#what-else-is-here).
-
-## Quick Start
+## Setup
 
 ```bash
-# Install gsc (read the script before running)
+# Install gsc (read the script before you run it)
 curl https://raw.githubusercontent.com/gitsense/chat/refs/heads/main/install.sh | bash
 
-# Clone the repo
+# Clone this repository
 git clone https://github.com/gitsense/smart-ripgrep
 cd smart-ripgrep
 
-# Build the Lessons Brain from committed records in .gitsense/lessons/records.jsonl
-gsc lessons build
-
 # Build the Code-Intent Brain from the committed manifest
 gsc manifest import code-intent
+
+# Build the Lessons Brain from the committed records
+gsc lessons build
 ```
 
-Then start your agent (Claude Code, Codex, etc.) and run:
+Then, inside your agent (Claude Code, Codex, and so on), run:
 
 ```
 gsc experts init
 ```
 
-This loads the Brain context so your agent knows how to query them on your behalf.
+That loads the Brain context, so the agent knows which Brains this repo has and can pick the right one when you ask in plain words. From here on, you talk to the agent, and it reaches for `gsc`.
 
-## The Lessons Brain
+You can check how much of the repo a Brain actually covers:
 
-Lessons are records in `.gitsense/lessons/records.jsonl`. Each one captures something worth knowing that is not obvious from the code, such as a constraint, a failed approach, or a cross file dependency.
+```
+gsc coverage --db code-intent
+```
 
-**Try this with your agent:**
+About 93% is analyzed, 214 of 229 files. The rest is mostly binaries and files with no extension.
 
-> I want to add a `--max-filesize-warning` flag that notifies users when files are skipped due to `--max-filesize`. Where should I start? Check if there are any lessons first. Do not make any changes yet.
+## Why this helps
 
-The agent will query the `gsc-lessons` Brain and find this has already been explored:
+Two ideas carry the whole guide.
 
-1. ripgrep has a three tier messaging system in `crates/core/messages.rs`: `message!`, `err_message!`, and `ignore_message!`, all gated by `--messages` / `--no-messages`. A new `--max-filesize-warning` flag would bypass this and create a one off solution.
-2. The skip currently happens in `crates/ignore/src/walk.rs` and only calls `log::debug!()`. Files silently disappear unless `--debug` is passed.
-3. The right fix is to route through `ignore_message!`, but `crates/ignore` does not depend on `crates/core`, so you cannot call it directly. You need a callback or hook on `WalkBuilder`/`Walk` so core can wire the notification through the existing message system.
+The first is search with meaning. Plain `rg` gives you a file name and a line. To know whether a file is the one you want, you open it and read. A Brain attaches what each file is for to the result, so you can judge it before you open anything.
 
-The agent caught a design mistake and a crate boundary constraint before any code was written.
+The second is lessons. The hard part of a change is rarely finding the file. It is the constraint that is not in the code, the approach that was already tried and dropped, the reason the obvious fix is wrong. A lesson is that knowledge, written down once and committed with the repo, so the next session starts where the last one ended.
 
-## The Code-Intent Brain
+## Search with meaning
 
-`gsc rg` enriches search results with metadata from the active Brain, so you can filter by intent rather than just text.
+You want to add the flag, so you look for where filesize handling lives. Plain ripgrep finds it:
 
-```bash
-gsc rg cache --fields purpose --db code-intent
+```
+rg -l filesize | wc -l
 ```
 
 ```
-✓ crates/ignore/src/dir.rs
-; purpose: Modify this file to change how ignore rules are loaded, matched,
-  and prioritized during directory traversal.
-96:    // Parent matchers are cached independently of the path being walked...
-
-✓ crates/globset/src/lib.rs
-; purpose: Modify this file to change how glob patterns are parsed, compiled
-  into optimized regex automata, and matched against file paths.
-278:        .hybrid_cache_capacity(10 * (1 << 20));
+10
 ```
 
-Plain `rg cache` gives you the line and filename. With `code-intent`, your agent knows a cache constant in a glob library is not the same as caching logic in the directory walker without opening either file.
+Ten files. On a repo this small that is already a short list, but it is just names. You still cannot tell the file that matters from the one that happens to mention the word, without opening each one.
 
-## What Else Is Here
+So you ask for the same search with meaning attached:
 
-Four more Brains are committed as manifests. Import them the same way:
+> Search for filesize, but tell me what each file is for.
 
-```bash
-gsc manifest import agent-file-triage       # change risk, open/skip guidance
-gsc manifest import implicit-todos          # hidden TODOs in comments
-gsc manifest import rust-blast-radius       # coupling risk, blast radius
-gsc manifest import rust-test-coverage-intent  # test intent, coverage gaps
+It runs:
+
+```
+gsc rg filesize --db code-intent --fields purpose --summary
 ```
 
-To record lessons from your own sessions:
+Two of the ten are the ones that matter:
 
-```bash
+```
+#  Summary:  65 matches in 10 files
+
+✓ crates/ignore/src/walk.rs
+; purpose: Modify this file to change the recursive directory traversal logic, including parallel execution strategies, ignore rule application, and symlink handling.
+
+Matches: 29
+
+✓ crates/core/flags/lowargs.rs
+; purpose: Modify this file to change the structure of low-level CLI arguments, add new flag modes, or adjust default values for search configuration options.
+
+Matches: 1
+```
+
+One is the traversal logic where files are actually skipped, and where the matches are concentrated. The other is the CLI plumbing where a flag would be declared. You know where to start, and you have not opened a file.
+
+## Check for lessons before you build
+
+Finding the files is the easy part. The question that costs you is whether adding the flag is even the right move. So before writing anything, you ask:
+
+> Before I add this flag, check if there are any lessons about it. Do not make changes yet.
+
+The agent queries the Lessons Brain:
+
+```
+gsc query --db gsc-lessons --filter "tags=max-filesize" --fields review_checks
+```
+
+and finds the area was already worked out. The lesson says, in short:
+
+- Do not add a one-off `--max-filesize-warning` flag. The skip can route through the existing `ignore_message!` system, which is already gated by `--no-messages`, so no new flag is needed.
+- The skip happens in `crates/ignore/src/walk.rs`, which today only calls `log::debug!()`, so files vanish silently unless `--debug` is passed.
+- You cannot call `ignore_message!` from `crates/ignore` directly. It is a lower-level crate that does not depend on `crates/core`. The skip has to surface to a core-owned point and emit there.
+
+That is a design mistake and a crate-boundary constraint, caught before a single line was written. None of it is in the code you would have grepped. Someone hit it in an earlier session and wrote it down.
+
+## Write down what you learned
+
+That lesson did not appear on its own. Someone worked this out once and saved it. That is the move smart-ripgrep is really about, because it is what makes the next session cheaper than this one.
+
+When a session teaches you something that is not obvious from the code, you keep it. You can let the agent do it:
+
+> Save what we learned about the max-filesize warning, so the next session does not relearn it.
+
+or write one by hand:
+
+```
 gsc lessons new
 gsc lessons review
 gsc lessons commit
 ```
 
-Full documentation: [github.com/gitsense/gsc-cli](https://github.com/gitsense/gsc-cli)
+A lesson is a small record in `.gitsense/lessons/records.jsonl`, tied to the files it is about. Once committed, it lives in the repo next to the code. Clone the repo and you have it. Pull the latest and you have what the team learned since. The walkthrough you just read does not have to happen twice.
+
+## What else is here
+
+Four more Brains are committed as manifests. Import any of them the same way:
+
+```bash
+gsc manifest import agent-file-triage          # change risk, open or skip guidance
+gsc manifest import implicit-todos             # hidden TODOs buried in comments
+gsc manifest import rust-blast-radius          # what leans on a file before you change it
+gsc manifest import rust-test-coverage-intent  # test intent and coverage gaps
+```
+
+## Where to go next
+
+This was one task on a small repo. The moves are the same anywhere: search with meaning, check for lessons before you build, and write down what you learned so the next session does not start cold.
+
+- [smart-codex](https://github.com/gitsense/smart-codex) runs the same ideas on a large codebase, around 4,400 files, where the noise and the savings are much larger. It also covers narrowing by intent and checking what leans on a file before you change it.
+- [gsc-cli](https://github.com/gitsense/gsc-cli) is the open source tool. It imports Brains, writes lessons, and runs `gsc rg`.
 
 ---
 
