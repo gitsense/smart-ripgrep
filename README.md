@@ -110,7 +110,7 @@ Finding the files is the easy part. The question that costs you is whether addin
 The agent queries the Lessons Brain:
 
 ```
-gsc query --db gsc-lessons --filter "tags=max-filesize" --fields review_checks
+gsc lessons search max-filesize --fields review_checks
 ```
 
 and finds the area was already worked out. The lesson says, in short:
@@ -132,9 +132,9 @@ When a session teaches you something that is not obvious from the code, you keep
 or write one by hand:
 
 ```
-gsc lessons new
-gsc lessons review
-gsc lessons commit
+gsc lessons draft new
+gsc lessons draft review
+gsc lessons draft commit
 ```
 
 A lesson is a small record in `.gitsense/lessons/records.jsonl`, tied to the files it is about. Once committed, it lives in the repo next to the code. Clone the repo and you have it. Pull the latest and you have what the team learned since. The walkthrough you just read does not have to happen twice.
