@@ -105,7 +105,7 @@ One is the traversal logic where files are actually skipped, and where the match
 
 Finding the files is the easy part. The question that costs you is whether adding the flag is even the right move. So before writing anything, you ask:
 
-> Before I add this flag, check if there are any lessons about it. Do not make changes yet.
+> I want to add a --max-filesize-warning flag, so users are told when a file is skipped for being too big. Before I add this flag, check if there are any lessons about it. Do not make changes yet.
 
 The agent queries the Lessons Brain:
 
