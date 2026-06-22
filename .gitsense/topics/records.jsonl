@@ -1,0 +1,11 @@
+{"slug":"search","description":"Search behavior: algorithms, mmap, line-buffer, binary detection, regex","created_at":"2026-06-22T17:12:13.577511Z","updated_at":"2026-06-22T17:12:13.577511Z"}
+{"slug":"platform","description":"Platform-specific: macOS, Linux, musl, cross-compilation, QEMU","created_at":"2026-06-22T17:12:13.604158Z","updated_at":"2026-06-22T17:12:13.604158Z"}
+{"slug":"build","description":"Build system: CI, allocator, crate boundaries","created_at":"2026-06-22T17:12:13.631189Z","updated_at":"2026-06-22T17:12:13.631189Z"}
+{"slug":"config","description":"Configuration: flags, git-config, environment variables, gitignore","created_at":"2026-06-22T17:12:13.658464Z","updated_at":"2026-06-22T17:12:13.658464Z"}
+{"slug":"output","description":"Output and messaging: formatting, user feedback, message controls","created_at":"2026-06-22T17:12:13.686125Z","updated_at":"2026-06-22T17:12:13.686125Z"}
+{"slug":"testing","description":"Test patterns, fixtures, and test infrastructure","created_at":"2026-06-22T17:12:13.713717Z","updated_at":"2026-06-22T17:12:13.713717Z"}
+{"slug":"filesystem","description":"Filesystem: home directory, symlinks, path matching","created_at":"2026-06-22T17:12:13.742765Z","updated_at":"2026-06-22T17:12:13.742765Z"}
+{"slug":"performance","description":"Performance: parallelism, concurrency, benchmarks","created_at":"2026-06-22T17:12:13.769744Z","updated_at":"2026-06-22T17:12:13.769744Z"}
+{"slug":"architecture","description":"Architecture: design decisions, known limitations, workarounds","created_at":"2026-06-22T17:12:13.796882Z","updated_at":"2026-06-22T17:12:13.796882Z"}
+{"slug":"cli","description":"CLI interface: argument parsing, documentation","created_at":"2026-06-22T17:12:13.824008Z","updated_at":"2026-06-22T17:12:13.824008Z"}
+{"slug":"error-handling","description":"Error types, propagation, and recovery patterns","created_at":"2026-06-22T17:12:13.850588Z","updated_at":"2026-06-22T17:12:13.850588Z"}
