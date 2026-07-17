@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="540" viewBox="0 0 1600 540" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="470" viewBox="0 0 1600 470" role="img" aria-labelledby="title desc">
   <title id="title">Build repository knowledge with GitSense Chat</title>
   <desc id="desc">The ripgrep source is analyzed, reviewed, and packaged with GitSense Chat as portable JSON manifests committed to smart-ripgrep.</desc>
   <rect width="1600" height="540" fill="#ffffff"/>
@@ -36,6 +36,4 @@
   <text x="1230" y="332" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="18">implicit-todos.json</text>
   <text x="1230" y="370" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="18">rust-blast-radius.json</text>
   <text x="1230" y="404" fill="#777777" font-family="Menlo, Consolas, monospace" font-size="18">...and two more</text>
-
-  <text x="800" y="498" fill="#333333" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle">Five reusable analyses now travel with the repository as plain JSON.</text>
 </svg>

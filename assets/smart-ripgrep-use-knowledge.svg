@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="500" viewBox="0 0 1600 500" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="420" viewBox="0 0 1600 420" role="img" aria-labelledby="title desc">
   <title id="title">Use repository knowledge locally with gsc</title>
   <desc id="desc">After smart-ripgrep is cloned, gsc imports its committed manifests, builds local SQLite Brains, and lets a coding agent query them.</desc>
   <rect width="1600" height="500" fill="#ffffff"/>
@@ -42,6 +42,4 @@
   <text x="1407" y="259" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc rg</text>
   <text x="1407" y="300" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc query</text>
   <text x="1407" y="341" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc knowledge</text>
-
-  <text x="800" y="448" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700" text-anchor="middle">GitSense Chat is not required here. The user and agent only need gsc.</text>
 </svg>
