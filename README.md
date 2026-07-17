@@ -8,7 +8,7 @@ This is the [ripgrep](https://github.com/BurntSushi/ripgrep) codebase with GitSe
 
 ![The ripgrep repository goes through GitSense Chat, where analysis is defined, reviewed, and packaged as JSON manifests committed with smart-ripgrep.](assets/smart-ripgrep-build-knowledge.svg)
 
-GitSense Chat was used to analyze ripgrep and package five kinds of repository knowledge. The results live in `.gitsense/manifests/` as plain JSON and travel with the code.
+[GitSense Chat](https://github.com/gitsense/chat) was used to analyze ripgrep and package five kinds of repository knowledge. The results live in `.gitsense/manifests/` as plain JSON and travel with the code.
 
 ## Use It Locally
 
