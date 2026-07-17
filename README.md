@@ -4,13 +4,17 @@
 
 This is the [ripgrep](https://github.com/BurntSushi/ripgrep) codebase with GitSense knowledge committed alongside it. Follow one realistic task to see how an agent finds the right files, checks what earlier work uncovered, and avoids a plausible design mistake.
 
-## Built Once, Used Locally
+## Build Repository Knowledge
 
-![The ripgrep repository is analyzed and packaged with GitSense Chat. Portable JSON manifests are committed with smart-ripgrep, then gsc builds local SQLite Brains that coding agents can query.](assets/smart-ripgrep-build-use.svg)
+![The ripgrep repository goes through GitSense Chat, where analysis is defined, reviewed, and packaged as JSON manifests committed with smart-ripgrep.](assets/smart-ripgrep-build-knowledge.svg)
 
 GitSense Chat was used to analyze ripgrep and package five kinds of repository knowledge. The results live in `.gitsense/manifests/` as plain JSON and travel with the code.
 
-Once those files are committed, GitSense Chat is no longer in the path. Anyone who clones this repository can use `gsc` to build local SQLite Brains and make the knowledge available to a coding agent.
+## Use It Locally
+
+![After cloning smart-ripgrep, gsc imports the committed manifests, builds local SQLite Brains, and makes them available to a coding agent.](assets/smart-ripgrep-use-knowledge.svg)
+
+Once those files are committed, GitSense Chat is no longer in the path. Anyone who clones this repository can use `gsc` to build local SQLite Brains and make the knowledge available to a coding agent. At this point, the user and agent only need `gsc`.
 
 ## One Task, Two Better Decisions
 

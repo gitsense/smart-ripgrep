@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="500" viewBox="0 0 1600 500" role="img" aria-labelledby="title desc">
+  <title id="title">Use repository knowledge locally with gsc</title>
+  <desc id="desc">After smart-ripgrep is cloned, gsc imports its committed manifests, builds local SQLite Brains, and lets a coding agent query them.</desc>
+  <rect width="1600" height="500" fill="#ffffff"/>
+
+  <rect x="45" y="76" width="330" height="300" rx="6" fill="#fafafa" stroke="#111111" stroke-width="3"/>
+  <text x="210" y="126" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">ANY CLONE</text>
+  <text x="210" y="176" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" text-anchor="middle">smart-ripgrep</text>
+  <line x1="90" y1="205" x2="330" y2="205" stroke="#cccccc" stroke-width="2"/>
+  <text x="210" y="254" fill="#333333" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">Source code</text>
+  <text x="210" y="294" fill="#333333" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">Committed manifests</text>
+  <text x="210" y="340" fill="#666666" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle">Knowledge arrives with the clone</text>
+
+  <path d="M395 226 H455" fill="none" stroke="#111111" stroke-width="4"/>
+  <path d="M455 226 l-15 -11 v22 z" fill="#111111"/>
+
+  <rect x="475" y="76" width="270" height="300" rx="6" fill="#f3f3f3" stroke="#111111" stroke-width="4"/>
+  <text x="610" y="126" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">LOCAL INTERFACE</text>
+  <text x="610" y="188" fill="#111111" font-family="Menlo, Consolas, monospace" font-size="34" font-weight="700" text-anchor="middle">gsc</text>
+  <line x1="520" y1="218" x2="700" y2="218" stroke="#bbbbbb" stroke-width="2"/>
+  <text x="610" y="271" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">Import manifests</text>
+  <text x="610" y="312" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">Build Brains</text>
+
+  <path d="M765 226 H825" fill="none" stroke="#111111" stroke-width="4"/>
+  <path d="M825 226 l-15 -11 v22 z" fill="#111111"/>
+
+  <rect x="845" y="76" width="315" height="300" rx="6" fill="#fafafa" stroke="#111111" stroke-width="3"/>
+  <text x="1002" y="126" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">GENERATED LOCALLY</text>
+  <text x="1002" y="176" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" text-anchor="middle">SQLite Brains</text>
+  <line x1="890" y1="205" x2="1115" y2="205" stroke="#cccccc" stroke-width="2"/>
+  <text x="1002" y="265" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="20" text-anchor="middle">.gitsense/*.db</text>
+  <text x="1002" y="310" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" text-anchor="middle">Queryable and fast</text>
+  <text x="1002" y="343" fill="#777777" font-family="Arial, Helvetica, sans-serif" font-size="17" text-anchor="middle">Generated | gitignored</text>
+
+  <path d="M1180 226 H1240" fill="none" stroke="#111111" stroke-width="4"/>
+  <path d="M1240 226 l-15 -11 v22 z" fill="#111111"/>
+
+  <rect x="1260" y="76" width="295" height="300" rx="6" fill="#fafafa" stroke="#111111" stroke-width="3"/>
+  <text x="1407" y="126" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">AT THE MOMENT OF WORK</text>
+  <text x="1407" y="176" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" text-anchor="middle">Coding agent</text>
+  <line x1="1305" y1="205" x2="1510" y2="205" stroke="#cccccc" stroke-width="2"/>
+  <text x="1407" y="259" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc rg</text>
+  <text x="1407" y="300" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc query</text>
+  <text x="1407" y="341" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19" text-anchor="middle">gsc knowledge</text>
+
+  <text x="800" y="448" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700" text-anchor="middle">GitSense Chat is not required here. The user and agent only need gsc.</text>
+</svg>

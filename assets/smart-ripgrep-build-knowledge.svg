@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="540" viewBox="0 0 1600 540" role="img" aria-labelledby="title desc">
+  <title id="title">Build repository knowledge with GitSense Chat</title>
+  <desc id="desc">The ripgrep source is analyzed, reviewed, and packaged with GitSense Chat as portable JSON manifests committed to smart-ripgrep.</desc>
+  <rect width="1600" height="540" fill="#ffffff"/>
+
+  <rect x="60" y="72" width="390" height="360" rx="6" fill="#fafafa" stroke="#111111" stroke-width="3"/>
+  <text x="255" y="124" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">SOURCE</text>
+  <text x="255" y="174" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" text-anchor="middle">ripgrep repository</text>
+  <line x1="110" y1="205" x2="400" y2="205" stroke="#cccccc" stroke-width="2"/>
+  <text x="115" y="258" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="21">crates/core/</text>
+  <text x="115" y="301" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="21">crates/ignore/</text>
+  <text x="115" y="344" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="21">crates/searcher/</text>
+  <text x="115" y="387" fill="#777777" font-family="Menlo, Consolas, monospace" font-size="21">tests/  Cargo.toml  ...</text>
+
+  <path d="M475 252 H555" fill="none" stroke="#111111" stroke-width="4"/>
+  <path d="M555 252 l-15 -11 v22 z" fill="#111111"/>
+
+  <rect x="580" y="72" width="440" height="360" rx="6" fill="#f3f3f3" stroke="#111111" stroke-width="4"/>
+  <text x="800" y="124" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">BUILD AND PACKAGE</text>
+  <text x="800" y="174" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" text-anchor="middle">GitSense Chat</text>
+  <line x1="630" y1="205" x2="970" y2="205" stroke="#bbbbbb" stroke-width="2"/>
+  <text x="800" y="254" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle">Define what matters</text>
+  <text x="800" y="296" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle">Analyze the repository</text>
+  <text x="800" y="338" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle">Review and refine</text>
+  <text x="800" y="380" fill="#222222" font-family="Arial, Helvetica, sans-serif" font-size="22" text-anchor="middle">Package the results</text>
+
+  <path d="M1045 252 H1125" fill="none" stroke="#111111" stroke-width="4"/>
+  <path d="M1125 252 l-15 -11 v22 z" fill="#111111"/>
+
+  <rect x="1150" y="72" width="390" height="360" rx="6" fill="#fafafa" stroke="#111111" stroke-width="3"/>
+  <text x="1345" y="124" fill="#555555" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" text-anchor="middle">COMMITTED KNOWLEDGE</text>
+  <text x="1345" y="174" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" text-anchor="middle">Portable manifests</text>
+  <line x1="1200" y1="205" x2="1490" y2="205" stroke="#cccccc" stroke-width="2"/>
+  <text x="1200" y="253" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="19">.gitsense/manifests/</text>
+  <text x="1230" y="294" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="18">code-intent.json</text>
+  <text x="1230" y="332" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="18">implicit-todos.json</text>
+  <text x="1230" y="370" fill="#333333" font-family="Menlo, Consolas, monospace" font-size="18">rust-blast-radius.json</text>
+  <text x="1230" y="404" fill="#777777" font-family="Menlo, Consolas, monospace" font-size="18">...and two more</text>
+
+  <text x="800" y="498" fill="#333333" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" text-anchor="middle">Five reusable analyses now travel with the repository as plain JSON.</text>
+</svg>
