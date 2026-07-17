@@ -52,11 +52,11 @@ The agent has a better starting point before opening either file.
 
 ### 2. Check What the Repository Remembers
 
-Finding the files is the easy part. Before changing anything, ask:
+Finding the files is the easy part. Before changing anything, ask your coding agent:
 
 > Check whether this repository has any lessons about max-filesize warnings. Do not make changes yet.
 
-The committed Lessons Brain shows that this work was already investigated:
+After `gsc experts init`, the agent knows this repository has a Lessons Brain and how to query it. It finds that this work was already investigated:
 
 - Do not add a one-off `--max-filesize-warning` flag.
 - Use the existing `ignore_message!` path, which already respects `--no-messages`.
