@@ -1,0 +1,828 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const { spawnSync } = require("node:child_process");
+const { createHash } = require("node:crypto");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+
+const TARGET_ANALYZER = "risk-session-review";
+const SOURCE_ANALYZERS = [
+  "code-intent",
+  "agent-file-triage",
+  "rust-blast-radius",
+  "rust-test-coverage-intent",
+];
+
+function main() {
+  const flags = parseFlags(process.argv.slice(2));
+  if (flags.help) {
+    printHelp();
+    return;
+  }
+  if (flags.selfTest) {
+    runSelfTest();
+    return;
+  }
+
+  const repoRoot = findRepoRoot(process.cwd());
+  const context = resolveRepositoryContext(repoRoot, flags);
+  const recordsByAnalyzer = new Map();
+
+  for (const analyzer of SOURCE_ANALYZERS) {
+    process.stderr.write(`[gsc] Reading ${analyzer} analysis...\n`);
+    recordsByAnalyzer.set(analyzer, fetchAnalysis(repoRoot, analyzer, context, false));
+  }
+
+  const lessons = loadRepositoryLessons(repoRoot);
+  const records = buildRecords(recordsByAnalyzer, lessons);
+  const outputPath = path.resolve(
+    flags.output || path.join(os.tmpdir(), "gsc-risk-session-review.jsonl"),
+  );
+  writeJSONL(outputPath, records);
+  process.stderr.write(`[risk-session-review] Generated ${records.length} record(s)\n`);
+  process.stderr.write(`[risk-session-review] Output: ${outputPath}\n`);
+
+  if (!flags.import) {
+    process.stderr.write("[risk-session-review] Review the JSONL, then rerun with --import\n");
+    return;
+  }
+
+  const existing = fetchAnalysis(repoRoot, TARGET_ANALYZER, context, true);
+  const changed = filterChangedRecords(records, existing);
+  process.stderr.write(
+    `[risk-session-review] Change check: new=${changed.newCount}, changed=${changed.changedCount}, unchanged=${changed.unchangedCount}\n`,
+  );
+
+  if (changed.records.length === 0) {
+    process.stderr.write("[risk-session-review] No metadata changes detected; skipping import\n");
+    return;
+  }
+
+  const importPath =
+    changed.records.length === records.length
+      ? outputPath
+      : path.join(os.tmpdir(), "gsc-risk-session-review-changed.jsonl");
+  if (importPath !== outputPath) {
+    writeJSONL(importPath, changed.records);
+    process.stderr.write(`[risk-session-review] Changed output: ${importPath}\n`);
+  }
+
+  runAnalysisSet(repoRoot, importPath, context, flags);
+}
+
+function parseFlags(args) {
+  const flags = {
+    owner: "",
+    repo: "",
+    branch: "",
+    output: "",
+    import: false,
+    dryRun: false,
+    force: false,
+    help: false,
+    selfTest: false,
+  };
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    switch (arg) {
+      case "--owner":
+      case "--repo":
+      case "--branch":
+      case "--output": {
+        const value = args[index + 1];
+        if (!value || value.startsWith("--")) {
+          throw new Error(`${arg} requires a value`);
+        }
+        flags[arg.slice(2)] = value;
+        index += 1;
+        break;
+      }
+      case "--import":
+        flags.import = true;
+        break;
+      case "--dry-run":
+        flags.dryRun = true;
+        break;
+      case "--force":
+        flags.force = true;
+        break;
+      case "--self-test":
+        flags.selfTest = true;
+        break;
+      case "--help":
+      case "-h":
+        flags.help = true;
+        break;
+      default:
+        throw new Error(`Unknown argument: ${arg}`);
+    }
+  }
+
+  if (flags.dryRun && !flags.import) {
+    throw new Error("--dry-run requires --import");
+  }
+  if (flags.force && !flags.import) {
+    throw new Error("--force requires --import");
+  }
+  return flags;
+}
+
+function printHelp() {
+  process.stdout.write("Build deterministic risk-session-review metadata.\n\n");
+  process.stdout.write("Usage:\n");
+  process.stdout.write("  .gitsense/bin/build-risk-session-review [flags]\n\n");
+  process.stdout.write("Flags:\n");
+  process.stdout.write("  --owner <name>    GitSense Chat repository owner\n");
+  process.stdout.write("  --repo <name>     GitSense Chat repository name\n");
+  process.stdout.write("  --branch <name>   GitSense Chat branch name\n");
+  process.stdout.write("  --output <path>   JSONL output path (default: system temp directory)\n");
+  process.stdout.write("  --import          Populate risk-session-review with changed records\n");
+  process.stdout.write("  --dry-run         Validate gsc app analysis set without writing\n");
+  process.stdout.write("  --force           Overwrite existing changed records\n");
+  process.stdout.write("  --self-test       Run deterministic formatter checks\n");
+  process.stdout.write("  -h, --help        Show this help\n");
+}
+
+function findRepoRoot(startDir) {
+  let current = path.resolve(startDir);
+  while (true) {
+    if (fs.existsSync(path.join(current, ".git"))) {
+      return current;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) {
+      throw new Error("Could not find a Git repository from the current directory");
+    }
+    current = parent;
+  }
+}
+
+function resolveRepositoryContext(repoRoot, flags) {
+  const context = {
+    owner: flags.owner,
+    repo: flags.repo,
+    branch: flags.branch,
+  };
+  if (context.owner && context.repo && context.branch) {
+    return context;
+  }
+
+  const manifestPath = path.join(repoRoot, ".gitsense", "manifests", "code-intent.json");
+  if (fs.existsSync(manifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    const repositoryName = manifest.repositories?.[0]?.name;
+    const branchName = manifest.branches?.[0]?.name;
+    if (typeof repositoryName === "string" && repositoryName.includes("/")) {
+      const separator = repositoryName.indexOf("/");
+      context.owner ||= repositoryName.slice(0, separator);
+      context.repo ||= repositoryName.slice(separator + 1);
+    }
+    if (typeof branchName === "string") {
+      context.branch ||= branchName;
+    }
+  }
+
+  if (!context.owner || !context.repo || !context.branch) {
+    throw new Error(
+      "Could not determine GitSense Chat repository context. Provide --owner, --repo, and --branch.",
+    );
+  }
+  return context;
+}
+
+function fetchAnalysis(repoRoot, analyzer, context, tolerateMissing) {
+  const args = [
+    "app",
+    "analysis",
+    "get",
+    "--analyzer",
+    analyzer,
+    "--list",
+    "--format",
+    "json",
+    ...contextArgs(context),
+  ];
+  const result = spawnSync("gsc", args, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+  });
+
+  if (result.error) {
+    throw new Error(`Failed to run gsc: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    if (tolerateMissing) {
+      return new Map();
+    }
+    const detail = result.stderr.trim() || result.stdout.trim() || `exit ${result.status}`;
+    throw new Error(`Failed to read ${analyzer} analysis: ${detail}`);
+  }
+
+  const parsed = JSON.parse(result.stdout);
+  const files = parsed.files === null ? [] : parsed.files;
+  if (!Array.isArray(files)) {
+    throw new Error(`Invalid ${analyzer} response: expected a files array`);
+  }
+
+  const records = new Map();
+  for (const record of files) {
+    if (record && typeof record.file_path === "string") {
+      records.set(normalizePath(record.file_path), record);
+    }
+  }
+  process.stderr.write(`[gsc] Found ${records.size} ${analyzer} record(s)\n`);
+  return records;
+}
+
+function buildRecords(recordsByAnalyzer, lessons = []) {
+  const filePaths = new Set();
+  for (const records of recordsByAnalyzer.values()) {
+    for (const filePath of records.keys()) {
+      filePaths.add(filePath);
+    }
+  }
+  for (const lesson of lessons) {
+    for (const filePath of [
+      ...stringArray(lesson.applies_to?.files),
+      ...stringArray(lesson.applies_to?.linked_files),
+    ]) {
+      filePaths.add(normalizePath(filePath));
+    }
+  }
+
+  return [...filePaths]
+    .sort((left, right) => left.localeCompare(right))
+    .map((filePath) => buildRecord(filePath, recordsByAnalyzer, lessons));
+}
+
+function buildRecord(filePath, recordsByAnalyzer, lessons = []) {
+  const codeIntent = recordsByAnalyzer.get("code-intent")?.get(filePath) || {};
+  const triage = recordsByAnalyzer.get("agent-file-triage")?.get(filePath) || {};
+  const blast = recordsByAnalyzer.get("rust-blast-radius")?.get(filePath) || {};
+  const tests = recordsByAnalyzer.get("rust-test-coverage-intent")?.get(filePath) || {};
+  const relatedLessons = findRelatedLessons(filePath, lessons);
+
+  const sourceRecords = {
+    "agent-file-triage": selectFields(triage, [
+      "triage_summary",
+      "surface_area",
+      "open_when",
+      "answers_questions",
+      "change_risk",
+      "change_risk_reason",
+    ]),
+    "code-intent": selectFields(codeIntent, ["purpose", "parent_keywords", "mechanism"]),
+    "rust-blast-radius": selectFields(blast, [
+      "purpose",
+      "surface_area",
+      "role",
+      "dependents_count",
+      "dependencies_count",
+      "coupling_risk",
+      "has_public_api",
+      "change_risk",
+    ]),
+    "rust-test-coverage-intent": selectFields(tests, [
+      "has_test",
+      "test_role",
+      "tested_behavior",
+      "risk_covered",
+      "add_test_guidance",
+      "summary",
+    ]),
+    "repository-lessons": relatedLessons.map(lesson => ({
+      id: lesson.id,
+      updated_at: lesson.updated_at || "",
+      summary: lesson.summary,
+      details: lesson.details || "",
+      topic: lesson.topic || "",
+      review_checks: stringArray(lesson.review_checks),
+      files: stringArray(lesson.applies_to?.files),
+      linked_files: stringArray(lesson.applies_to?.linked_files),
+    })),
+  };
+
+  const sourceAnalyzers = Object.entries(sourceRecords)
+    .filter(([, record]) => Object.keys(record).length > 0)
+    .map(([analyzer]) => analyzer)
+    .sort();
+  const sourceFingerprint = sha256(stableStringify(sourceRecords));
+
+  return {
+    file_path: filePath,
+    fields: {
+      read_items: buildReadItems(filePath, codeIntent, triage, blast, relatedLessons),
+      edit_items: buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLessons),
+      write_items: buildWriteItems(filePath, codeIntent, triage, blast, tests, relatedLessons),
+      source_analyzers: sourceAnalyzers,
+      source_fingerprint: sourceFingerprint,
+    },
+  };
+}
+
+function buildReadItems(filePath, codeIntent, triage, blast, relatedLessons = []) {
+  const context = buildFileContextItem(filePath, codeIntent, triage, blast);
+  return [
+    ...(context ? [context] : []),
+    ...buildLessonItems(relatedLessons),
+  ];
+}
+
+function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLessons = []) {
+  const items = [];
+  const context = buildFileContextItem(filePath, codeIntent, triage, blast);
+  if (context) {
+    items.push(context);
+  }
+
+  const risk = highestRisk(triage.change_risk, blast.change_risk, blast.coupling_risk);
+  const riskReason = firstString(triage.change_risk_reason);
+  if (risk || riskReason) {
+    const details = [];
+    if (riskReason) {
+      details.push(markdownText(riskReason));
+    }
+    if (blast.coupling_risk) {
+      details.push(`**Coupling risk:** ${markdownText(titleCase(blast.coupling_risk))}`);
+    }
+    items.push(reviewItem(
+      "Change risk",
+      `change-risk:${risk || "unspecified"}`,
+      risk ? `${titleCase(risk)}-risk change` : "Change risk needs review",
+      details.join("\n\n") || "Review the visible change impact before continuing.",
+    ));
+  }
+
+  const dependents = integerValue(blast.dependents_count);
+  if (blast.has_public_api === true) {
+    const details = [];
+    const role = firstString(blast.role);
+    if (role) {
+      details.push(`**Role:** ${markdownText(titleCase(role))}`);
+    }
+    if (dependents !== null) {
+      details.push(`**Known dependents:** ${dependents}`);
+    }
+    items.push(reviewItem(
+      "API and dependencies",
+      "public-api",
+      "Public API may be affected",
+      details.join("\n\n") || "This file exposes a public API.",
+    ));
+  } else if (dependents !== null && dependents > 0) {
+    items.push(reviewItem(
+      "API and dependencies",
+      `known-dependents:${dependents}`,
+      `${dependents} known dependent${dependents === 1 ? "" : "s"}`,
+      `Changes to this file may affect **${dependents}** known dependent${dependents === 1 ? "" : "s"}.`,
+    ));
+  }
+
+  const coverage = [];
+  const testSummary = firstString(tests.summary);
+  if (testSummary) {
+    coverage.push(markdownText(testSummary));
+  }
+  const risksCovered = stringArray(tests.risk_covered).slice(0, 4);
+  if (risksCovered.length > 0) {
+    coverage.push(bulletList(risksCovered.map(titleCase)));
+  }
+  if (coverage.length > 0) {
+    items.push(reviewItem(
+      "Tests and safeguards",
+      "regression-coverage",
+      "Regression coverage exists",
+      coverage.join("\n\n"),
+    ));
+  }
+
+  const testGuidance = firstString(tests.add_test_guidance);
+  if (testGuidance) {
+    const title = compactTitle(testGuidance, "Add regression coverage");
+    items.push(reviewItem(
+      "Tests and safeguards",
+      `test-guidance:${sha256(title.toLowerCase()).slice(0, 12)}`,
+      title,
+      markdownText(testGuidance),
+    ));
+  }
+  return [...items, ...buildLessonItems(relatedLessons)];
+}
+
+function buildWriteItems(filePath, codeIntent, triage, blast, tests, relatedLessons = []) {
+  return [
+    reviewItem(
+      "Write operation",
+      "create-or-replace-file",
+      "New or replaced file",
+      "A write operation supplies the complete file contents instead of applying a targeted edit. Confirm whether it creates a new file or intentionally replaces the existing contents.",
+    ),
+    ...buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLessons),
+  ];
+}
+
+function loadRepositoryLessons(repoRoot) {
+  const recordsPath = path.join(repoRoot, ".gitsense", "lessons", "records.jsonl");
+  if (!fs.existsSync(recordsPath)) {
+    return [];
+  }
+
+  const lessons = [];
+  const lines = fs.readFileSync(recordsPath, "utf8").split(/\r?\n/);
+  for (let lineNumber = 0; lineNumber < lines.length; lineNumber += 1) {
+    const line = lines[lineNumber].trim();
+    if (!line) continue;
+    let lesson;
+    try {
+      lesson = JSON.parse(line);
+    } catch (error) {
+      throw new Error(`Invalid lesson JSON at ${recordsPath}:${lineNumber + 1}: ${error.message}`);
+    }
+    if (lesson && typeof lesson.id === "string" && firstString(lesson.summary)) {
+      lessons.push(lesson);
+    }
+  }
+  return lessons;
+}
+
+function findRelatedLessons(filePath, lessons) {
+  const matches = new Map();
+  for (const lesson of lessons) {
+    const directFiles = new Set(stringArray(lesson.applies_to?.files).map(normalizePath));
+    const linkedFiles = new Set(stringArray(lesson.applies_to?.linked_files).map(normalizePath));
+    const appliesDirectly = directFiles.has(filePath);
+    const appliesAsLinked = linkedFiles.has(filePath);
+    if (!appliesDirectly && !appliesAsLinked) continue;
+
+    matches.set(lesson.id, lesson);
+  }
+  return [...matches.values()].sort((left, right) => left.id.localeCompare(right.id));
+}
+
+function buildLessonItems(lessons) {
+  return lessons.map((lesson) => {
+    const details = [];
+    const topic = firstString(lesson.topic);
+    if (topic) {
+      details.push(`**Topic:** ${markdownText(titleCase(topic))}`);
+    }
+    const importance = firstString(lesson.importance);
+    if (importance) {
+      details.push(`**Importance:** ${markdownText(titleCase(importance))}`);
+    }
+    const lessonDetails = firstString(lesson.details);
+    if (lessonDetails) {
+      details.push(`### Lesson\n\n${markdownText(lessonDetails)}`);
+    }
+    const reviewChecks = stringArray(lesson.review_checks).slice(0, 6);
+    if (reviewChecks.length > 0) {
+      details.push(`### Review checks\n\n${bulletList(reviewChecks)}`);
+    }
+    return reviewItem(
+      "Repository memory",
+      `lesson:${lesson.id}`,
+      `Related lesson: ${compactTitle(lesson.summary, "Repository lesson")}`,
+      details.join("\n\n"),
+    );
+  });
+}
+
+function buildFileContextItem(filePath, codeIntent, triage, blast) {
+  const sections = [];
+  const purpose = firstString(triage.triage_summary, codeIntent.purpose, blast.purpose);
+  if (purpose) {
+    sections.push(`### What this file does\n\n${markdownText(purpose)}`);
+  }
+
+  const where = [];
+  pushLabel(where, "Surface", firstString(triage.surface_area, blast.surface_area));
+  pushLabel(where, "Role", firstString(blast.role));
+  pushLabel(where, "Mechanism", firstString(codeIntent.mechanism));
+  const topics = stringArray(codeIntent.parent_keywords).slice(0, 4);
+  if (topics.length > 0) {
+    pushLabel(where, "Areas", topics.map(titleCase).join(", "));
+  }
+  if (where.length > 0) {
+    sections.push(`### Where it fits\n\n${where.join("\n")}`);
+  }
+
+  const openWhen = stringArray(triage.open_when).slice(0, 3);
+  if (openWhen.length > 0) {
+    sections.push(`### Useful when\n\n${bulletList(openWhen)}`);
+  }
+  if (sections.length === 0) {
+    return null;
+  }
+  return reviewItem(
+    "File context",
+    `file-context:${sha256(filePath).slice(0, 12)}`,
+    compactTitle(purpose, "Understand this file's role"),
+    sections.join("\n\n"),
+  );
+}
+
+function reviewItem(group, key, title, markdown) {
+  return { group, key, title, markdown };
+}
+
+function selectFields(record, names) {
+  const selected = {};
+  for (const name of names) {
+    if (record[name] !== undefined && record[name] !== null && record[name] !== "N/A") {
+      selected[name] = normalizeValue(record[name]);
+    }
+  }
+  return selected;
+}
+
+function normalizeValue(value) {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if ((trimmed.startsWith("[") && trimmed.endsWith("]")) || (trimmed.startsWith("{") && trimmed.endsWith("}"))) {
+      try {
+        return normalizeValue(JSON.parse(trimmed));
+      } catch {
+        return value;
+      }
+    }
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value.map(normalizeValue);
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, normalizeValue(item)]),
+    );
+  }
+  return value;
+}
+
+function stringArray(value) {
+  const normalized = normalizeValue(value);
+  if (!Array.isArray(normalized)) {
+    return [];
+  }
+  return [...new Set(normalized.filter((item) => typeof item === "string").map(cleanText).filter(Boolean))];
+}
+
+function firstString(...values) {
+  for (const value of values) {
+    if (typeof value === "string") {
+      const cleaned = cleanText(value);
+      if (cleaned && cleaned !== "N/A") {
+        return cleaned;
+      }
+    }
+  }
+  return "";
+}
+
+function cleanText(value) {
+  return String(value).replace(/\s+/g, " ").trim();
+}
+
+function markdownText(value) {
+  return cleanText(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function compactTitle(value, fallback) {
+  const cleaned = cleanText(value || fallback).replace(/[.!?]+$/, "");
+  if (cleaned.length <= 72) {
+    return cleaned;
+  }
+  return `${cleaned.slice(0, 69).trimEnd()}…`;
+}
+
+function bulletList(values) {
+  return values.map((value) => `- ${markdownText(value)}`).join("\n");
+}
+
+function pushLabel(lines, label, value) {
+  if (value) {
+    lines.push(`- **${label}:** ${markdownText(value)}`);
+  }
+}
+
+function titleCase(value) {
+  return cleanText(value)
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function integerValue(value) {
+  return Number.isInteger(value) ? value : null;
+}
+
+function highestRisk(...values) {
+  const rank = { low: 1, medium: 2, high: 3, critical: 4 };
+  return values
+    .filter((value) => typeof value === "string" && rank[value.toLowerCase()])
+    .map((value) => value.toLowerCase())
+    .sort((left, right) => rank[right] - rank[left])[0] || "";
+}
+
+function stableStringify(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(",")}]`;
+  }
+  if (value && typeof value === "object") {
+    const entries = Object.entries(value).sort(([left], [right]) => left.localeCompare(right));
+    return `{${entries.map(([key, item]) => `${JSON.stringify(key)}:${stableStringify(item)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function normalizePath(filePath) {
+  return filePath.replaceAll("\\", "/").replace(/^\.\//, "");
+}
+
+function writeJSONL(outputPath, records) {
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  const body = records.map((record) => JSON.stringify(record)).join("\n");
+  fs.writeFileSync(outputPath, body ? `${body}\n` : "", "utf8");
+}
+
+function filterChangedRecords(records, existing) {
+  const changed = [];
+  let newCount = 0;
+  let changedCount = 0;
+  let unchangedCount = 0;
+
+  for (const record of records) {
+    const previous = existing.get(record.file_path);
+    if (!previous) {
+      changed.push(record);
+      newCount += 1;
+      continue;
+    }
+    const previousFields = {
+      read_items: Array.isArray(previous.read_items) ? normalizeValue(previous.read_items) : [],
+      edit_items: Array.isArray(previous.edit_items) ? normalizeValue(previous.edit_items) : [],
+      write_items: Array.isArray(previous.write_items) ? normalizeValue(previous.write_items) : [],
+      source_analyzers: stringArray(previous.source_analyzers).sort(),
+      source_fingerprint:
+        typeof previous.source_fingerprint === "string" ? previous.source_fingerprint : "",
+    };
+    if (sha256(stableStringify(record.fields)) === sha256(stableStringify(previousFields))) {
+      unchangedCount += 1;
+    } else {
+      changed.push(record);
+      changedCount += 1;
+    }
+  }
+  return { records: changed, newCount, changedCount, unchangedCount };
+}
+
+function runAnalysisSet(repoRoot, bulkPath, context, flags) {
+  const args = [
+    "app",
+    "analysis",
+    "set",
+    "--analyzer",
+    TARGET_ANALYZER,
+    "--bulk",
+    bulkPath,
+    ...contextArgs(context),
+  ];
+  if (flags.dryRun) {
+    args.push("--dry-run");
+  }
+  if (flags.force) {
+    args.push("--force");
+  }
+
+  const result = spawnSync("gsc", args, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    stdio: ["ignore", "inherit", "inherit"],
+  });
+  if (result.error) {
+    throw new Error(`Failed to run gsc: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    throw new Error(`gsc app analysis set failed with exit code ${result.status}`);
+  }
+}
+
+function contextArgs(context) {
+  return ["--owner", context.owner, "--repo", context.repo, "--branch", context.branch];
+}
+
+function runSelfTest() {
+  const records = new Map([
+    [
+      "code-intent",
+      new Map([
+        [
+          "src/example.rs",
+          {
+            purpose: "Modify this file to change JSON output.",
+            parent_keywords: ["serialization", "public-api"],
+            mechanism: "json-lines",
+          },
+        ],
+      ]),
+    ],
+    [
+      "agent-file-triage",
+      new Map([
+        [
+          "src/example.rs",
+          {
+            triage_summary: "Implements the public JSON Lines output format.",
+            surface_area: "primary-implementation",
+            open_when: ["Changing JSON output", "Debugging binary encoding"],
+            change_risk: "high",
+            change_risk_reason: "Downstream tools parse this output.",
+          },
+        ],
+      ]),
+    ],
+    [
+      "rust-blast-radius",
+      new Map([
+        [
+          "src/example.rs",
+          {
+            role: "defines-api",
+            dependents_count: 3,
+            coupling_risk: "high",
+            has_public_api: true,
+          },
+        ],
+      ]),
+    ],
+    [
+      "rust-test-coverage-intent",
+      new Map([
+        [
+          "src/example.rs",
+          {
+            summary: "Tests cover JSON events and binary detection.",
+            risk_covered: ["json-format-regression", "binary-detection-regression"],
+            add_test_guidance: "Add output compatibility tests here.",
+          },
+        ],
+      ]),
+    ],
+  ]);
+  const lessons = [
+    {
+      id: "lsn_example",
+      summary: "Keep JSON output compatible with downstream tools.",
+      details: "Consumers parse this output as a stable contract.",
+      topic: "serialization",
+      importance: "high",
+      review_checks: ["Run the compatibility tests."],
+      applies_to: {
+        files: ["src/example.rs"],
+        linked_files: ["src/linked.rs"],
+      },
+    },
+  ];
+  const builtRecords = buildRecords(records, lessons);
+  const [record] = builtRecords;
+  assert(record.file_path === "src/example.rs", "file path");
+  assert(record.fields.read_items.length === 2, "classified read item plus repository lesson");
+  assert(record.fields.read_items[0].group === "File context", "read group");
+  assert(record.fields.read_items[0].markdown.includes("### Useful when"), "read guidance");
+  assert(record.fields.read_items.some((item) => item.group === "Repository memory"), "read lesson");
+  assert(record.fields.edit_items.some((item) => item.title === "High-risk change"), "risk item");
+  assert(record.fields.edit_items.some((item) => item.title === "Public API may be affected"), "public API item");
+  assert(record.fields.edit_items.some((item) => item.title === "Regression coverage exists"), "coverage item");
+  assert(record.fields.edit_items.some((item) => item.title === "Add output compatibility tests here"), "test guidance item");
+  assert(record.fields.edit_items.every((item) => item.group && item.key && item.title && item.markdown), "item contract");
+  assert(record.fields.write_items[0].title === "New or replaced file", "write classification item");
+  assert(record.fields.write_items.some((item) => item.title === "High-risk change"), "write risk item");
+  assert(record.fields.write_items.some((item) => item.key === "lesson:lsn_example"), "write lesson");
+  assert(record.fields.write_items.every((item) => item.group && item.key && item.title && item.markdown), "write item contract");
+  assert(record.fields.source_fingerprint.length === 64, "source fingerprint");
+  assert(builtRecords.length === 2, "lesson linked file record");
+  assert(builtRecords[1].fields.read_items[0].key === "lesson:lsn_example", "linked lesson item");
+  process.stdout.write("risk-session-review self-test passed\n");
+}
+
+function assert(condition, label) {
+  if (!condition) {
+    throw new Error(`Self-test failed: ${label}`);
+  }
+}
+
+try {
+  main();
+} catch (error) {
+  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+  process.exitCode = 1;
+}
