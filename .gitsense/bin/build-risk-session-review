@@ -15,6 +15,35 @@ const SOURCE_ANALYZERS = [
   "rust-blast-radius",
   "rust-test-coverage-intent",
 ];
+const SOURCE_FIELDS = {
+  "code-intent": ["purpose", "parent_keywords", "mechanism"],
+  "agent-file-triage": [
+    "triage_summary",
+    "surface_area",
+    "open_when",
+    "answers_questions",
+    "change_risk",
+    "change_risk_reason",
+  ],
+  "rust-blast-radius": [
+    "purpose",
+    "surface_area",
+    "role",
+    "dependents_count",
+    "dependencies_count",
+    "coupling_risk",
+    "has_public_api",
+    "change_risk",
+  ],
+  "rust-test-coverage-intent": [
+    "has_test",
+    "test_role",
+    "tested_behavior",
+    "risk_covered",
+    "add_test_guidance",
+    "summary",
+  ],
+};
 
 function main() {
   const flags = parseFlags(process.argv.slice(2));
@@ -28,12 +57,12 @@ function main() {
   }
 
   const repoRoot = findRepoRoot(process.cwd());
-  const context = resolveRepositoryContext(repoRoot, flags);
+  const context = flags.import ? resolveRepositoryContext(repoRoot, flags) : null;
   const recordsByAnalyzer = new Map();
 
   for (const analyzer of SOURCE_ANALYZERS) {
-    process.stderr.write(`[gsc] Reading ${analyzer} analysis...\n`);
-    recordsByAnalyzer.set(analyzer, fetchAnalysis(repoRoot, analyzer, context, false));
+    process.stderr.write(`[gsc] Reading ${analyzer} Brain...\n`);
+    recordsByAnalyzer.set(analyzer, fetchBrain(repoRoot, analyzer, false));
   }
 
   const lessons = loadRepositoryLessons(repoRoot);
@@ -50,7 +79,7 @@ function main() {
     return;
   }
 
-  const existing = fetchAnalysis(repoRoot, TARGET_ANALYZER, context, true);
+  const existing = fetchRemoteAnalysis(repoRoot, TARGET_ANALYZER, context, true);
   const changed = filterChangedRecords(records, existing);
   process.stderr.write(
     `[risk-session-review] Change check: new=${changed.newCount}, changed=${changed.changedCount}, unchanged=${changed.unchangedCount}\n`,
@@ -136,9 +165,9 @@ function printHelp() {
   process.stdout.write("Usage:\n");
   process.stdout.write("  .gitsense/bin/build-risk-session-review [flags]\n\n");
   process.stdout.write("Flags:\n");
-  process.stdout.write("  --owner <name>    GitSense Chat repository owner\n");
-  process.stdout.write("  --repo <name>     GitSense Chat repository name\n");
-  process.stdout.write("  --branch <name>   GitSense Chat branch name\n");
+  process.stdout.write("  --owner <name>    GitSense Chat repository owner (required with --import)\n");
+  process.stdout.write("  --repo <name>     GitSense Chat repository name (required with --import)\n");
+  process.stdout.write("  --branch <name>   GitSense Chat branch name (required with --import)\n");
   process.stdout.write("  --output <path>   JSONL output path (default: system temp directory)\n");
   process.stdout.write("  --import          Populate risk-session-review with changed records\n");
   process.stdout.write("  --dry-run         Validate gsc app analysis set without writing\n");
@@ -194,7 +223,58 @@ function resolveRepositoryContext(repoRoot, flags) {
   return context;
 }
 
-function fetchAnalysis(repoRoot, analyzer, context, tolerateMissing) {
+function fetchBrain(repoRoot, analyzer, tolerateMissing) {
+  const fields = SOURCE_FIELDS[analyzer];
+  if (!fields) {
+    throw new Error(`No local Brain field list configured for ${analyzer}`);
+  }
+
+  const args = [
+    "query",
+    "--db",
+    analyzer,
+    "--glob",
+    "**/*",
+    "--fields",
+    fields.join(","),
+    "--format",
+    "json",
+    "--quiet",
+  ];
+  const result = spawnSync("gsc", args, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+  });
+
+  if (result.error) {
+    throw new Error(`Failed to run gsc: ${result.error.message}`);
+  }
+  if (result.status !== 0) {
+    if (tolerateMissing) {
+      return new Map();
+    }
+    const detail = result.stderr.trim() || result.stdout.trim() || `exit ${result.status}`;
+    throw new Error(`Failed to read local ${analyzer} Brain: ${detail}`);
+  }
+
+  const parsed = JSON.parse(result.stdout);
+  const files = parsed.results === null ? [] : parsed.results;
+  if (!Array.isArray(files)) {
+    throw new Error(`Invalid ${analyzer} Brain response: expected a results array`);
+  }
+
+  const records = new Map();
+  for (const resultRecord of files) {
+    if (resultRecord && typeof resultRecord.file_path === "string") {
+      records.set(normalizePath(resultRecord.file_path), resultRecord.metadata || {});
+    }
+  }
+  process.stderr.write(`[gsc] Found ${records.size} ${analyzer} Brain record(s)\n`);
+  return records;
+}
+
+function fetchRemoteAnalysis(repoRoot, analyzer, context, tolerateMissing) {
   const args = [
     "app",
     "analysis",

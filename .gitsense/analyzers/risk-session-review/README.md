@@ -30,19 +30,35 @@ Every item contains:
 
 ## Install
 
-Copy the Analyzer into the GitSense Chat Analyzer directory:
+Run this from the `smart-ripgrep` repository. The repository root is resolved explicitly so the command also works when the shell is in a subdirectory:
 
 ```bash
-GSC_ANALYZERS_DIR="${GSC_HOME:?Set GSC_HOME}/data/analyzers"
-mkdir -p "$GSC_ANALYZERS_DIR"
-cp -R .gitsense/analyzers/risk-session-review "$GSC_ANALYZERS_DIR/"
+cd ~/smart-ripgrep
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+ANALYZER_ID="risk-session-review"
+GSC_ANALYZER_DIR="${GSC_HOME:?Set GSC_HOME}/data/analyzers/$ANALYZER_ID"
+mkdir -p "$GSC_ANALYZER_DIR"
+cp -R "$REPO_ROOT/.gitsense/analyzers/$ANALYZER_ID/." "$GSC_ANALYZER_DIR/"
 ```
 
-Restart GitSense Chat after installing a new Analyzer.
+The `/.` source suffix copies the Analyzer contents into the target directory and makes the command safe to rerun without creating a nested Analyzer directory. GitSense Chat discovers the Analyzer from this directory without requiring a restart.
 
 ## Required Source Analysis
 
-The deterministic builder reads these Analyzers:
+Before running the builder, create the local source Brains from the committed manifests:
+
+```bash
+for manifest in \
+  code-intent \
+  agent-file-triage \
+  rust-blast-radius \
+  rust-test-coverage-intent
+do
+  gsc manifest import ".gitsense/manifests/$manifest.json"
+done
+```
+
+The deterministic builder reads these local Brains:
 
 * `code-intent`
 * `agent-file-triage`
@@ -51,7 +67,7 @@ The deterministic builder reads these Analyzers:
 
 The builder also reads repository-local `.gitsense/lessons/records.jsonl`. Lesson paths are matched deterministically against both `applies_to.files` and `applies_to.linked_files`. A missing lesson file is valid and produces no repository-memory items.
 
-The source repository and branch must already be imported into GitSense Chat, and the source analysis must be available there. Missing metadata for an individual file is allowed; the corresponding Markdown section is omitted.
+The source repository does not need to be imported into GitSense Chat for the local build. Missing metadata for an individual file is allowed; the corresponding Markdown section is omitted. The source Brain databases are the only analysis input required.
 
 ## Build and Review
 
@@ -59,11 +75,10 @@ Generate reviewable JSONL without writing analysis:
 
 ```bash
 .gitsense/bin/build-risk-session-review \
-  --owner gitsense \
-  --repo smart-ripgrep \
-  --branch master \
   --output /tmp/risk-session-review.jsonl
 ```
+
+The basic build reads the local Brains and does not require GitSense Chat.
 
 Validate the import path without writing:
 
@@ -87,6 +102,8 @@ Populate the Analyzer after reviewing the output:
 ```
 
 The builder hashes canonical source metadata and skips unchanged records.
+
+`--import` is an optional publishing path. It requires the repository and branch to exist in GitSense Chat and uses `--owner`, `--repo`, and `--branch` to publish the generated records there.
 
 ## Adapt the Pattern
 
