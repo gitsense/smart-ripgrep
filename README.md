@@ -20,9 +20,9 @@ Once those files are committed, GitSense Chat is no longer in the path. Anyone w
 
 GitSense can also attach repository knowledge to an agent session. The `risk-session-review` Analyzer combines file purpose, risk, dependency, test-coverage, and lesson metadata into structured review items for files the agent reads, edits, or writes.
 
-This lets a reviewer see not only which files changed, but what the repository already knows about those files. The Analyzer is deterministic: it combines existing metadata without making another AI request. A surfaced lesson indicates that guidance is available for review; it does not prove that the agent consulted or followed it.
+This lets a reviewer see not only which files changed, but also useful signals they may not have thought to ask for—such as file purpose, risks, dependencies, test coverage, and repository lessons. The Analyzer is deterministic: it combines existing metadata without making another AI request. A surfaced lesson indicates that guidance is available for review; it does not prove that the agent consulted or followed it.
 
-See the [`risk-session-review` documentation](.gitsense/analyzers/risk-session-review/README.md) for installation, building, and Pi session export instructions.
+See the [`risk-session-review` documentation](.gitsense/analyzers/risk-session-review/README.md) for building the derived Brain and enriching Pi session exports.
 
 ## One Task, Two Better Decisions
 

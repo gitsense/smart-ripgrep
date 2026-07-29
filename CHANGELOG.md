@@ -2,6 +2,14 @@ TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+Features:
+
+* [FEATURE #XXXX](https://github.com/BurntSushi/ripgrep/issues/XXXX):
+  Add `--max-filesize-warning` flag. When set, ripgrep will emit a warning
+  for files that exceed the given size limit, but will still search them.
+  This is useful for identifying large files that might slow down searches
+  without skipping them entirely.
+
 Bug fixes:
 
 * [BUG #3212](https://github.com/BurntSushi/ripgrep/pull/3212):

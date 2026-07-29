@@ -2,7 +2,7 @@
 
 `risk-session-review` stores deterministic change-risk review items for file-read, targeted-edit, and complete-file-write events in a coding-agent session.
 
-This smart-ripgrep version is tuned for change review: it combines file purpose, agent triage, Rust blast radius, test-coverage metadata, and repository lessons so a reviewer can quickly see what a read or edit brought into play. Each item has a group, stable key, short title, and Markdown detail, allowing a session metadata index to group matching concerns without interpreting prose.
+This smart-ripgrep version is tuned for change review: it combines file purpose, agent triage, Rust blast radius, test-coverage metadata, and repository lessons so a reviewer can quickly see what a read or edit brought into play. Each item has a group, stable key, short title, concise authored review summary, and complete Markdown detail, allowing a session metadata index to group matching concerns without interpreting prose.
 
 The Analyzer is a data contract. Its values are populated by [build-risk-session-review](../../bin/build-risk-session-review), which combines existing local Brains without making another LLM call.
 
@@ -30,9 +30,25 @@ Every item contains:
   "group": "Change risk",
   "key": "change-risk:high",
   "title": "High-risk change",
+  "short_markdown": "Review the impact of this high-risk change before continuing.",
+  "long_markdown": "Downstream tools parse this output.",
   "markdown": "Downstream tools parse this output."
 }
 ```
+
+`short_markdown` is authored for high-information-density views and should quickly tell a reviewer what to check. It must not be produced by mechanically truncating the full detail. `long_markdown` is the authoritative explanation and should retain lesson details, review checks, and supporting context for deeper investigation. Existing consumers can continue reading `markdown`, which is kept as a compatibility alias for `long_markdown`.
+
+The two representations let the same repository context be useful at different
+levels of attention:
+
+- `short_markdown` keeps a list of matching items scannable when many files or
+  metadata groups are present.
+- `long_markdown` preserves the complete reasoning, lesson content, and review
+  checks when a reviewer needs to understand why the item matters.
+
+The metadata describes repository context that applies to the file. It does not
+prove that the agent saw, understood, or followed that context. Reviewers should
+use the matching item as a prompt for what to compare against the agent's work.
 
 ## Source Brains
 

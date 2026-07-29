@@ -338,6 +338,9 @@ function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLesso
       "Change risk",
       `change-risk:${risk || "unspecified"}`,
       risk ? `${titleCase(risk)}-risk change` : "Change risk needs review",
+      risk
+        ? `Review the impact of this ${titleCase(risk)}-risk change before continuing.`
+        : "Review the visible change impact before continuing.",
       details.join("\n\n") || "Review the visible change impact before continuing.",
     ));
   }
@@ -356,6 +359,7 @@ function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLesso
       "API and dependencies",
       "public-api",
       "Public API may be affected",
+      "Check callers and compatibility before changing this public API.",
       details.join("\n\n") || "This file exposes a public API.",
     ));
   } else if (dependents !== null && dependents > 0) {
@@ -363,6 +367,7 @@ function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLesso
       "API and dependencies",
       `known-dependents:${dependents}`,
       `${dependents} known dependent${dependents === 1 ? "" : "s"}`,
+      `Check the ${dependents} known dependent${dependents === 1 ? "" : "s"} before changing this file.`,
       `Changes to this file may affect **${dependents}** known dependent${dependents === 1 ? "" : "s"}.`,
     ));
   }
@@ -381,6 +386,7 @@ function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLesso
       "Tests and safeguards",
       "regression-coverage",
       "Regression coverage exists",
+      "Check that existing regression coverage still protects the affected behavior.",
       coverage.join("\n\n"),
     ));
   }
@@ -392,6 +398,7 @@ function buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLesso
       "Tests and safeguards",
       `test-guidance:${sha256(title.toLowerCase()).slice(0, 12)}`,
       title,
+      "Confirm that the recommended regression coverage is present.",
       markdownText(testGuidance),
     ));
   }
@@ -404,6 +411,7 @@ function buildWriteItems(filePath, codeIntent, triage, blast, tests, relatedLess
       "Write operation",
       "create-or-replace-file",
       "New or replaced file",
+      "Confirm whether this complete write creates a new file or replaces existing contents.",
       "A write operation supplies the complete file contents instead of applying a targeted edit. Confirm whether it creates a new file or intentionally replaces the existing contents.",
     ),
     ...buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLessons),
@@ -530,6 +538,7 @@ function buildLessonItems(lessons) {
       "Repository memory",
       `lesson:${lesson.id}`,
       `Related lesson: ${compactTitle(lesson.summary, "Repository lesson")}`,
+      "Check this related repository lesson before changing the file.",
       details.join("\n\n"),
     );
   });
@@ -565,12 +574,21 @@ function buildFileContextItem(filePath, codeIntent, triage, blast) {
     "File context",
     `file-context:${sha256(filePath).slice(0, 12)}`,
     compactTitle(purpose, "Understand this file's role"),
+    "Understand this file's role before judging the change.",
     sections.join("\n\n"),
   );
 }
 
-function reviewItem(group, key, title, markdown) {
-  return { group, key, title, markdown };
+function reviewItem(group, key, title, shortMarkdown, longMarkdown) {
+  return {
+    group,
+    key,
+    title,
+    short_markdown: shortMarkdown,
+    long_markdown: longMarkdown,
+    // Keep the legacy field populated for existing Brain consumers.
+    markdown: longMarkdown,
+  };
 }
 
 function selectFields(record, names) {
@@ -742,7 +760,7 @@ function buildManifest(records, context) {
       id: "risk-session-review::file-content::default",
       name: "risk-session-review::file-content::default",
       description: "Stores deterministic change-risk review items for file activity.",
-      version: "1.0.0",
+      version: "1.1.0",
     }],
     fields,
     data: records.map((record, index) => {
@@ -896,16 +914,18 @@ function runSelfTest() {
   assert(record.fields.read_items.length === 2, "classified read item plus repository lesson");
   assert(record.fields.read_items[0].group === "File context", "read group");
   assert(record.fields.read_items[0].markdown.includes("### Useful when"), "read guidance");
+  assert(record.fields.read_items[0].long_markdown === record.fields.read_items[0].markdown, "legacy markdown alias");
+  assert(record.fields.read_items[0].short_markdown === "Understand this file's role before judging the change.", "short read guidance");
   assert(record.fields.read_items.some((item) => item.group === "Repository memory"), "read lesson");
   assert(record.fields.edit_items.some((item) => item.title === "High-risk change"), "risk item");
   assert(record.fields.edit_items.some((item) => item.title === "Public API may be affected"), "public API item");
   assert(record.fields.edit_items.some((item) => item.title === "Regression coverage exists"), "coverage item");
   assert(record.fields.edit_items.some((item) => item.title === "Add output compatibility tests here"), "test guidance item");
-  assert(record.fields.edit_items.every((item) => item.group && item.key && item.title && item.markdown), "item contract");
+  assert(record.fields.edit_items.every((item) => item.group && item.key && item.title && item.short_markdown && item.long_markdown && item.markdown), "item contract");
   assert(record.fields.write_items[0].title === "New or replaced file", "write classification item");
   assert(record.fields.write_items.some((item) => item.title === "High-risk change"), "write risk item");
   assert(record.fields.write_items.some((item) => item.key === "lesson:lsn_example"), "write lesson");
-  assert(record.fields.write_items.every((item) => item.group && item.key && item.title && item.markdown), "write item contract");
+  assert(record.fields.write_items.every((item) => item.group && item.key && item.title && item.short_markdown && item.long_markdown && item.markdown), "write item contract");
   assert(record.fields.source_fingerprint.length === 64, "source fingerprint");
   assert(builtRecords.length === 2, "lesson linked file record");
   assert(builtRecords[1].fields.read_items[0].key === "lesson:lsn_example", "linked lesson item");

@@ -95,6 +95,7 @@ pub(super) const FLAGS: &[&dyn Flag] = &[
     &MaxCount,
     &MaxDepth,
     &MaxFilesize,
+    &MaxFilesizeWarning,
     &Mmap,
     &Multiline,
     &MultilineDotall,
@@ -4055,6 +4056,71 @@ fn test_max_filesize() {
     let args =
         parse_low_raw(["--max-filesize", "1K", "--max-filesize=1M"]).unwrap();
     assert_eq!(Some(1024 * 1024), args.max_filesize);
+}
+
+/// --max-filesize-warning
+#[derive(Debug)]
+struct MaxFilesizeWarning;
+
+impl Flag for MaxFilesizeWarning {
+    fn is_switch(&self) -> bool {
+        false
+    }
+    fn name_long(&self) -> &'static str {
+        "max-filesize-warning"
+    }
+    fn doc_variable(&self) -> Option<&'static str> {
+        Some("NUM+SUFFIX?")
+    }
+    fn doc_category(&self) -> Category {
+        Category::Filter
+    }
+    fn doc_short(&self) -> &'static str {
+        r"Warn about files larger than NUM in size."
+    }
+    fn doc_long(&self) -> &'static str {
+        r"
+Warn about files larger than \fI NUM\fP in size. This does not apply to
+directories. Unlike \fB--max-filesize\fP, files are still searched and not
+skipped. This can be useful for identifying files that might be too large to
+search efficiently.
+.sp
+Warnings are printed to stderr and can be suppressed with \fB--no-messages\fP.
+.sp
+The input format accepts suffixes of \fBK\fP, \fBM\fP or \fBG\fP which
+correspond to kilobytes, megabytes and gigabytes, respectively. If no suffix is
+provided the input is treated as bytes.
+.sp
+Examples: \fB\-\-max-filesize-warning 50K\fP or \fB\-\-max-filesize-warning 80M\fP.
+"
+    }
+
+    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {
+        let v = v.unwrap_value();
+        args.max_filesize_warning = Some(convert::human_readable_u64(&v)?);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn test_max_filesize_warning() {
+    let args = parse_low_raw(None::<&str>).unwrap();
+    assert_eq!(None, args.max_filesize_warning);
+
+    let args = parse_low_raw(["--max-filesize-warning", "1024"]).unwrap();
+    assert_eq!(Some(1024), args.max_filesize_warning);
+
+    let args = parse_low_raw(["--max-filesize-warning", "1K"]).unwrap();
+    assert_eq!(Some(1024), args.max_filesize_warning);
+
+    let args = parse_low_raw([
+        "--max-filesize-warning",
+        "1K",
+        "--max-filesize-warning=1M",
+    ])
+    .unwrap();
+    assert_eq!(Some(1024 * 1024), args.max_filesize_warning);
 }
 
 /// --mmap

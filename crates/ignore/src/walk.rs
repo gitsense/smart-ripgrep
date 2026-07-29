@@ -486,6 +486,7 @@ pub struct WalkBuilder {
     max_depth: Option<usize>,
     min_depth: Option<usize>,
     max_filesize: Option<u64>,
+    max_filesize_warning: Option<u64>,
     follow_links: bool,
     same_file_system: bool,
     sorter: Option<Sorter>,
@@ -523,6 +524,7 @@ impl std::fmt::Debug for WalkBuilder {
             .field("max_depth", &self.max_depth)
             .field("min_depth", &self.min_depth)
             .field("max_filesize", &self.max_filesize)
+            .field("max_filesize_warning", &self.max_filesize_warning)
             .field("follow_links", &self.follow_links)
             .field("same_file_system", &self.same_file_system)
             .field("sorter", &"<...>")
@@ -551,6 +553,7 @@ impl WalkBuilder {
             max_depth: None,
             min_depth: None,
             max_filesize: None,
+            max_filesize_warning: None,
             follow_links: false,
             same_file_system: false,
             sorter: None,
@@ -612,6 +615,7 @@ impl WalkBuilder {
             ig_root: ig_root.clone(),
             ig: ig_root.clone(),
             max_filesize: self.max_filesize,
+            max_filesize_warning: self.max_filesize_warning,
             skip: self.skip.clone(),
             filter: self.filter.clone(),
         }
@@ -633,6 +637,7 @@ impl WalkBuilder {
             max_depth: self.max_depth,
             min_depth: self.min_depth,
             max_filesize: self.max_filesize,
+            max_filesize_warning: self.max_filesize_warning,
             follow_links: self.follow_links,
             same_file_system: self.same_file_system,
             threads: self.threads,
@@ -688,6 +693,18 @@ impl WalkBuilder {
     /// Whether to ignore files above the specified limit.
     pub fn max_filesize(&mut self, filesize: Option<u64>) -> &mut WalkBuilder {
         self.max_filesize = filesize;
+        self
+    }
+
+    /// Whether to warn about files above the specified limit.
+    ///
+    /// Unlike `max_filesize`, files are still traversed and searched.
+    /// A warning is emitted for files that exceed the given size.
+    pub fn max_filesize_warning(
+        &mut self,
+        filesize: Option<u64>,
+    ) -> &mut WalkBuilder {
+        self.max_filesize_warning = filesize;
         self
     }
 
@@ -1040,6 +1057,7 @@ pub struct Walk {
     ig_root: Ignore,
     ig: Ignore,
     max_filesize: Option<u64>,
+    max_filesize_warning: Option<u64>,
     skip: Option<Arc<Handle>>,
     filter: Option<Filter>,
 }
@@ -1081,6 +1099,13 @@ impl Walk {
                 ent.path(),
                 &ent.metadata().ok(),
             ));
+        }
+        if self.max_filesize_warning.is_some() && !ent.is_dir() {
+            warn_filesize(
+                self.max_filesize_warning.unwrap(),
+                ent.path(),
+                &ent.metadata().ok(),
+            );
         }
         if let Some(Filter(filter)) = &self.filter {
             if !filter(ent) {
@@ -1315,6 +1340,7 @@ pub struct WalkParallel {
     paths: std::vec::IntoIter<PathBuf>,
     ig_root: Ignore,
     max_filesize: Option<u64>,
+    max_filesize_warning: Option<u64>,
     max_depth: Option<usize>,
     min_depth: Option<usize>,
     follow_links: bool,
@@ -1418,6 +1444,7 @@ impl WalkParallel {
                     max_depth: self.max_depth,
                     min_depth: self.min_depth,
                     max_filesize: self.max_filesize,
+                    max_filesize_warning: self.max_filesize_warning,
                     follow_links: self.follow_links,
                     skip: self.skip.clone(),
                     filter: self.filter.clone(),
@@ -1611,6 +1638,9 @@ struct Worker<'s> {
     /// The maximum size a searched file can be (in bytes). If a file exceeds
     /// this size it will be skipped.
     max_filesize: Option<u64>,
+    /// The maximum size a searched file can be (in bytes) before emitting a
+    /// warning. Unlike max_filesize, the file is still searched.
+    max_filesize_warning: Option<u64>,
     /// Whether to follow symbolic links or not. When this is enabled, loop
     /// detection is performed.
     follow_links: bool,
@@ -1788,6 +1818,13 @@ impl<'s> Worker<'s> {
             } else {
                 false
             };
+        if self.max_filesize_warning.is_some() && !dent.is_dir() {
+            warn_filesize(
+                self.max_filesize_warning.unwrap(),
+                dent.path(),
+                &dent.metadata().ok(),
+            );
+        }
         let should_skip_filtered =
             if let Some(Filter(predicate)) = &self.filter {
                 !predicate(&dent)
@@ -1933,6 +1970,30 @@ fn skip_filesize(
         }
     } else {
         false
+    }
+}
+
+// Before calling this function, make sure that you ensure that is really
+// necessary as the arguments imply a file stat.
+fn warn_filesize(
+    max_filesize: u64,
+    path: &Path,
+    ent: &Option<Metadata>,
+) {
+    let filesize = match *ent {
+        Some(ref md) => Some(md.len()),
+        None => None,
+    };
+
+    if let Some(fs) = filesize {
+        if fs > max_filesize {
+            eprintln!(
+                "rg: {}: file size ({} bytes) exceeds --max-filesize-warning limit ({} bytes)",
+                path.display(),
+                fs,
+                max_filesize
+            );
+        }
     }
 }
 
@@ -2363,6 +2424,42 @@ mod tests {
         assert_paths(
             td.path(),
             builder.max_filesize(Some(50000)),
+            &["a", "a/b", "foo", "bar", "baz", "a/foo", "a/bar", "a/baz"],
+        );
+    }
+
+    #[test]
+    fn max_filesize_warning() {
+        let td = tmpdir();
+        mkdirp(td.path().join("a/b"));
+        wfile_size(td.path().join("foo"), 0);
+        wfile_size(td.path().join("bar"), 400);
+        wfile_size(td.path().join("baz"), 600);
+        wfile_size(td.path().join("a/foo"), 600);
+        wfile_size(td.path().join("a/bar"), 500);
+        wfile_size(td.path().join("a/baz"), 200);
+
+        // max_filesize_warning should not skip files, only warn about them.
+        // So all files should still be returned.
+        let mut builder = WalkBuilder::new(td.path());
+        assert_paths(
+            td.path(),
+            &builder,
+            &["a", "a/b", "foo", "bar", "baz", "a/foo", "a/bar", "a/baz"],
+        );
+        assert_paths(
+            td.path(),
+            builder.max_filesize_warning(Some(0)),
+            &["a", "a/b", "foo", "bar", "baz", "a/foo", "a/bar", "a/baz"],
+        );
+        assert_paths(
+            td.path(),
+            builder.max_filesize_warning(Some(500)),
+            &["a", "a/b", "foo", "bar", "baz", "a/foo", "a/bar", "a/baz"],
+        );
+        assert_paths(
+            td.path(),
+            builder.max_filesize_warning(Some(50000)),
             &["a", "a/b", "foo", "bar", "baz", "a/foo", "a/bar", "a/baz"],
         );
     }
