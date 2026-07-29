@@ -4,7 +4,13 @@
 
 This smart-ripgrep version is tuned for change review: it combines file purpose, agent triage, Rust blast radius, test-coverage metadata, and repository lessons so a reviewer can quickly see what a read or edit brought into play. Each item has a group, stable key, short title, and Markdown detail, allowing a session metadata index to group matching concerns without interpreting prose.
 
-The Analyzer is a data contract. Its values are populated by [build-risk-session-review](../../bin/build-risk-session-review), which combines existing GitSense analysis without making another LLM call.
+The Analyzer is a data contract. Its values are populated by [build-risk-session-review](../../bin/build-risk-session-review), which combines existing local Brains without making another LLM call.
+
+## Compose a Brain from Existing Brains
+
+This Analyzer demonstrates a deterministic composition pattern. Existing Brains provide focused repository knowledge—file purpose, triage, dependency risk, test coverage, and lessons. The builder joins that knowledge by file path, turns it into structured review items, and creates a new `risk-session-review` Brain.
+
+The derived Brain can then enrich coding-agent sessions with repository context at the moment a file is read, edited, or written. AI-generated metadata and deterministic analysis can be combined in the same review surface while remaining independently inspectable.
 
 ## Fields
 
@@ -28,22 +34,7 @@ Every item contains:
 }
 ```
 
-## Optional GitSense Chat UI integration
-
-The local Brain build does not require GitSense Chat. If you also want GitSense Chat to discover the Analyzer definition for its metadata UI, run this from the `smart-ripgrep` repository:
-
-```bash
-cd ~/smart-ripgrep
-REPO_ROOT="$(git rev-parse --show-toplevel)"
-ANALYZER_ID="risk-session-review"
-GSC_ANALYZER_DIR="${GSC_HOME:?Set GSC_HOME}/data/analyzers/$ANALYZER_ID"
-mkdir -p "$GSC_ANALYZER_DIR"
-cp -R "$REPO_ROOT/.gitsense/analyzers/$ANALYZER_ID/." "$GSC_ANALYZER_DIR/"
-```
-
-The `/.` source suffix copies the Analyzer contents into the target directory and makes the command safe to rerun without creating a nested Analyzer directory. GitSense Chat discovers the Analyzer from this directory without requiring a restart.
-
-## Required Source Analysis
+## Source Brains
 
 Before running the builder, create the local source Brains from the committed manifests:
 
