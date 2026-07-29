@@ -16,6 +16,14 @@ This is the [ripgrep](https://github.com/BurntSushi/ripgrep) codebase with GitSe
 
 Once those files are committed, GitSense Chat is no longer in the path. Anyone who clones this repository can use `gsc` to build local SQLite Brains and make the knowledge available to a coding agent. At this point, the user and agent only need `gsc`.
 
+## Turn Knowledge into Session Insights
+
+GitSense can also attach repository knowledge to an agent session. The `risk-session-review` Analyzer combines file purpose, risk, dependency, test-coverage, and lesson metadata into structured review items for files the agent reads, edits, or writes.
+
+This lets a reviewer see not only which files changed, but what the repository already knows about those files. The Analyzer is deterministic: it combines existing metadata without making another AI request. A surfaced lesson indicates that guidance is available for review; it does not prove that the agent consulted or followed it.
+
+See the [`risk-session-review` documentation](.gitsense/analyzers/risk-session-review/README.md) for installation, building, and Pi session export instructions.
+
 ## One Task, Two Better Decisions
 
 The walkthrough follows one reasonable request:
@@ -98,7 +106,7 @@ The max-filesize lesson exists because an earlier session saved it. When your wo
 
 ## Explore the Other Brains
 
-This repository includes five GitSense Chat manifests:
+This repository includes five GitSense Chat manifests. These manifests and Brains provide the source knowledge; the optional `risk-session-review` Analyzer combines that knowledge into a session-review view:
 
 | Brain | A question it can help answer |
 | :--- | :--- |
