@@ -28,9 +28,9 @@ Every item contains:
 }
 ```
 
-## Install
+## Optional GitSense Chat UI integration
 
-Run this from the `smart-ripgrep` repository. The repository root is resolved explicitly so the command also works when the shell is in a subdirectory:
+The local Brain build does not require GitSense Chat. If you also want GitSense Chat to discover the Analyzer definition for its metadata UI, run this from the `smart-ripgrep` repository:
 
 ```bash
 cd ~/smart-ripgrep
@@ -58,6 +58,8 @@ do
 done
 ```
 
+Run this setup on a fresh checkout. If a Brain already exists, inspect it with `gsc brains --summary`; `gsc manifest import` will not overwrite it unless `--force` is supplied.
+
 The deterministic builder reads these local Brains:
 
 * `code-intent`
@@ -71,39 +73,15 @@ The source repository does not need to be imported into GitSense Chat for the lo
 
 ## Build and Review
 
-Generate reviewable JSONL without writing analysis:
+Build the local Brain and generate reviewable JSONL:
 
 ```bash
-.gitsense/bin/build-risk-session-review \
-  --output /tmp/risk-session-review.jsonl
+.gitsense/bin/build-risk-session-review
 ```
 
-The basic build reads the local Brains and does not require GitSense Chat.
+The builder reads the local Brains, writes reviewable JSONL to `/tmp/risk-session-review.jsonl`, generates `.gitsense/manifests/risk-session-review.json`, and creates or refreshes the local `.gitsense/risk-session-review.db` Brain. GitSense Chat is not required.
 
-Validate the import path without writing:
-
-```bash
-.gitsense/bin/build-risk-session-review \
-  --owner gitsense \
-  --repo smart-ripgrep \
-  --branch master \
-  --import \
-  --dry-run
-```
-
-Populate the Analyzer after reviewing the output:
-
-```bash
-.gitsense/bin/build-risk-session-review \
-  --owner gitsense \
-  --repo smart-ripgrep \
-  --branch master \
-  --import
-```
-
-The builder hashes canonical source metadata and skips unchanged records.
-
-`--import` is an optional publishing path. It requires the repository and branch to exist in GitSense Chat and uses `--owner`, `--repo`, and `--branch` to publish the generated records there.
+The generated manifest is deterministic for the same source metadata apart from its `generated_at` timestamp. The local Brain is refreshed only when the manifest changes.
 
 ## Adapt the Pattern
 
@@ -113,7 +91,7 @@ The Analyzer contract remains the same even when a repository chooses different 
 
 ## Enrich a Pi Session Export
 
-After packaging or loading the `risk-session-review` results as a Brain:
+After the builder creates the local `risk-session-review` Brain:
 
 ```bash
 gsc pi sessions export \

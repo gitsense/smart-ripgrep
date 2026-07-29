@@ -57,7 +57,7 @@ function main() {
   }
 
   const repoRoot = findRepoRoot(process.cwd());
-  const context = flags.import ? resolveRepositoryContext(repoRoot, flags) : null;
+  const context = resolveRepositoryContext(repoRoot);
   const recordsByAnalyzer = new Map();
 
   for (const analyzer of SOURCE_ANALYZERS) {
@@ -73,44 +73,19 @@ function main() {
   writeJSONL(outputPath, records);
   process.stderr.write(`[risk-session-review] Generated ${records.length} record(s)\n`);
   process.stderr.write(`[risk-session-review] Output: ${outputPath}\n`);
-
-  if (!flags.import) {
-    process.stderr.write("[risk-session-review] Review the JSONL, then rerun with --import\n");
-    return;
-  }
-
-  const existing = fetchRemoteAnalysis(repoRoot, TARGET_ANALYZER, context, true);
-  const changed = filterChangedRecords(records, existing);
-  process.stderr.write(
-    `[risk-session-review] Change check: new=${changed.newCount}, changed=${changed.changedCount}, unchanged=${changed.unchangedCount}\n`,
+  const manifestPath = path.join(
+    repoRoot,
+    ".gitsense",
+    "manifests",
+    `${TARGET_ANALYZER}.json`,
   );
-
-  if (changed.records.length === 0) {
-    process.stderr.write("[risk-session-review] No metadata changes detected; skipping import\n");
-    return;
-  }
-
-  const importPath =
-    changed.records.length === records.length
-      ? outputPath
-      : path.join(os.tmpdir(), "gsc-risk-session-review-changed.jsonl");
-  if (importPath !== outputPath) {
-    writeJSONL(importPath, changed.records);
-    process.stderr.write(`[risk-session-review] Changed output: ${importPath}\n`);
-  }
-
-  runAnalysisSet(repoRoot, importPath, context, flags);
+  const manifestChanged = writeManifest(manifestPath, buildManifest(records, context));
+  createLocalBrain(repoRoot, manifestPath, manifestChanged);
 }
 
 function parseFlags(args) {
   const flags = {
-    owner: "",
-    repo: "",
-    branch: "",
     output: "",
-    import: false,
-    dryRun: false,
-    force: false,
     help: false,
     selfTest: false,
   };
@@ -118,9 +93,6 @@ function parseFlags(args) {
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
     switch (arg) {
-      case "--owner":
-      case "--repo":
-      case "--branch":
       case "--output": {
         const value = args[index + 1];
         if (!value || value.startsWith("--")) {
@@ -130,15 +102,6 @@ function parseFlags(args) {
         index += 1;
         break;
       }
-      case "--import":
-        flags.import = true;
-        break;
-      case "--dry-run":
-        flags.dryRun = true;
-        break;
-      case "--force":
-        flags.force = true;
-        break;
       case "--self-test":
         flags.selfTest = true;
         break;
@@ -151,12 +114,6 @@ function parseFlags(args) {
     }
   }
 
-  if (flags.dryRun && !flags.import) {
-    throw new Error("--dry-run requires --import");
-  }
-  if (flags.force && !flags.import) {
-    throw new Error("--force requires --import");
-  }
   return flags;
 }
 
@@ -165,13 +122,8 @@ function printHelp() {
   process.stdout.write("Usage:\n");
   process.stdout.write("  .gitsense/bin/build-risk-session-review [flags]\n\n");
   process.stdout.write("Flags:\n");
-  process.stdout.write("  --owner <name>    GitSense Chat repository owner (required with --import)\n");
-  process.stdout.write("  --repo <name>     GitSense Chat repository name (required with --import)\n");
-  process.stdout.write("  --branch <name>   GitSense Chat branch name (required with --import)\n");
   process.stdout.write("  --output <path>   JSONL output path (default: system temp directory)\n");
-  process.stdout.write("  --import          Populate risk-session-review with changed records\n");
-  process.stdout.write("  --dry-run         Validate gsc app analysis set without writing\n");
-  process.stdout.write("  --force           Overwrite existing changed records\n");
+  process.stdout.write("                    The local Brain is written to .gitsense/risk-session-review.db\n");
   process.stdout.write("  --self-test       Run deterministic formatter checks\n");
   process.stdout.write("  -h, --help        Show this help\n");
 }
@@ -190,17 +142,9 @@ function findRepoRoot(startDir) {
   }
 }
 
-function resolveRepositoryContext(repoRoot, flags) {
-  const context = {
-    owner: flags.owner,
-    repo: flags.repo,
-    branch: flags.branch,
-  };
-  if (context.owner && context.repo && context.branch) {
-    return context;
-  }
-
+function resolveRepositoryContext(repoRoot) {
   const manifestPath = path.join(repoRoot, ".gitsense", "manifests", "code-intent.json");
+  const context = {};
   if (fs.existsSync(manifestPath)) {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
     const repositoryName = manifest.repositories?.[0]?.name;
@@ -217,7 +161,7 @@ function resolveRepositoryContext(repoRoot, flags) {
 
   if (!context.owner || !context.repo || !context.branch) {
     throw new Error(
-      "Could not determine GitSense Chat repository context. Provide --owner, --repo, and --branch.",
+      "Could not determine repository context from .gitsense/manifests/code-intent.json.",
     );
   }
   return context;
@@ -267,55 +211,14 @@ function fetchBrain(repoRoot, analyzer, tolerateMissing) {
   const records = new Map();
   for (const resultRecord of files) {
     if (resultRecord && typeof resultRecord.file_path === "string") {
-      records.set(normalizePath(resultRecord.file_path), resultRecord.metadata || {});
+      const metadata = { ...(resultRecord.metadata || {}) };
+      if (Number.isInteger(resultRecord.chat_id)) {
+        metadata.__source_chat_id = resultRecord.chat_id;
+      }
+      records.set(normalizePath(resultRecord.file_path), metadata);
     }
   }
   process.stderr.write(`[gsc] Found ${records.size} ${analyzer} Brain record(s)\n`);
-  return records;
-}
-
-function fetchRemoteAnalysis(repoRoot, analyzer, context, tolerateMissing) {
-  const args = [
-    "app",
-    "analysis",
-    "get",
-    "--analyzer",
-    analyzer,
-    "--list",
-    "--format",
-    "json",
-    ...contextArgs(context),
-  ];
-  const result = spawnSync("gsc", args, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    maxBuffer: 64 * 1024 * 1024,
-  });
-
-  if (result.error) {
-    throw new Error(`Failed to run gsc: ${result.error.message}`);
-  }
-  if (result.status !== 0) {
-    if (tolerateMissing) {
-      return new Map();
-    }
-    const detail = result.stderr.trim() || result.stdout.trim() || `exit ${result.status}`;
-    throw new Error(`Failed to read ${analyzer} analysis: ${detail}`);
-  }
-
-  const parsed = JSON.parse(result.stdout);
-  const files = parsed.files === null ? [] : parsed.files;
-  if (!Array.isArray(files)) {
-    throw new Error(`Invalid ${analyzer} response: expected a files array`);
-  }
-
-  const records = new Map();
-  for (const record of files) {
-    if (record && typeof record.file_path === "string") {
-      records.set(normalizePath(record.file_path), record);
-    }
-  }
-  process.stderr.write(`[gsc] Found ${records.size} ${analyzer} record(s)\n`);
   return records;
 }
 
@@ -395,6 +298,7 @@ function buildRecord(filePath, recordsByAnalyzer, lessons = []) {
 
   return {
     file_path: filePath,
+    chat_id: firstInteger(codeIntent.__source_chat_id, triage.__source_chat_id, blast.__source_chat_id, tests.__source_chat_id),
     fields: {
       read_items: buildReadItems(filePath, codeIntent, triage, blast, relatedLessons),
       edit_items: buildEditItems(filePath, codeIntent, triage, blast, tests, relatedLessons),
@@ -513,21 +417,80 @@ function loadRepositoryLessons(repoRoot) {
   }
 
   const lessons = [];
-  const lines = fs.readFileSync(recordsPath, "utf8").split(/\r?\n/);
-  for (let lineNumber = 0; lineNumber < lines.length; lineNumber += 1) {
-    const line = lines[lineNumber].trim();
-    if (!line) continue;
-    let lesson;
-    try {
-      lesson = JSON.parse(line);
-    } catch (error) {
-      throw new Error(`Invalid lesson JSON at ${recordsPath}:${lineNumber + 1}: ${error.message}`);
-    }
+  const records = parseJSONRecords(fs.readFileSync(recordsPath, "utf8"), recordsPath);
+  for (const lesson of records) {
     if (lesson && typeof lesson.id === "string" && firstString(lesson.summary)) {
       lessons.push(lesson);
     }
   }
   return lessons;
+}
+
+function parseJSONRecords(text, recordsPath) {
+  const records = [];
+  let recordStart = -1;
+  let objectDepth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+
+    if (recordStart === -1) {
+      if (/\s/.test(character) || character === "\uFEFF") {
+        continue;
+      }
+      if (character !== "{") {
+        throw new Error(
+          `Invalid lesson JSON at ${recordsPath}:${lineNumberAt(text, index)}: expected a JSON object`,
+        );
+      }
+      recordStart = index;
+      objectDepth = 1;
+      continue;
+    }
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (character === "\\") {
+        escaped = true;
+      } else if (character === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (character === '"') {
+      inString = true;
+    } else if (character === "{") {
+      objectDepth += 1;
+    } else if (character === "}") {
+      objectDepth -= 1;
+      if (objectDepth === 0) {
+        const rawRecord = text.slice(recordStart, index + 1);
+        try {
+          records.push(JSON.parse(rawRecord));
+        } catch (error) {
+          throw new Error(
+            `Invalid lesson JSON at ${recordsPath}:${lineNumberAt(text, recordStart)}: ${error.message}`,
+          );
+        }
+        recordStart = -1;
+      }
+    }
+  }
+
+  if (recordStart !== -1) {
+    throw new Error(
+      `Invalid lesson JSON at ${recordsPath}:${lineNumberAt(text, recordStart)}: unterminated JSON object`,
+    );
+  }
+  return records;
+}
+
+function lineNumberAt(text, index) {
+  return text.slice(0, index).split(/\r?\n/).length;
 }
 
 function findRelatedLessons(filePath, lessons) {
@@ -701,6 +664,10 @@ function integerValue(value) {
   return Number.isInteger(value) ? value : null;
 }
 
+function firstInteger(...values) {
+  return values.find((value) => Number.isInteger(value)) ?? null;
+}
+
 function highestRisk(...values) {
   const rank = { low: 1, medium: 2, high: 3, critical: 4 };
   return values
@@ -734,55 +701,104 @@ function writeJSONL(outputPath, records) {
   fs.writeFileSync(outputPath, body ? `${body}\n` : "", "utf8");
 }
 
-function filterChangedRecords(records, existing) {
-  const changed = [];
-  let newCount = 0;
-  let changedCount = 0;
-  let unchangedCount = 0;
+const TARGET_FIELD_DEFINITIONS = [
+  ["file_path", "string", "Repository-relative target file path."],
+  ["file_name", "string", "Target filename including extension."],
+  ["file_extension", "string", "Target file extension without a leading dot."],
+  ["read_items", "array", "Review items surfaced for file-read events."],
+  ["edit_items", "array", "Review items surfaced for targeted-edit events."],
+  ["write_items", "array", "Review items surfaced for complete-file write events."],
+  ["source_analyzers", "array", "Source Analyzers that contributed metadata."],
+  ["source_fingerprint", "string", "SHA-256 fingerprint of the source metadata."],
+];
 
-  for (const record of records) {
-    const previous = existing.get(record.file_path);
-    if (!previous) {
-      changed.push(record);
-      newCount += 1;
-      continue;
-    }
-    const previousFields = {
-      read_items: Array.isArray(previous.read_items) ? normalizeValue(previous.read_items) : [],
-      edit_items: Array.isArray(previous.edit_items) ? normalizeValue(previous.edit_items) : [],
-      write_items: Array.isArray(previous.write_items) ? normalizeValue(previous.write_items) : [],
-      source_analyzers: stringArray(previous.source_analyzers).sort(),
-      source_fingerprint:
-        typeof previous.source_fingerprint === "string" ? previous.source_fingerprint : "",
-    };
-    if (sha256(stableStringify(record.fields)) === sha256(stableStringify(previousFields))) {
-      unchangedCount += 1;
-    } else {
-      changed.push(record);
-      changedCount += 1;
-    }
-  }
-  return { records: changed, newCount, changedCount, unchangedCount };
+function buildManifest(records, context) {
+  const analyzerRef = "A0";
+  const fieldRefs = new Map(
+    TARGET_FIELD_DEFINITIONS.map(([name], index) => [name, `F${index}`]),
+  );
+  const fields = TARGET_FIELD_DEFINITIONS.map(([name, type, description], index) => ({
+    ref: `F${index}`,
+    name,
+    type,
+    display_name: titleCase(name),
+    description,
+    analyzer_ref: analyzerRef,
+  }));
+
+  return {
+    schema_version: "1.0",
+    generated_at: new Date().toISOString(),
+    manifest: {
+      name: `${context.repo} - Risk Session Review`,
+      database_name: TARGET_ANALYZER,
+      description: "Deterministic review items composed from local repository Brains and lessons.",
+      tags: ["deterministic", "session-review", "risk-session-review"],
+    },
+    repositories: [{ ref: "R0", name: `${context.owner}/${context.repo}` }],
+    branches: [{ ref: "B0", name: context.branch }],
+    analyzers: [{
+      ref: analyzerRef,
+      id: "risk-session-review::file-content::default",
+      name: "risk-session-review::file-content::default",
+      description: "Stores deterministic change-risk review items for file activity.",
+      version: "1.0.0",
+    }],
+    fields,
+    data: records.map((record, index) => {
+      const extension = path.extname(record.file_path).replace(/^\./, "");
+      const values = {
+        file_path: record.file_path,
+        file_name: path.basename(record.file_path),
+        file_extension: extension,
+        ...record.fields,
+      };
+      return {
+        repo_ref: "R0",
+        branch_ref: "B0",
+        chat_id: Number.isInteger(record.chat_id) ? record.chat_id : index + 1,
+        file_path: record.file_path,
+        language: extension,
+        fields: Object.fromEntries(
+          TARGET_FIELD_DEFINITIONS.map(([name]) => [fieldRefs.get(name), values[name]]),
+        ),
+      };
+    }),
+  };
 }
 
-function runAnalysisSet(repoRoot, bulkPath, context, flags) {
-  const args = [
-    "app",
-    "analysis",
-    "set",
-    "--analyzer",
-    TARGET_ANALYZER,
-    "--bulk",
-    bulkPath,
-    ...contextArgs(context),
-  ];
-  if (flags.dryRun) {
-    args.push("--dry-run");
+function writeManifest(manifestPath, manifest) {
+  fs.mkdirSync(path.dirname(manifestPath), { recursive: true });
+  const body = `${JSON.stringify(manifest, null, 2)}\n`;
+  if (fs.existsSync(manifestPath)) {
+    const previous = fs.readFileSync(manifestPath, "utf8");
+    try {
+      const previousManifest = JSON.parse(previous);
+      const comparablePrevious = { ...previousManifest, generated_at: "" };
+      const comparableCurrent = { ...manifest, generated_at: "" };
+      if (stableStringify(comparablePrevious) === stableStringify(comparableCurrent)) {
+        return false;
+      }
+    } catch {
+      // Rewrite an invalid or incomplete generated manifest.
+    }
   }
-  if (flags.force) {
-    args.push("--force");
+  fs.writeFileSync(manifestPath, body, "utf8");
+  process.stderr.write(`[risk-session-review] Manifest: ${manifestPath}\n`);
+  return true;
+}
+
+function createLocalBrain(repoRoot, manifestPath, manifestChanged) {
+  const databasePath = path.join(repoRoot, ".gitsense", `${TARGET_ANALYZER}.db`);
+  if (!manifestChanged && fs.existsSync(databasePath)) {
+    process.stderr.write(`[risk-session-review] Local Brain is up to date: ${databasePath}\n`);
+    return;
   }
 
+  const args = ["manifest", "import", manifestPath];
+  if (fs.existsSync(databasePath)) {
+    args.push("--force");
+  }
   const result = spawnSync("gsc", args, {
     cwd: repoRoot,
     encoding: "utf8",
@@ -792,12 +808,9 @@ function runAnalysisSet(repoRoot, bulkPath, context, flags) {
     throw new Error(`Failed to run gsc: ${result.error.message}`);
   }
   if (result.status !== 0) {
-    throw new Error(`gsc app analysis set failed with exit code ${result.status}`);
+    throw new Error(`Failed to create local ${TARGET_ANALYZER} Brain`);
   }
-}
-
-function contextArgs(context) {
-  return ["--owner", context.owner, "--repo", context.repo, "--branch", context.branch];
+  process.stderr.write(`[risk-session-review] Local Brain ready: ${databasePath}\n`);
 }
 
 function runSelfTest() {
@@ -872,6 +885,11 @@ function runSelfTest() {
       },
     },
   ];
+  const parsedLessons = parseJSONRecords(
+    '{\n  "id": "lsn_formatted",\n  "summary": "Formatted lesson"\n}\n{"id":"lsn_compact","summary":"Compact lesson"}',
+    "/tmp/lessons/records.jsonl",
+  );
+  assert(parsedLessons.length === 2, "formatted and compact lesson records");
   const builtRecords = buildRecords(records, lessons);
   const [record] = builtRecords;
   assert(record.file_path === "src/example.rs", "file path");
